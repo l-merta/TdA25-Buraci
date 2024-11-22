@@ -1,7 +1,7 @@
 //@ts-ignore
 import React, { useEffect } from 'react'
 
-import './App.css';
+import './styles/main.css';
 
 function App() {
   const apiUrl = import.meta.env.VITE_API_URL;
