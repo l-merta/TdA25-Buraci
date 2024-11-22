@@ -1,7 +1,6 @@
 //@ts-ignore
 import React, { useEffect } from 'react'
-
-import './styles/main.css';
+import { Link } from "react-router-dom";
 
 function App() {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -28,7 +27,13 @@ function App() {
 
   return (
     <>
-      <h1>Hello TdA</h1>
+      <h1>Home page</h1>
+      <nav>
+        <ul>
+          <li><Link to="/game">Game</Link></li>
+          <li><Link to="/create">Create</Link></li>
+        </ul>
+      </nav>
     </>
   )
 }
