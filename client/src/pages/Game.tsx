@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 
+import GameBoard from "./../components/GameBoard";
+
 const Game = () => {
   return (
     <>
-        <h1>Game page</h1>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/create">Create</Link></li>
-          </ul>
-        </nav>
+      <h1>Game page</h1>
+      <GameBoard size={15} />
     </>
   )
 }
