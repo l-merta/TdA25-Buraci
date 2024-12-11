@@ -9,7 +9,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
     const [fields, setFields] = useState<Array<string | number>>(Array(size * size).fill(null)); // seznam hracích polí - co maj v sobě
     const [playing, setPlaying] = useState<number>(players.length - 1); // kdo zrovna hraje, by default poslední player aby při prvním tahu skočil na prvního
 
-    function onFieldClick(index: number) {
+    function onFieldClick(index: number) { // funkce při kliku na hrací field
         if (fields[index] == null) { // koukne se jestli na kliknutým poli někdo už nehrál
             // koukne se jestli odehrál poslední hráč v seznamu
             if (playing == players.length - 1) {
@@ -24,7 +24,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
             }
         }
     }
-    function PlayField(index: number, player: number) {
+    function PlayField(index: number, player: number) { // funkce na update hracích polí, index = číslo fieldu, player = číslo hráče v seznamu players
         setFields((prevFields: any) => {
             return prevFields.map((field: any, i: number) => (i === index ? player : field)) // dá na pole index číslo playera v seznamu players
         });
