@@ -1,0 +1,30 @@
+.game-board {
+    //background-color: red;
+    aspect-ratio: 1/1;
+    width: 100%;
+    max-width: 45rem;
+    margin: 0 auto;
+    display: grid;
+    //grid-template-columns: repeat(var(--size), 1fr);
+
+    --size: 3;
+
+    .field {
+        font: 600 2rem var(--f1);
+        border: 1px solid gray;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: .1s;
+    }
+    .field:hover:not(.field-played) {
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+    .field-empty {
+        color: transparent;
+    }
+    .field-played {
+        cursor: default;
+    }
+}
