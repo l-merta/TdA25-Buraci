@@ -7,9 +7,20 @@
   --size: 3;
 }
 .game-board .field {
+  font: 600 2rem var(--f1);
   border: 1px solid gray;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.1s;
 }
-.game-board .field:hover {
-  background-color: whitesmoke;
+.game-board .field:hover:not(.field-played) {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+.game-board .field-empty {
+  color: transparent;
+}
+.game-board .field-played {
+  cursor: default;
 }/*# sourceMappingURL=main.css.map */

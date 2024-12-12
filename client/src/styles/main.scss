@@ -10,11 +10,21 @@
     --size: 3;
 
     .field {
-        //background-color: gray;
+        font: 600 2rem var(--f1);
         border: 1px solid gray;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: .1s;
     }
-    .field:hover {
-        background-color: whitesmoke;
+    .field:hover:not(.field-played) {
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+    .field-empty {
+        color: transparent;
+    }
+    .field-played {
+        cursor: default;
     }
 }

@@ -33,7 +33,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
     return (
         <div className="game-board"  style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
             {fields.map((item: any, index: number) => (
-                <div className="field" key={index} onClick={()=>{onFieldClick(index)}}>{players[item] ? players[item] : "."}</div>
+                <div className={"field " + (!players[item] ? "field-empty " : "field-played ")} key={index} onClick={()=>{onFieldClick(index)}}>{players[item] ? players[item] : "."}</div>
             ))}
         </div>
     )
