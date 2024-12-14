@@ -29,3 +29,15 @@ jobs:
           team_token: ${{ secrets.TEAM_TOKEN }}
           image_name: tda-generic
           image_path: /tmp/tda-generic.tar
+
+      - name: Export Environment Variables
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: |
+          echo DB_HOST=$DB_HOST >> .env
+          echo DB_USER=$DB_USER >> .env
+          echo DB_PASSWORD=$DB_PASSWORD >> .env
+          echo DB_NAME=$DB_NAME >> .env
