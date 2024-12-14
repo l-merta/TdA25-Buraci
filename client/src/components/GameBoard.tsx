@@ -7,6 +7,7 @@ interface GameBoardProps {
 const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
 
+    //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
     const [fields, setFields] = useState<string[][]>(Array.from({ length: size }, () => Array(size).fill(''))); // 2D array for game fields initialized with ''
     const [playing, setPlaying] = useState<number>(players.length - 1); // Current player index, defaults to last player to start with first on the next turn
