@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 5200;
 // Middleware
 app.use(cors());
 app.use(express.json()); // Parses JSON bodies
+app.use(express.static("public")); // Slouží statické soubory z Reactu
 
 // Database connection
 connectToDatabase();
@@ -144,6 +145,11 @@ process.on("SIGINT", async () => {
     console.error("Error during shutdown:", err.message);
     process.exit(1);
   }
+});
+
+// Obsluhuje všechny ostatní cesty a vrací hlavní HTML soubor
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.listen(PORT, () => {
