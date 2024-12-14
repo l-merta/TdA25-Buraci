@@ -37,7 +37,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
         run: |
-          echo DB_HOST=$DB_HOST >> server/.env
-          echo DB_USER=$DB_USER >> server/.env
-          echo DB_PASSWORD=$DB_PASSWORD >> server/.env
-          echo DB_NAME=$DB_NAME >> server/.env
+          echo DB_HOST=$DB_HOST >> ./app/server/.env
+          echo DB_USER=$DB_USER >> ./app/server/.env
+          echo DB_PASSWORD=$DB_PASSWORD >> ./app/server/.env
+          echo DB_NAME=$DB_NAME >> ./app/server/.env
