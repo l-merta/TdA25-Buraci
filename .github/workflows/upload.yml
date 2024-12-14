@@ -39,7 +39,9 @@ jobs:
         run: |
           echo "host: $DB_HOST"
           pwd
+          ls
           echo DB_HOST=$DB_HOST >> ./server/.env
           echo DB_USER=$DB_USER >> ./server/.env
           echo DB_PASSWORD=$DB_PASSWORD >> ./server/.env
           echo DB_NAME=$DB_NAME >> ./server/.env
+          cat ./server/.env
