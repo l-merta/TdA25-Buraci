@@ -13,8 +13,8 @@ app.use(express.json()); // Parses JSON bodies
 app.use(express.static("public")); // Slouží statické soubory z Reactu
 
 // Database connection
-//connectToDatabase();
 console.log(process.env.DB_HOST);
+connectToDatabase();
 
 // API Endpoints
 app.post("/api/v1/games", async (req, res) => {
