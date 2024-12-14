@@ -27,7 +27,7 @@ app.post("/api/v1/games", async (req, res) => {
     updatedAt: new Date().toISOString(),
     name,
     difficulty,
-    gameState: "opening",
+    gameState: "unknown",
     board,
   };
 
@@ -124,10 +124,26 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
   }
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error
+  if (req.headers.accept && req.headers.accept.includes("text/html")) {
+    res.redirect(`/error?message=${encodeURIComponent(err.message || "An error occurred")}`);
+  } else {
+    res.status(500).json({ code: 500, message: err.message || "Internal Server Error" });
+  }
+});
+
 // Graceful shutdown
 process.on("SIGINT", async () => {
-  await closeDatabase();
-  process.exit(0);
+  try {
+    await closeDatabase();
+    console.log("Database connection closed");
+    process.exit(0);
+  } catch (err) {
+    console.error("Error during shutdown:", err.message);
+    process.exit(1);
+  }
 });
 
 app.listen(PORT, () => {
