@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
 const { v4: uuidv4 } = require("uuid");
-require("dotenv").config({ path: '/server/.env' });
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5200;
@@ -11,6 +11,37 @@ const PORT = process.env.PORT || 5200;
 app.use(cors());
 app.use(express.json()); // Parses JSON bodies
 app.use(express.static("public")); // Slouží statické soubory z Reactu
+
+//
+/*
+const fs = require('fs');
+const path = require('path');
+
+// Define the path to the .env file
+const envFilePath = path.join(__dirname, '.env');
+
+// Check if the .env file exists
+if (fs.existsSync(envFilePath)) {
+  console.log('.env file exists.');
+} else {
+  console.log('.env file does not exist.');
+}
+*/
+const fs = require('fs');
+const path = require('path');
+
+// Define the path to the .env file
+const envFilePath = path.join(__dirname, '.env');
+
+// Check if the .env file exists asynchronously
+fs.access(envFilePath, fs.constants.F_OK, (err) => {
+    if (err) {
+        console.log('.env file does not exist.');
+    } else {
+        console.log('.env file exists.');
+    }
+})
+//
 
 // Database connection
 console.log(process.env.DB_HOST);
