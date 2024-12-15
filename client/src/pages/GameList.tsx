@@ -23,7 +23,7 @@ const Game = () => {
 
   return (
     <>
-      <h1>Game list</h1>
+      <h1>Games</h1>
     </>
   )
 }
