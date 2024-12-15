@@ -23,4 +23,20 @@
 }
 .game-board .field-played {
   cursor: default;
+}
+
+.games-list {
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.games-list .game {
+  width: 100%;
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }/*# sourceMappingURL=main.css.map */

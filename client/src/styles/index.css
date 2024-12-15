@@ -2,6 +2,7 @@
   --f1: "Poppins";
 }
 body {
+  font-family: var(--f1);
   margin: 0;
 }
 body * {
