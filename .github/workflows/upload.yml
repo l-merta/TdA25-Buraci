@@ -23,13 +23,6 @@ jobs:
           tags: tda-generic:latest
           outputs: type=docker,dest=/tmp/tda-generic.tar
 
-      - name: Upload to TdA
-        uses: Tour-de-App/upload-app@tda-25
-        with:
-          team_token: ${{ secrets.TEAM_TOKEN }}
-          image_name: tda-generic
-          image_path: /tmp/tda-generic.tar
-
       - name: Export Environment Variables
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -41,3 +34,10 @@ jobs:
           echo DB_USER=$DB_USER >> ./server/.env
           echo DB_PASSWORD=$DB_PASSWORD >> ./server/.env
           echo DB_NAME=$DB_NAME >> ./server/.env
+
+      - name: Upload to TdA
+        uses: Tour-de-App/upload-app@tda-25
+        with:
+          team_token: ${{ secrets.TEAM_TOKEN }}
+          image_name: tda-generic
+          image_path: /tmp/tda-generic.tar
