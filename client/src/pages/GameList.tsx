@@ -1,14 +1,11 @@
-//@ts-ignore
-import React, { useEffect } from 'react'
-import { Link } from "react-router-dom";
-
-function App() {
+import { useEffect } from 'react';
+const Game = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(apiUrl); // Replace with your API URL
+        const response = await fetch(apiUrl + "games"); // Replace with your API URL
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -26,16 +23,9 @@ function App() {
 
   return (
     <>
-      <h1>Home page</h1>
-      <nav>
-        <ul>
-          <li><Link to="/game">Game</Link></li>
-          <li><Link to="/game-list">Game list</Link></li>
-          <li><Link to="/create">Create</Link></li>
-        </ul>
-      </nav>
+      <h1>Game list</h1>
     </>
   )
 }
 
-export default App
+export default Game
