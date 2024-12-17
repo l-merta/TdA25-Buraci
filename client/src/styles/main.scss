@@ -7,8 +7,6 @@
     display: grid;
     //grid-template-columns: repeat(var(--size), 1fr);
 
-    --size: 3;
-
     .field {
         font: 600 2rem var(--f1);
         border: 1px solid gray;
@@ -42,5 +40,37 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        transition: .12s;
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            
+            button {
+                color: var(--c1);
+                background-color: transparent;
+                font: 500 1.0rem var(--f1);
+                border: 1px solid var(--c1);
+                border-radius: 0.5rem;
+                padding: 0.4rem 0.6rem;
+                transition: .12s;
+                cursor: pointer;
+            }
+            button:hover {
+                color: var(--c2);
+                background-color: var(--c1);
+            }
+            .button-warning {
+                color: var(--c-warn);
+                border-color: var(--c-warn);
+            }
+            .button-warning:hover {
+                color: var(--c2);
+                background-color: var(--c-warn);
+            }
+        }
+    }
+    .game:hover {
+        background-color: rgba(0, 0, 0, 0.03);
     }
 }

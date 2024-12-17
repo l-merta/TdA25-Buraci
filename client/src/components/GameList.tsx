@@ -62,14 +62,14 @@ const GameList = () => {
   }
 
   return (
-    <div className="games-list">
+    <div className="games-list" style={{ maxWidth: "45rem"}}>
       {games && games.map((game) => (
         <div className="game" key={game.uuid}>
           <span className="game-name">{game.name}</span>
           <div className="actions">
             <button onClick={() => playGame(game.uuid)}>Hrát</button>
             <button onClick={() => editGame(game.uuid)}>Upravit</button>
-            <button onClick={() => deleteGame(game.uuid)}>Smazat</button>
+            <button onClick={() => deleteGame(game.uuid)} className="button-warning">Smazat</button>
           </div>
         </div>
       ))}
