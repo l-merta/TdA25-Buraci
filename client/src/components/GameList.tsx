@@ -68,8 +68,8 @@ const GameList = () => {
           <span className="game-name">{game.name}</span>
           <div className="actions">
             <button onClick={() => playGame(game.uuid)}>Hrát</button>
-            <button onClick={() => editGame(game.uuid)}>Upravit</button>
-            <button onClick={() => deleteGame(game.uuid)} className="button-warning">Smazat</button>
+            <button onClick={() => editGame(game.uuid)}><i className="fa-regular fa-pen-to-square"></i></button>
+            <button onClick={() => deleteGame(game.uuid)} className="button-warning"><i className="fa-regular fa-trash"></i></button>
           </div>
         </div>
       ))}
