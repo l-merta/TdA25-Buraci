@@ -1,7 +1,12 @@
 :root {
+  --c1: black;
+  --c2: whitesmoke;
+  --c-warn: rgb(247, 66, 66);
+
   --f1: "Poppins";
 }
 body {
+  font-family: var(--f1);
   margin: 0;
 }
 body * {

@@ -14,7 +14,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
 
     function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
         if (fields[row][col] === '') { // Check if the clicked field is empty
-            createGame({name: "test-name", difficulty: "hard", board: fields});
+            //createGame({name: "test-name", difficulty: "hard", board: fields});
             // Check if the last player in the list played
             if (playing === players.length - 1) {
                 PlayField(row, col, 0); // Make the first player play

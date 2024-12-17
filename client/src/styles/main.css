@@ -4,7 +4,6 @@
   max-width: 45rem;
   margin: 0 auto;
   display: grid;
-  --size: 3;
 }
 .game-board .field {
   font: 600 2rem var(--f1);
@@ -23,4 +22,50 @@
 }
 .game-board .field-played {
   cursor: default;
+}
+
+.games-list {
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.games-list .game {
+  width: 100%;
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.12s;
+}
+.games-list .game .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.games-list .game .actions button {
+  color: var(--c1);
+  background-color: transparent;
+  font: 500 1rem var(--f1);
+  border: 1px solid var(--c1);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  transition: 0.12s;
+  cursor: pointer;
+}
+.games-list .game .actions button:hover {
+  color: var(--c2);
+  background-color: var(--c1);
+}
+.games-list .game .actions .button-warning {
+  color: var(--c-warn);
+  border-color: var(--c-warn);
+}
+.games-list .game .actions .button-warning:hover {
+  color: var(--c2);
+  background-color: var(--c-warn);
+}
+.games-list .game:hover {
+  background-color: rgba(0, 0, 0, 0.03);
 }/*# sourceMappingURL=main.css.map */
