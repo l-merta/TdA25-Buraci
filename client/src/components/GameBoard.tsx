@@ -36,6 +36,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
         });
     }
 
+    /*
     const createGame = async (gameData: object) => {
         try {
             const response = await fetch(apiUrl + "games", {
@@ -58,6 +59,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
             console.error("Error creating game:", error.message);
         }
     };
+    */
 
     return (
         <div className="game-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
