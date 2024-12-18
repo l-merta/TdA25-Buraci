@@ -1,5 +1,6 @@
-import GameBoard from "./../components/GameBoard";
 import { Link } from "react-router-dom";
+
+import GameBoard from "./../components/GameBoard";
 
 const Game = () => {
   return (
