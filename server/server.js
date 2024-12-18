@@ -69,6 +69,7 @@ app.get("/api/v1/games", async (req, res) => {
 
 app.get("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
+  console.log("někdo to zkouší", uuid);
 
   try {
     const db = require("./db").getDb();
@@ -77,6 +78,7 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     row.board = JSON.parse(row.board);
+    console.log("row", row);
     res.json(row);
   } catch (error) {
     console.error(error);

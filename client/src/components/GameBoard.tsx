@@ -36,7 +36,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                 try {
                     const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
                     if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
                     const result = await response.json(); // Parse JSON data
                     setGameData(result);
