@@ -13,8 +13,9 @@ interface GamesProps {
 
 const GameList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const [games, setGames] = useState<Array<GamesProps>>([]);
   const navigate = useNavigate(); // Initialize useNavigate
+
+  const [games, setGames] = useState<Array<GamesProps>>([]);
 
   useEffect(() => {
     const fetchData = async () => {

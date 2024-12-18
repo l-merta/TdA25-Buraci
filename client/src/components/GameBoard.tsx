@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 interface GameBoardProps {
     size: number;
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
-    //const apiUrl = import.meta.env.VITE_API_URL;
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const { uuid } = useParams<{ uuid: string }>();
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
     const [fields, setFields] = useState<string[][]>(Array.from({ length: size }, () => Array(size).fill(''))); // 2D array for game fields initialized with ''
     const [playing, setPlaying] = useState<number>(players.length - 1); // Current player index, defaults to last player to start with first on the next turn
+
+    useEffect(() => {
+        if (uuid) {
+            const fetchData = async () => {
+                try {
+                    const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
+                    if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const result = await response.json(); // Parse JSON data
+                    setFields(result.board);
+                } catch (error: any) {
+                    console.log(error.message); // Set error message if there's an issue
+                }
+            };
+        
+            fetchData(); // Call the fetch function
+        }
+    }, []); // Empty dependency array means this runs once on mount
 
     function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
         if (fields[row][col] === '') { // Check if the clicked field is empty
