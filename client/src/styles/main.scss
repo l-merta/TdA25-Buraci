@@ -1,31 +1,49 @@
-.game-board {
-    //background-color: red;
-    aspect-ratio: 1/1;
-    width: 100%;
-    max-width: 45rem;
-    margin: 0 auto;
-    display: grid;
-    //grid-template-columns: repeat(var(--size), 1fr);
 
-    .field {
-        font: 600 2rem var(--f1);
-        border: 1px solid gray;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: .1s;
+h1 {
+    margin: 0;
+}
+.game-board-container {
+    width: 45rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1.0rem;
+
+    h1 {
+        width: 100%;
+        text-align: center;
     }
-    .field:hover:not(.field-played) {
-        background-color: rgba(0, 0, 0, 0.15);
-    }
-    .field-empty {
-        color: transparent;
-    }
-    .field-played {
-        cursor: default;
+    .game-board {
+        //background-color: red;
+        aspect-ratio: 1/1;
+        width: 100%;
+        max-width: 45rem;
+        margin: 0 auto;
+        display: grid;
+        //grid-template-columns: repeat(var(--size), 1fr);
+    
+        .field {
+            font: 600 2rem var(--f1);
+            border: 1px solid gray;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: .1s;
+        }
+        .field:hover:not(.field-played) {
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+        .field-empty {
+            color: transparent;
+        }
+        .field-played {
+            cursor: default;
+        }
     }
 }
+
 .games-list {
     padding: 0 0.5rem;
     display: flex;
@@ -45,32 +63,41 @@
         .actions {
             display: flex;
             gap: 0.5rem;
-            
-            button {
-                color: var(--c1);
-                background-color: transparent;
-                font: 500 1.0rem var(--f1);
-                border: 1px solid var(--c1);
-                border-radius: 0.5rem;
-                padding: 0.4rem 0.6rem;
-                transition: .12s;
-                cursor: pointer;
-            }
-            button:hover {
-                color: var(--c2);
-                background-color: var(--c1);
-            }
-            .button-warning {
-                color: var(--c-warn);
-                border-color: var(--c-warn);
-            }
-            .button-warning:hover {
-                color: var(--c2);
-                background-color: var(--c-warn);
-            }
         }
     }
     .game:hover {
         background-color: rgba(0, 0, 0, 0.03);
     }
+}
+.button-main {
+    color: var(--c1);
+    background-color: transparent;
+    font: 500 1.0rem var(--f1);
+    border: 1px solid var(--c1);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    transition: .12s;
+    cursor: pointer;
+}
+.button-main:hover {
+    color: var(--c2);
+    background-color: var(--c1);
+}
+.button-warning {
+    color: var(--c-warn);
+    border-color: var(--c-warn);
+}
+.button-warning:hover {
+    color: var(--c2);
+    background-color: var(--c-warn);
+}
+input[type=text] {
+    color: var(--c1);
+    background-color: transparent;
+    font: 500 1.0rem var(--f1);
+    width: 100%;
+    border: 1px solid var(--c1);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    transition: .12s;
 }

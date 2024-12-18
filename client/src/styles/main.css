@@ -1,11 +1,27 @@
-.game-board {
+h1 {
+  margin: 0;
+}
+
+.game-board-container {
+  width: 45rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1rem;
+}
+.game-board-container h1 {
+  width: 100%;
+  text-align: center;
+}
+.game-board-container .game-board {
   aspect-ratio: 1/1;
   width: 100%;
   max-width: 45rem;
   margin: 0 auto;
   display: grid;
 }
-.game-board .field {
+.game-board-container .game-board .field {
   font: 600 2rem var(--f1);
   border: 1px solid gray;
   cursor: pointer;
@@ -14,13 +30,13 @@
   align-items: center;
   transition: 0.1s;
 }
-.game-board .field:hover:not(.field-played) {
+.game-board-container .game-board .field:hover:not(.field-played) {
   background-color: rgba(0, 0, 0, 0.15);
 }
-.game-board .field-empty {
+.game-board-container .game-board .field-empty {
   color: transparent;
 }
-.game-board .field-played {
+.game-board-container .game-board .field-played {
   cursor: default;
 }
 
@@ -44,7 +60,11 @@
   display: flex;
   gap: 0.5rem;
 }
-.games-list .game .actions button {
+.games-list .game:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.button-main {
   color: var(--c1);
   background-color: transparent;
   font: 500 1rem var(--f1);
@@ -54,18 +74,29 @@
   transition: 0.12s;
   cursor: pointer;
 }
-.games-list .game .actions button:hover {
+
+.button-main:hover {
   color: var(--c2);
   background-color: var(--c1);
 }
-.games-list .game .actions .button-warning {
+
+.button-warning {
   color: var(--c-warn);
   border-color: var(--c-warn);
 }
-.games-list .game .actions .button-warning:hover {
+
+.button-warning:hover {
   color: var(--c2);
   background-color: var(--c-warn);
 }
-.games-list .game:hover {
-  background-color: rgba(0, 0, 0, 0.03);
+
+input[type=text] {
+  color: var(--c1);
+  background-color: transparent;
+  font: 500 1rem var(--f1);
+  width: 100%;
+  border: 1px solid var(--c1);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  transition: 0.12s;
 }/*# sourceMappingURL=main.css.map */

@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
 
+import GameBoard from "./../components/GameBoard";
+
 const Create = () => {
   return (
     <>
+      <Link to="/">Home</Link>
       <h1>Create page</h1>
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/game">Game</Link></li>
-        </ul>
-      </nav>
+      <GameBoard size={15} editMode={true}/>
     </>
   )
 }
