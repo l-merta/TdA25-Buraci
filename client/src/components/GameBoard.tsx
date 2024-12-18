@@ -5,7 +5,7 @@ interface GameBoardProps {
 }
 
 const GameBoard: React.FC<GameBoardProps> = ({ size }) => {
-    const apiUrl = import.meta.env.VITE_API_URL;
+    //const apiUrl = import.meta.env.VITE_API_URL;
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
