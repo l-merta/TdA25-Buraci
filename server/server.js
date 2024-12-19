@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
+const { getPlaying } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
@@ -79,7 +80,7 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
     }
     row.board = JSON.parse(row.board);
     console.log("row", row);
-    res.json(row);
+    res.json({ ...row, playing: getPlaying(row.board) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
