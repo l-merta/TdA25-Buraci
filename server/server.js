@@ -141,6 +141,19 @@ app.use((err, req, res, next) => {
 // Graceful shutdown
 process.on("SIGINT", async () => {
   try {
+    console.log("Received SIGINT. Closing database connection...");
+    await closeDatabase();
+    console.log("Database connection closed");
+    process.exit(0);
+  } catch (err) {
+    console.error("Error during shutdown:", err.message);
+    process.exit(1);
+  }
+});
+
+process.on("SIGTERM", async () => {
+  try {
+    console.log("Received SIGTERM. Closing database connection...");
     await closeDatabase();
     console.log("Database connection closed");
     process.exit(0);
