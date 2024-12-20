@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import SocketService from "./SocketService";
+
 interface GameDataProps {
     uuid: string;
     createdAt: string;
@@ -30,6 +32,41 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
     });
     //const [fields, setFields] = useState<string[][]>(Array.from({ length: size }, () => Array(size).fill(''))); // 2D array for game fields initialized with ''
     //const [playing, setPlaying] = useState<number>(players.length - 1); // Current player index, defaults to last player to start with first on the next turn
+    const [session, setSession] = useState<any>(null);
+
+    useEffect(() => {
+      SocketService.socket.on("connect", () => {
+        console.log("WebSocket connection established");
+
+        // Create a new game session
+        SocketService.createGameSession((newSession) => {
+          console.log("New game session created:", newSession);
+          setSession(newSession);
+        });
+
+        // Join an existing game session
+        const sessionId = "your-session-id";
+        SocketService.joinGameSession(sessionId, (session) => {
+          if (session) {
+            console.log("Joined game session:", session);
+            setSession(session);
+          } else {
+            console.log("Failed to join game session");
+          }
+        });
+      });
+
+      SocketService.socket.on("disconnect", () => {
+        console.log("WebSocket connection closed");
+      });
+
+      // Clean up on component unmount
+      return () => {
+        if (session) {
+          SocketService.leaveGameSession(session.id);
+        }
+      };
+    }, [session]);
 
     useEffect(() => {
         if (uuid) {
