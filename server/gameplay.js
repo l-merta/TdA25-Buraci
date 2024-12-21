@@ -16,10 +16,30 @@ const getPlaying = (board) => {
   const nextPlayerIndex = counts.indexOf(Math.min(...counts));
   return nextPlayerIndex;
 };
+
 const playField = (row, col, board, player) => { // Function to update game fields, row and col = field position, player = player index in the players list
   const newFields = board.map((r) => [...r]);
   newFields[row][col] = players[player];
   return newFields;
 }
 
-module.exports = { getPlaying, playField };
+// Helper function to determine game state
+const determineGameState = (board) => {
+  const moves = board.flat().filter(cell => cell !== '').length;
+  if (moves <= 5) return 'opening';
+  if (moves >= 6) return 'midgame';
+  // Add logic to check for endgame conditions
+  // ...
+  return 'unknown';
+};
+
+// Helper function to validate the game board
+const validateBoard = (board) => {
+  if (board.length !== 15 || board.some(row => row.length !== 15)) {
+    return false;
+  }
+  const validSymbols = ['X', 'O', ''];
+  return board.flat().every(cell => validSymbols.includes(cell));
+};
+
+module.exports = { getPlaying, playField, determineGameState, validateBoard };

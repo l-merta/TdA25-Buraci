@@ -40,7 +40,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                     }
                     const result = await response.json(); // Parse JSON data
                     setGameData(result);
-                    //console.log(result);
+                    console.log(result);
                 } catch (error: any) {
                     console.log(error.message); // Set error message if there's an issue
                 }
