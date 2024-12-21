@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import socket from "./Socket";
-
 interface GameDataProps {
     uuid: string;
     createdAt: string;
@@ -24,49 +22,14 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
-    const [roomId, setRoomId] = useState<string>(); // Room ID for WebSocket connection
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
         difficulty: "test diff",
-        board: Array.from({ length: size }, () => Array(size).fill(''))
+        board: Array.from({ length: size }, () => Array(size).fill('')),
+        playing: players.length - 1
     });
-    //const [fields, setFields] = useState<string[][]>(Array.from({ length: size }, () => Array(size).fill(''))); // 2D array for game fields initialized with ''
-    const [playing, setPlaying] = useState<number>(players.length - 1); // Current player index, defaults to last player to start with first on the next turn
 
-    // WebSocket room creation
-    // WebSocket room creation and joining
-  useEffect(() => {
-    if (!roomId) {
-      // Generate a random 5-digit room ID and check availability with server
-      const createRoom = () => {
-        const newRoomId = Math.floor(10000 + Math.random() * 90000).toString();
-        socket.emit("createRoom", newRoomId, (isAvailable: boolean) => {
-          if (isAvailable) {
-            setRoomId(newRoomId);
-          } else {
-            createRoom();
-          }
-        });
-      };
-
-      createRoom();
-    } 
-    else {
-        // Join the room
-        socket.emit("joinRoom", roomId);
-
-        socket.on("message", (message: string) => {
-            console.log(message);
-        });
-
-        return () => {
-            socket.emit("leaveRoom", roomId);
-            socket.off("message");
-        };
-    }
-    }, [roomId]);
-
-    // Fetch game data with uuid
+    // Get game with uuid from API
     useEffect(() => {
         if (uuid) {
             const fetchData = async () => {
@@ -77,6 +40,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                     }
                     const result = await response.json(); // Parse JSON data
                     setGameData(result);
+                    //console.log(result);
                 } catch (error: any) {
                     console.log(error.message); // Set error message if there's an issue
                 }
@@ -86,27 +50,29 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         }
     }, []); // Empty dependency array means this runs once on mount
 
-    function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
+    async function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
         if (gameData.board[row][col] === '') { // Check if the clicked field is empty
-            // Check if the last player in the list played
-            if (playing === players.length - 1) {
-                PlayField(row, col, 0); // Make the first player play
-                setPlaying(0); // Set the first player as the current one
-            } else {
-                setPlaying((prevPlaying: any) => {
-                    PlayField(row, col, prevPlaying + 1); // Make the current player play
-                    return prevPlaying + 1; // Pass the turn to the next player in the list
+            try {
+                const response = await fetch(`${apiUrl}gameFieldClick`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ...gameData, row: row, col: col }),
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Failed to play field in game");
+                }
+
+                const data = await response.json();
+                setGameData(data);
+                //console.log("Field played successfully:", data, data.uuid);
+            } catch (error: any) {
+                console.error("Error playing field:", error.message);
             }
         }
-    }
-
-    function PlayField(row: number, col: number, player: number) { // Function to update game fields, row and col = field position, player = player index in the players list
-        setGameData((prevData: any) => {
-            const newFields = prevData.board.map((r: any) => [...r]); // Create a shallow copy of the 2D array
-            newFields[row][col] = players[player]; // Update the specific field with the player's symbol
-            return { ...prevData, board: newFields };
-        });
     }
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
