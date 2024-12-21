@@ -92,7 +92,6 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
   }
 });
 
-// Game endpoints
 app.put("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
   const { name, difficulty, board } = req.body;
@@ -127,7 +126,6 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
   }
 });
 
-// Delete game endpoint
 app.delete("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
