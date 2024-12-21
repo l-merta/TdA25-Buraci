@@ -11,7 +11,7 @@ interface GameDataProps {
     difficulty: string;
     gameState: string;
     board: Array<String>;
-  }
+}
 interface GameBoardProps {
     size: number;
     editMode?: boolean;
@@ -30,44 +30,55 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         board: Array.from({ length: size }, () => Array(size).fill('')),
         playing: players.length - 1
     });
-    //const [fields, setFields] = useState<string[][]>(Array.from({ length: size }, () => Array(size).fill(''))); // 2D array for game fields initialized with ''
-    //const [playing, setPlaying] = useState<number>(players.length - 1); // Current player index, defaults to last player to start with first on the next turn
     const [session, setSession] = useState<any>(null);
 
+    // Connect to WebSocket
     useEffect(() => {
       SocketService.socket.on("connect", () => {
         console.log("WebSocket connection established");
-
-        // Create a new game session
-        SocketService.createGameSession((newSession) => {
-          console.log("New game session created:", newSession);
-          setSession(newSession);
-        });
-
-        // Join an existing game session
-        const sessionId = "your-session-id";
-        SocketService.joinGameSession(sessionId, (session) => {
-          if (session) {
-            console.log("Joined game session:", session);
-            setSession(session);
-          } else {
-            console.log("Failed to join game session");
-          }
-        });
+  
+        // Create a new game session if no UUID is provided
+        if (!uuid) {
+          SocketService.createGameSession((newSession) => {
+            console.log("New game session created:", newSession);
+            setSession(newSession);
+            setGameData(newSession.gameData);
+          });
+        } else {
+          // Join an existing game session with the provided UUID
+          SocketService.joinGameSession(uuid, (session) => {
+            if (session) {
+              console.log("Joined game session:", session);
+              setSession(session);
+              setGameData(session.gameData);
+            } else {
+              console.log("Failed to join game session");
+            }
+          });
+        }
       });
-
+  
       SocketService.socket.on("disconnect", () => {
         console.log("WebSocket connection closed");
       });
-
+  
+      SocketService.socket.on("updateGameData", (updatedGameData: GameDataProps) => {
+        console.log("Received updated game data:", updatedGameData);
+        setGameData(updatedGameData);
+      });
+      SocketService.socket.on("message", (message: string) => {
+        console.log("Received message:", message);
+      });
+  
       // Clean up on component unmount
       return () => {
         if (session) {
           SocketService.leaveGameSession(session.id);
         }
       };
-    }, [session]);
+    }, [session, uuid]);
 
+    // Get game with uuid
     useEffect(() => {
         if (uuid) {
             const fetchData = async () => {
@@ -88,47 +99,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         }
     }, []); // Empty dependency array means this runs once on mount
 
-    async function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
-        if (gameData.board[row][col] === '') { // Check if the clicked field is empty
-            /*
-            setGameData((prevData: any) => {
-                PlayField(row, col, prevData.playing); // Make the current player play
-                return { ...prevData, playing: prevData.playing } // Pass the turn to the next player in the list
-            });
-            */
-            try {
-                const response = await fetch(`${apiUrl}gameFieldClick`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ ...gameData, row: row, col: col }),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || "Failed to play field in game");
-                }
-
-                const data = await response.json();
-                setGameData(data);
-                //console.log("Field played successfully:", data, data.uuid);
-            } catch (error: any) {
-                console.error("Error playing field:", error.message);
-            }
-        }
-    }
-
-    /*
-    function PlayField(row: number, col: number, player: number) { // Function to update game fields, row and col = field position, player = player index in the players list
-        console.log(player, players[player]);
-        setGameData((prevData: any) => {
-            const newFields = prevData.board.map((r: any) => [...r]); // Create a shallow copy of the 2D array
-            newFields[row][col] = players[player]; // Update the specific field with the player's symbol
-            return { ...prevData, board: newFields };
-        });
-    }
-    */
+    const onFieldClick = (x: number, y: number) => {
+      if (session) {
+        SocketService.sendMove(session.id, { x, y });
+      }
+    };
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGameData((prevGameData: GameBoardProps) => {

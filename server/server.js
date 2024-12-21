@@ -84,7 +84,6 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     row.board = JSON.parse(row.board);
-    console.log("row", row);
     res.json({ ...row, playing: getPlaying(row.board) });
   } catch (error) {
     console.error(error);
@@ -109,7 +108,7 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
       [name, difficulty, JSON.stringify(board), updatedAt, uuid]
     );
 
-    res.json({ ...existing, name, difficulty, board, updatedAt, playing: getPlaying(row.board) });
+    res.json({ ...existing, name, difficulty, board, updatedAt, playing: getPlaying(board) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });

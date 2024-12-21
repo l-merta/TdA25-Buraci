@@ -21,6 +21,10 @@ class SocketService {
     this.socket.emit("leaveGameSession", sessionId);
     this.socket.close();
   }
+
+  public sendMove(sessionId: string, coordinates: { x: number, y: number }) {
+    this.socket.emit("makeMove", { sessionId, coordinates });
+  }
 }
 
 export default new SocketService();
