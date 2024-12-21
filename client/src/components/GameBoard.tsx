@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import socket from "./Socket";
+
 interface GameDataProps {
     uuid: string;
     createdAt: string;
@@ -22,6 +24,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
+    const [roomId, setRoomId] = useState<string>(); // Room ID for WebSocket connection
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
         difficulty: "test diff",
@@ -30,6 +33,40 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
     //const [fields, setFields] = useState<string[][]>(Array.from({ length: size }, () => Array(size).fill(''))); // 2D array for game fields initialized with ''
     const [playing, setPlaying] = useState<number>(players.length - 1); // Current player index, defaults to last player to start with first on the next turn
 
+    // WebSocket room creation
+    // WebSocket room creation and joining
+  useEffect(() => {
+    if (!roomId) {
+      // Generate a random 5-digit room ID and check availability with server
+      const createRoom = () => {
+        const newRoomId = Math.floor(10000 + Math.random() * 90000).toString();
+        socket.emit("createRoom", newRoomId, (isAvailable: boolean) => {
+          if (isAvailable) {
+            setRoomId(newRoomId);
+          } else {
+            createRoom();
+          }
+        });
+      };
+
+      createRoom();
+    } 
+    else {
+        // Join the room
+        socket.emit("joinRoom", roomId);
+
+        socket.on("message", (message: string) => {
+            console.log(message);
+        });
+
+        return () => {
+            socket.emit("leaveRoom", roomId);
+            socket.off("message");
+        };
+    }
+    }, [roomId]);
+
+    // Fetch game data with uuid
     useEffect(() => {
         if (uuid) {
             const fetchData = async () => {

@@ -24,6 +24,7 @@ RUN mkdir -p server/public && cp -r client/dist/* server/public/
 COPY server ./server
 
 EXPOSE 5200
+EXPOSE 5201
 
 # Nastavení pracovního adresáře na server a spuštění Express serveru
 WORKDIR /app/server

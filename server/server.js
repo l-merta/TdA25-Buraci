@@ -1,8 +1,10 @@
+require("dotenv").config();
+require('./wss');
 const express = require("express");
 const cors = require("cors");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
+const { getPlaying, playField } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
-require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 5200;
@@ -69,7 +71,6 @@ app.get("/api/v1/games", async (req, res) => {
 
 app.get("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
-  console.log("někdo to zkouší", uuid);
 
   try {
     const db = require("./db").getDb();
@@ -78,8 +79,7 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     row.board = JSON.parse(row.board);
-    console.log("row", row);
-    res.json(row);
+    res.json({ ...row, playing: getPlaying(row.board) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
@@ -103,7 +103,19 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
       [name, difficulty, JSON.stringify(board), updatedAt, uuid]
     );
 
-    res.json({ ...existing, name, difficulty, board, updatedAt });
+    res.json({ ...existing, name, difficulty, board, updatedAt, playing: getPlaying(board) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.put("/api/v1/gameFieldClick", async (req, res) => {
+  const { row, col, board } = req.body;
+  console.log(row, col, board, playField(row, col, board, getPlaying(board)));
+
+  try {
+    res.json({ ...req.body, board: playField(row, col, board, getPlaying(board)), playing: getPlaying(board) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
@@ -169,5 +181,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
