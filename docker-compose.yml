@@ -5,7 +5,7 @@ services:
       context: ./client  # Specify the React app folder
       dockerfile: Dockerfile.client
     ports:
-      - "5100:5100"  # Map host port 3000 to container port 3000 for React
+      - "5100:5100"  # Map host port 5100 to container port 5100 for React
     volumes:
       - ./client:/app  # Mount local files into the container for live reloading
       - /app/node_modules  # Exclude node_modules to avoid conflicts
@@ -17,7 +17,8 @@ services:
       context: ./server  # Specify the Express server folder
       dockerfile: Dockerfile.server
     ports:
-      - '5200:5200'  # Map host port 5000 to container port 5000 for Express API
+      - '5200:5200'  # Map host port 5200 to container port 5200 for Express API
+      - '5201:5201'
     volumes:
       - ./server:/app  # Mount server files for live reloading
       - /app/node_modules  # Exclude node_modules for compatibility

@@ -1,105 +1,93 @@
+const express = require("express");
+const http = require("http");
 const { Server } = require("socket.io");
-const { v4: uuidv4 } = require('uuid');
 
-// In-memory storage for game sessions
-const gameSessions = new Map();
+const app = express();
+const PORT = process.env.PORT || 5201;
 
-// Placeholder function to fetch a game preset from the database
-async function getGamePreset(uuid) {
-  // This is a placeholder function, replace with actual DB query
-  // Example preset data
-  return {
-    uuid,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    name: "Preset Game",
-    difficulty: "Medium",
-    gameState: "Not Started",
-    board: Array.from({ length: 15 }, () => Array(15).fill(''))
-  };
-}
+// Create an HTTP server and Socket.IO server
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
-module.exports = (server) => {
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
+// Store rooms and users
+const rooms = new Map();
+
+io.on("connection", (socket) => {
+  console.log(`New connection: ${socket.id}`);
+
+  // Handle room creation with unique 5-digit room ID
+  socket.on("createRoom", (roomId, callback) => {
+    if (rooms.has(roomId)) {
+      callback(false); // Room ID is taken
+    } else {
+      rooms.set(roomId, []);
+      callback(true); // Room ID is available
     }
   });
 
-  io.on("connection", (socket) => {
-    console.log(`New connection: ${socket.id}`);
+  // Handle joining a room
+  socket.on("joinRoom", (roomId) => {
+    const room = rooms.get(roomId);
+    if (!room) {
+      socket.emit("error", { code: 101, message: "Místnost s tímto kódem neexistuje" }); // Send error to the client
+      return;
+    }
 
-    // Handle creating a new game session
-    socket.on("createGameSession", async (callback) => {
-      const newSession = {
-        id: uuidv4(),
-        gameData: {
-          uuid: uuidv4(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          name: "Default Game",
-          difficulty: "Easy",
-          gameState: "Not Started",
-          board: Array.from({ length: 15 }, () => Array(15).fill(''))
-        }
-      };
-      gameSessions.set(newSession.id, newSession);
-      callback(newSession);
-    });
+    console.log(`User ${socket.id} joined room ${roomId}`);
+    socket.join(roomId);
+    room.push({ id: socket.id });
+    io.to(roomId).emit("message", { message: "nazdar" });
+  });
 
-    // Handle joining a game session with or without a preset uuid
-    socket.on("joinGameSession", async (sessionId, callback) => {
-      let session = gameSessions.get(sessionId);
-      if (!session) {
-        const gamePreset = await getGamePreset(sessionId);
-        session = {
-          id: sessionId,
-          gameData: gamePreset
-        };
-        gameSessions.set(sessionId, session);
+  // Handle sending a message in the room
+  socket.on("sendMessage", ({ roomId, message }) => {
+    if (rooms.has(roomId)) {
+      const user = rooms.get(roomId).find((u) => u.id === socket.id);
+      if (user) {
+        io.to(roomId).emit("receiveMessage", {
+          sender: user.name,
+          message,
+        });
       }
+    }
+  });
 
-      io.to(sessionId).emit("message", "dobrej");
-      if (session) {
-        socket.join(sessionId);
-        callback(session);
+  // Handle leaving the room
+  socket.on("leaveRoom", (roomId) => {
+    const users = rooms.get(roomId);
+    if (!users) return;
+
+    console.log("Deleting room " + roomId);
+
+    socket.leave(roomId);
+    rooms.delete(roomId);
+  });
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log(`User ${socket.id} disconnected`);
+
+    // Remove the user from any rooms they were part of
+    rooms.forEach((users, roomId) => {
+      const updatedUsers = users.filter((user) => user.id !== socket.id);
+      rooms.set(roomId, updatedUsers);
+
+      // If the room is now empty, remove it from the list
+      if (updatedUsers.length === 0) {
+        console.log("Deleting room " + roomId);
+        rooms.delete(roomId);
       } else {
-        callback(null);
+        io.to(roomId).emit("roomUsers", updatedUsers);
       }
-    });
-
-    // Handle making a move
-    socket.on("makeMove", async ({ sessionId, coordinates }) => {
-      const session = gameSessions.get(sessionId);
-      if (session) {
-        const { x, y } = coordinates;
-        const gameData = session.gameData;
-
-        // Calculate the new game state
-        if (gameData.board[x][y] === '') {
-          gameData.board[x][y] = "X"; // Example: Set the clicked cell to "X"
-        }
-
-        // Update the game session in memory
-        gameData.updatedAt = new Date().toISOString();
-        gameSessions.set(sessionId, session);
-
-        // Broadcast the updated game data to all clients in the session
-        io.to(sessionId).emit("updateGameData", gameData);
-        console.log(`Emitted updated game data to session ${sessionId}`);
-      }
-    });
-
-    // Handle leaving a game session
-    socket.on("leaveGameSession", (sessionId) => {
-      gameSessions.delete(sessionId);
-      socket.leave(sessionId);
-    });
-
-    // Handle disconnection
-    socket.on("disconnect", () => {
-      console.log(`User ${socket.id} disconnected`);
     });
   });
-};
+});
+
+server.listen(PORT, () => {
+  console.log(`WebSocket server running on port ${PORT}`);
+});

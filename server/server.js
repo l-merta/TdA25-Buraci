@@ -1,18 +1,13 @@
 require("dotenv").config();
+require('./wss');
 const express = require("express");
 const cors = require("cors");
-const http = require("http");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
 const { getPlaying, playField } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 const PORT = process.env.PORT || 5200;
-
-// Create an HTTP server
-const server = http.createServer(app);
-// Import and use the WebSocket server
-require('./wss')(server);
 
 // Middleware
 app.use(cors());
@@ -185,11 +180,6 @@ app.get("*", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-/*
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-*/
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
