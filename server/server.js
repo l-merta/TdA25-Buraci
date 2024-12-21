@@ -84,7 +84,6 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     row.board = JSON.parse(row.board);
-    console.log("row", row);
     res.json({ ...row, playing: getPlaying(row.board) });
   } catch (error) {
     console.error(error);
