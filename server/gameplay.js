@@ -26,7 +26,7 @@ const playField = (row, col, board, player) => { // Function to update game fiel
 // Helper function to determine game state
 const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
-  const rounds = Math.floor(moves / 2);
+  const rounds = Math.ceil(moves / 2);
 
   if (checkPotentialWin(board, 4, players)) return 'endgame';
   if (rounds <= 5) return 'opening';
