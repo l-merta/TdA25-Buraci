@@ -160,8 +160,8 @@ app.put("/api/v1/gameFieldClick", async (req, res) => {
   }
 
   // Check win
-  console.log("win check: ", checkWin(newGameData.board, 5, players));
-  console.log("poten. win check: ", checkPotentialWin(newGameData.board, 4, players));
+  //console.log("win check: ", checkWin(newGameData.board, 5, players));
+  //console.log("poten. win check: ", checkPotentialWin(newGameData.board, 4, players));
   newGameData.win = checkWin(newGameData.board, 5, players);
 
   try {

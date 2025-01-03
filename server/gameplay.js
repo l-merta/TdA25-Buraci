@@ -26,9 +26,11 @@ const playField = (row, col, board, player) => { // Function to update game fiel
 // Helper function to determine game state
 const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
+  const rounds = Math.floor(moves / 2);
+
   if (checkPotentialWin(board, 4, players)) return 'koncovka';
-  if (moves <= 5) return 'opening';
-  if (moves >= 6) return 'midgame';
+  if (rounds <= 5) return 'opening';
+  if (rounds >= 6) return 'midgame';
   return 'unknown';
 };
 
