@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
+const { getPlaying, playField, determineGameState, validateBoard } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
@@ -23,13 +24,19 @@ app.post("/api/v1/games", async (req, res) => {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
+  if (!validateBoard(board)) {
+    return res.status(422).json({ code: 422, message: "Semantic error: Invalid board state" });
+  }
+
+  const gameState = determineGameState(board);
+
   const game = {
     uuid: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     name,
     difficulty,
-    gameState: "unknown",
+    gameState,
     board,
   };
 
@@ -77,7 +84,7 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     row.board = JSON.parse(row.board);
-    res.json(row);
+    res.json({ ...row, playing: getPlaying(row.board) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
@@ -88,23 +95,42 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
   const { name, difficulty, board } = req.body;
 
+  if (!name || !difficulty || !board) {
+    return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
+  }
+
+  if (!validateBoard(board)) {
+    return res.status(422).json({ code: 422, message: "Semantic error: Invalid board state" });
+  }
+
+  const gameState = determineGameState(board);
+
+  const updatedGame = {
+    name,
+    difficulty,
+    gameState,
+    board,
+    updatedAt: new Date().toISOString(),
+  };
+
   try {
-    const db = require("./db").getDb();
-    const existing = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
-    if (!existing) {
+    const db = getDb();
+    const result = await db.run(
+      `UPDATE games SET name = ?, difficulty = ?, gameState = ?, board = ?, updatedAt = ? WHERE uuid = ?`,
+      [updatedGame.name, updatedGame.difficulty, updatedGame.gameState, JSON.stringify(updatedGame.board), updatedGame.updatedAt, uuid]
+    );
+    if (result.affectedRows === 0) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
 
-    const updatedAt = new Date().toISOString();
-    await db.run(
-      `UPDATE games SET name = ?, difficulty = ?, board = ?, updatedAt = ? WHERE uuid = ?`,
-      [name, difficulty, JSON.stringify(board), updatedAt, uuid]
-    );
-
-    res.json({ ...existing, name, difficulty, board, updatedAt });
+    const updatedRow = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
+    if (!updatedRow) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    updatedRow.board = JSON.parse(updatedRow.board);
+    res.status(200).json(updatedRow);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ code: 500, message: "Internal Server Error" });
+    res.status(500).json({ code: 500, message: "Internal server error" });
   }
 });
 
@@ -112,14 +138,28 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
-    const db = require("./db").getDb();
-    const existing = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
-    if (!existing) {
+    const db = getDb();
+    const result = await db.collection("games").deleteOne({ uuid });
+    if (result.deletedCount === 0) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
-
-    await db.run(`DELETE FROM games WHERE uuid = ?`, [uuid]);
     res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+// Endpoint for handling game field clicks
+app.put("/api/v1/gameFieldClick", async (req, res) => {
+  const { row, col, board } = req.body;
+  const newGameData = { 
+    ...req.body, 
+    board: playField(row, col, board, getPlaying(board)), 
+    playing: getPlaying(board) 
+  }
+
+  try {
+    res.json(newGameData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
@@ -139,6 +179,19 @@ app.use((err, req, res, next) => {
 // Graceful shutdown
 process.on("SIGINT", async () => {
   try {
+    console.log("Received SIGINT. Closing database connection...");
+    await closeDatabase();
+    console.log("Database connection closed");
+    process.exit(0);
+  } catch (err) {
+    console.error("Error during shutdown:", err.message);
+    process.exit(1);
+  }
+});
+
+process.on("SIGTERM", async () => {
+  try {
+    console.log("Received SIGTERM. Closing database connection...");
     await closeDatabase();
     console.log("Database connection closed");
     process.exit(0);

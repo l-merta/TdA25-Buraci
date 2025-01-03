@@ -62,6 +62,8 @@ const closeDatabase = async () => {
       console.log("Closed MySQL database connection.");
     } catch (err) {
       console.error("Error closing MySQL database connection:", err);
+    } finally {
+      connection = null;
     }
   }
 };
