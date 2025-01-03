@@ -28,7 +28,7 @@ const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
   const rounds = Math.floor(moves / 2);
 
-  if (checkPotentialWin(board, 4, players)) return 'koncovka';
+  if (checkPotentialWin(board, 4, players)) return 'endgame';
   if (rounds <= 5) return 'opening';
   if (rounds >= 6) return 'midgame';
   return 'unknown';
@@ -40,7 +40,16 @@ const validateBoard = (board) => {
     return false;
   }
   const validSymbols = ['X', 'O', ''];
-  return board.flat().every(cell => validSymbols.includes(cell));
+  const flatBoard = board.flat();
+  if (!flatBoard.every(cell => validSymbols.includes(cell))) {
+    return false;
+  }
+  const xCount = flatBoard.filter(cell => cell === 'X').length;
+  const oCount = flatBoard.filter(cell => cell === 'O').length;
+  if (xCount !== oCount && xCount !== oCount + 1) {
+    return false;
+  }
+  return true;
 };
 
 const checkWin = (board, winLength, players) => {
