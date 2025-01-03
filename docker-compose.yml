@@ -18,7 +18,6 @@ services:
       dockerfile: Dockerfile.server
     ports:
       - '5200:5200'  # Map host port 5200 to container port 5200 for Express API
-      - '5201:5201'
     volumes:
       - ./server:/app  # Mount server files for live reloading
       - /app/node_modules  # Exclude node_modules for compatibility
