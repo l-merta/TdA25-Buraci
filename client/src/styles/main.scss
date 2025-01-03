@@ -60,6 +60,51 @@ h1 {
         align-items: center;
         transition: .12s;
 
+        .text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+
+            .game-name {
+                font: 500 1.1rem var(--f1);
+            }
+            .att {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                .game-state {
+                    font: 400 0.9rem var(--f1);
+                }
+                .game-difficulty {
+                    color: var(--c1);
+                    background-color: rgb(199, 199, 199);
+                    font: 500 0.9rem var(--f1);
+                    border-radius: 0.3rem;
+                    padding: 0.1rem 0.5rem;
+                }
+                .game-difficulty-beginner {
+                    color: rgb(10, 119, 0);
+                    background-color: rgba(21, 255, 0, 0.25);
+                }
+                .game-difficulty-easy {
+                    color: rgb(80, 102, 0);
+                    background-color: rgba(102, 255, 0, 0.25);
+                }
+                .game-difficulty-medium {
+                    color: rgb(94, 87, 0);
+                    background-color: rgba(238, 255, 0, 0.25);
+                }
+                .game-difficulty-hard {
+                    color: rgb(94, 22, 0);
+                    background-color: rgba(255, 72, 0, 0.25);
+                }
+                .game-difficulty-extreme {
+                    color: var(--c1);
+                    background-color: rgb(199, 199, 199);
+                }
+            }
+        }
         .actions {
             display: flex;
             gap: 0.5rem;

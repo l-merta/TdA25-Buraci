@@ -66,7 +66,13 @@ const GameList = () => {
     <div className="games-list" style={{ maxWidth: "45rem"}}>
       {games && games.map((game) => (
         <div className="game" key={game.uuid}>
-          <span className="game-name">{game.name}</span>
+          <div className="text">
+            <span className="game-name">{game.name}</span>
+            <div className="att">
+              <span className={"game-difficulty game-difficulty-" + game.difficulty}>{game.difficulty}</span>
+              <span className="game-state">{game.gameState}</span>
+            </div>
+          </div>
           <div className="actions">
             <button onClick={() => playGame(game.uuid)} className="button-main">Hrát</button>
             <button onClick={() => editGame(game.uuid)} className="button-main"><i className="fa-regular fa-pen-to-square"></i></button>

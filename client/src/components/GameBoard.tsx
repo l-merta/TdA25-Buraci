@@ -26,7 +26,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         name: "",
         difficulty: "test diff",
         board: Array.from({ length: size }, () => Array(size).fill('')),
-        playing: players.length - 1
+        playing: players.length - 1,
+        gameState: "unknown"
     });
 
     // Get game with uuid from API
