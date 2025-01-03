@@ -28,9 +28,9 @@ const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
   const rounds = Math.ceil(moves / 2);
 
-  if (checkPotentialWin(board, 4, players)) return 'endgame';
-  if (rounds <= 5) return 'opening';
-  if (rounds >= 6) return 'midgame';
+  if (checkPotentialWin(board, 4, 'X')) return 'endgame';
+  if (rounds <= 5) return 'opening'; // 5 rounds or less
+  if (rounds >= 6) return 'midgame'; // 6 rounds or more
   return 'unknown';
 };
 
@@ -97,13 +97,12 @@ const checkWin = (board, winLength, players) => {
   return null; // No winner
 };
 
-const checkPotentialWin = (board, winLength, players) => {
+const checkPotentialWin = (board, winLength, player) => {
   const numRows = board.length;
   const numCols = board[0].length;
 
   const checkDirection = (row, col, rowDir, colDir) => {
-    const player = board[row][col];
-    if (!players.includes(player)) return null;
+    if (board[row][col] !== player) return null;
 
     const coordinates = [{ row, col }];
 
@@ -130,6 +129,14 @@ const checkPotentialWin = (board, winLength, players) => {
     const prevCellEmpty = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] === '';
 
     if (nextCellEmpty || prevCellEmpty) {
+      // Check if the potential win is blockable
+      const nextCellBlocked = nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] !== '' && board[nextRow][nextCol] !== player;
+      const prevCellBlocked = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] !== '' && board[prevRow][prevCol] !== player;
+
+      if (nextCellBlocked && prevCellBlocked) {
+        return null; // Blocked on both sides
+      }
+
       return { player, coordinates };
     }
 
