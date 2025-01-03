@@ -115,11 +115,20 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
 
   try {
     const db = getDb();
-    const result = await db.collection("games").updateOne({ uuid }, { $set: updatedGame });
-    if (result.matchedCount === 0) {
+    const result = await db.run(
+      `UPDATE games SET name = ?, difficulty = ?, gameState = ?, board = ?, updatedAt = ? WHERE uuid = ?`,
+      [updatedGame.name, updatedGame.difficulty, updatedGame.gameState, JSON.stringify(updatedGame.board), updatedGame.updatedAt, uuid]
+    );
+    if (result.affectedRows === 0) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
-    res.status(200).json(updatedGame);
+
+    const updatedRow = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
+    if (!updatedRow) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    updatedRow.board = JSON.parse(updatedRow.board);
+    res.status(200).json(updatedRow);
   } catch (error) {
     res.status(500).json({ code: 500, message: "Internal server error" });
   }

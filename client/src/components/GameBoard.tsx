@@ -9,7 +9,7 @@ interface GameDataProps {
     difficulty: string;
     gameState: string;
     board: Array<String>;
-  }
+}
 interface GameBoardProps {
     size: number;
     editMode?: boolean;
@@ -24,7 +24,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
-        difficulty: "test diff",
+        difficulty: "medium",
         board: Array.from({ length: size }, () => Array(size).fill('')),
         playing: players.length - 1,
         gameState: "unknown"
