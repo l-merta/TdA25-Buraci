@@ -26,11 +26,11 @@ const playField = (row, col, board, player) => { // Function to update game fiel
 // Helper function to determine game state
 const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
-  const rounds = Math.ceil(moves / 2);
+  const rounds = Math.floor(moves / 2);
 
-  if (checkPotentialWin(board, 4, players)) return 'endgame';
-  if (rounds <= 5) return 'opening';
-  if (rounds >= 6) return 'midgame';
+  if (checkPotentialWin(board, 4, players)) return 'endgame'; // Use "endgame" instead of "koncovka"
+  if (rounds <= 2) return 'opening'; // 5 moves or less is 2 rounds or less
+  if (rounds >= 3) return 'midgame'; // 6 moves or more is 3 rounds or more
   return 'unknown';
 };
 
@@ -126,10 +126,10 @@ const checkPotentialWin = (board, winLength, players) => {
     const prevRow = row - rowDir;
     const prevCol = col - colDir;
 
-    if (
-      (nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] === '') ||
-      (prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] === '')
-    ) {
+    const nextCellEmpty = nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] === '';
+    const prevCellEmpty = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] === '';
+
+    if (nextCellEmpty || prevCellEmpty) {
       return { player, coordinates };
     }
 
