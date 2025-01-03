@@ -28,7 +28,7 @@ const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
   const rounds = Math.ceil(moves / 2);
 
-  if (checkPotentialWin(board, 4, players, 'X')) return 'endgame';
+  if (checkPotentialWin(board, 4, players)) return 'endgame';
   if (rounds <= 5) return 'opening';
   if (rounds >= 6) return 'midgame';
   return 'unknown';
@@ -97,7 +97,7 @@ const checkWin = (board, winLength, players) => {
   return null; // No winner
 };
 
-const checkPotentialWin = (board, winLength, players, forPlayer) => {
+const checkPotentialWin = (board, winLength, players) => {
   const numRows = board.length;
   const numCols = board[0].length;
 
@@ -129,7 +129,7 @@ const checkPotentialWin = (board, winLength, players, forPlayer) => {
     const nextCellEmpty = nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] === '';
     const prevCellEmpty = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] === '';
 
-    if ((nextCellEmpty || prevCellEmpty) && player === forPlayer) {
+    if (nextCellEmpty || prevCellEmpty) {
       return { player, coordinates };
     }
 
