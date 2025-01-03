@@ -26,10 +26,9 @@ const playField = (row, col, board, player) => { // Function to update game fiel
 // Helper function to determine game state
 const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
+  if (checkPotentialWin(board, 4, players)) return 'koncovka';
   if (moves <= 5) return 'opening';
   if (moves >= 6) return 'midgame';
-  // Add logic to check for endgame conditions
-  // ...
   return 'unknown';
 };
 
@@ -42,4 +41,108 @@ const validateBoard = (board) => {
   return board.flat().every(cell => validSymbols.includes(cell));
 };
 
-module.exports = { getPlaying, playField, determineGameState, validateBoard };
+const checkWin = (board, winLength, players) => {
+  const numRows = board.length;
+  const numCols = board[0].length;
+
+  const checkDirection = (row, col, rowDir, colDir) => {
+    const player = board[row][col];
+    if (!players.includes(player)) return null;
+
+    const coordinates = [{ row, col }];
+
+    for (let i = 1; i < winLength; i++) {
+      const newRow = row + i * rowDir;
+      const newCol = col + i * colDir;
+      if (
+        newRow < 0 || newRow >= numRows ||
+        newCol < 0 || newCol >= numCols ||
+        board[newRow][newCol] !== player
+      ) {
+        return null;
+      }
+      coordinates.push({ row: newRow, col: newCol });
+    }
+    return { player, coordinates };
+  };
+
+  for (let row = 0; row < numRows; row++) {
+    for (let col = 0; col < numCols; col++) {
+      const directions = [
+        checkDirection(row, col, 0, 1),  // Horizontal
+        checkDirection(row, col, 1, 0),  // Vertical
+        checkDirection(row, col, 1, 1),  // Diagonal down-right
+        checkDirection(row, col, 1, -1)  // Diagonal down-left
+      ];
+
+      for (const result of directions) {
+        if (result) {
+          return result;
+        }
+      }
+    }
+  }
+
+  return null; // No winner
+};
+
+const checkPotentialWin = (board, winLength, players) => {
+  const numRows = board.length;
+  const numCols = board[0].length;
+
+  const checkDirection = (row, col, rowDir, colDir) => {
+    const player = board[row][col];
+    if (!players.includes(player)) return null;
+
+    const coordinates = [{ row, col }];
+
+    for (let i = 1; i < winLength; i++) {
+      const newRow = row + i * rowDir;
+      const newCol = col + i * colDir;
+      if (
+        newRow < 0 || newRow >= numRows ||
+        newCol < 0 || newCol >= numCols ||
+        board[newRow][newCol] !== player
+      ) {
+        return null;
+      }
+      coordinates.push({ row: newRow, col: newCol });
+    }
+
+    // Check if the next move can complete the win
+    const nextRow = row + winLength * rowDir;
+    const nextCol = col + winLength * colDir;
+    const prevRow = row - rowDir;
+    const prevCol = col - colDir;
+
+    if (
+      (nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] === '') ||
+      (prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] === '')
+    ) {
+      return { player, coordinates };
+    }
+
+    return null;
+  };
+
+  for (let row = 0; row < numRows; row++) {
+    for (let col = 0; col < numCols; col++) {
+      const directions = [
+        checkDirection(row, col, 0, 1),  // Horizontal
+        checkDirection(row, col, 1, 0),  // Vertical
+        checkDirection(row, col, 1, 1),  // Diagonal down-right
+        checkDirection(row, col, 1, -1)  // Diagonal down-left
+      ];
+
+      for (const result of directions) {
+        if (result) {
+          return result;
+        }
+      }
+    }
+  }
+
+  return null; // No potential win
+};
+
+module.exports = { players, getPlaying, playField, determineGameState, validateBoard, checkWin, checkPotentialWin };
