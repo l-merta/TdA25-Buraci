@@ -138,13 +138,14 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
-    const db = getDb();
-    const result = await db.collection("games").deleteOne({ uuid });
-    if (result.deletedCount === 0) {
+    const db = require("./db").getDb();
+    const result = await db.run(`DELETE FROM games WHERE uuid = ?`, [uuid]);
+    if (result.affectedRows === 0) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     res.status(204).send();
   } catch (error) {
+    console.error(error);
     res.status(500).json({ code: 500, message: "Internal server error" });
   }
 });
