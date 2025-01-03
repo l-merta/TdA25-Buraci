@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
-const { getPlaying, playField, determineGameState, validateBoard } = require("./gameplay");
+const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, checkPotentialWin } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
@@ -155,8 +155,14 @@ app.put("/api/v1/gameFieldClick", async (req, res) => {
   const newGameData = { 
     ...req.body, 
     board: playField(row, col, board, getPlaying(board)), 
-    playing: getPlaying(board) 
+    playing: getPlaying(board),
+    win: null
   }
+
+  // Check win
+  //console.log("win check: ", checkWin(newGameData.board, 5, players));
+  //console.log("poten. win check: ", checkPotentialWin(newGameData.board, 4, players));
+  newGameData.win = checkWin(newGameData.board, 5, players);
 
   try {
     res.json(newGameData);

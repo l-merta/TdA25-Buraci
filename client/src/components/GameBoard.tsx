@@ -70,6 +70,9 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                 const data = await response.json();
                 setGameData(data);
                 //console.log("Field played successfully:", data, data.uuid);
+                if (data.win) {
+                    console.log("Player " + data.win.player + " won!");
+                }
             } catch (error: any) {
                 console.error("Error playing field:", error.message);
             }
