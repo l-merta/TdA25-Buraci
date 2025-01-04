@@ -97,11 +97,11 @@ const checkWin = (board, winLength, players) => {
   return null; // No winner
 };
 
-const checkPotentialWin = (board, winLength, player) => {
+const checkPotentialWin = (board, winLength, players) => {
   const numRows = board.length;
   const numCols = board[0].length;
 
-  const checkDirection = (row, col, rowDir, colDir) => {
+  const checkDirection = (row, col, rowDir, colDir, player) => {
     if (board[row][col] !== player) return null;
 
     const coordinates = [{ row, col }];
@@ -134,6 +134,7 @@ const checkPotentialWin = (board, winLength, player) => {
       const prevCellBlocked = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] !== '' && board[prevRow][prevCol] !== player;
 
       if (nextCellBlocked && prevCellBlocked) {
+        //console.log("returning null protože blocked obě strany");
         return null; // Blocked on both sides
       }
 
@@ -141,9 +142,11 @@ const checkPotentialWin = (board, winLength, player) => {
       const moves = board.flat().filter(cell => cell !== '').length;
       const nextPlayer = players[moves % players.length];
       if (nextPlayer !== player) {
+        //console.log("returning null protože další hráč to blokne");
         return null; // The next player will block the potential win
       }
 
+      //console.log("returning win pro " + player);
       return { player, coordinates };
     }
 
@@ -152,16 +155,18 @@ const checkPotentialWin = (board, winLength, player) => {
 
   for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
-      const directions = [
-        checkDirection(row, col, 0, 1),  // Horizontal
-        checkDirection(row, col, 1, 0),  // Vertical
-        checkDirection(row, col, 1, 1),  // Diagonal down-right
-        checkDirection(row, col, 1, -1)  // Diagonal down-left
-      ];
+      for (const player of players) {
+        const directions = [
+          checkDirection(row, col, 0, 1, player),  // Horizontal
+          checkDirection(row, col, 1, 0, player),  // Vertical
+          checkDirection(row, col, 1, 1, player),  // Diagonal down-right
+          checkDirection(row, col, 1, -1, player)  // Diagonal down-left
+        ];
 
-      for (const result of directions) {
-        if (result) {
-          return result;
+        for (const result of directions) {
+          if (result) {
+            return result;
+          }
         }
       }
     }
