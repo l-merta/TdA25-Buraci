@@ -16,7 +16,7 @@ const connectToDatabase = async () => {
       password: process.env.DB_PASSWORD, // MySQL password from .env file
       database: process.env.DB_NAME,      // MySQL database name from .env file
     });
-    console.log("Connected to MySQL database.");
+    //console.log("Connected to MySQL database.");
   } catch (err) {
     console.error("Error connecting to MySQL database:", err);
     throw err;
@@ -59,7 +59,7 @@ const closeDatabase = async () => {
   if (connection) {
     try {
       await connection.end();
-      console.log("Closed MySQL database connection.");
+      //console.log("Closed MySQL database connection.");
     } catch (err) {
       console.error("Error closing MySQL database connection:", err);
     } finally {

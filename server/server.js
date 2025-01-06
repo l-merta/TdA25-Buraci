@@ -41,35 +41,42 @@ app.post("/api/v1/games", async (req, res) => {
   };
 
   try {
-    const db = require("./db").getDb();
+    await connectToDatabase();
+    const db = getDb();
     await db.run(
-      `INSERT INTO games (uuid, createdAt, updatedAt, name, difficulty, gameState, board) VALUES (?, ?, ?, ?, ?, ?, ?)`
-    , [
-      game.uuid,
-      game.createdAt,
-      game.updatedAt,
-      game.name,
-      game.difficulty,
-      game.gameState,
-      JSON.stringify(game.board),
-    ]);
+      `INSERT INTO games (uuid, createdAt, updatedAt, name, difficulty, gameState, board) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        game.uuid,
+        game.createdAt,
+        game.updatedAt,
+        game.name,
+        game.difficulty,
+        game.gameState,
+        JSON.stringify(game.board),
+      ]
+    );
+    await closeDatabase();
     res.status(201).json(game);
   } catch (error) {
-    console.error(error);
+    console.error("Error inserting game into database:", error);
+    await closeDatabase();
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
 
 app.get("/api/v1/games", async (req, res) => {
   try {
-    const db = require("./db").getDb();
+    await connectToDatabase();
+    const db = getDb();
     const rows = await db.all(`SELECT * FROM games`);
     rows.forEach(row => {
       row.board = JSON.parse(row.board); // Convert board back to JSON
     });
+    await closeDatabase();
     res.json(rows);
   } catch (error) {
     console.error(error);
+    await closeDatabase();
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
@@ -78,15 +85,19 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
-    const db = require("./db").getDb();
+    await connectToDatabase();
+    const db = getDb();
     const row = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
     if (!row) {
+      await closeDatabase();
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     row.board = JSON.parse(row.board);
+    await closeDatabase();
     res.json({ ...row, playing: getPlaying(row.board) });
   } catch (error) {
     console.error(error);
+    await closeDatabase();
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
@@ -114,22 +125,27 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
   };
 
   try {
+    await connectToDatabase();
     const db = getDb();
     const result = await db.run(
       `UPDATE games SET name = ?, difficulty = ?, gameState = ?, board = ?, updatedAt = ? WHERE uuid = ?`,
       [updatedGame.name, updatedGame.difficulty, updatedGame.gameState, JSON.stringify(updatedGame.board), updatedGame.updatedAt, uuid]
     );
     if (result.affectedRows === 0) {
+      await closeDatabase();
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
 
     const updatedRow = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
     if (!updatedRow) {
+      await closeDatabase();
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
     updatedRow.board = JSON.parse(updatedRow.board);
+    await closeDatabase();
     res.status(200).json(updatedRow);
   } catch (error) {
+    await closeDatabase();
     res.status(500).json({ code: 500, message: "Internal server error" });
   }
 });
@@ -138,14 +154,18 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
-    const db = require("./db").getDb();
+    await connectToDatabase();
+    const db = getDb();
     const result = await db.run(`DELETE FROM games WHERE uuid = ?`, [uuid]);
     if (result.affectedRows === 0) {
+      await closeDatabase();
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
+    await closeDatabase();
     res.status(204).send();
   } catch (error) {
     console.error(error);
+    await closeDatabase();
     res.status(500).json({ code: 500, message: "Internal server error" });
   }
 });
