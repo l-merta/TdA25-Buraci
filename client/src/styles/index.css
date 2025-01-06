@@ -1,11 +1,22 @@
 :root {
-  --c1: black;
-  --c2: whitesmoke;
+  --c1: #080808;
+  --c2: #1A1A1A;
+  --c3: #F6F6F6;
+  --c4: #FFFFFF;
+  --c5: #E31837;
+  --c6: #0070BB;
+  --c7: #395A9A;
+  --c8: #724479;
+  --c9: #AB2E58;
   --c-warn: rgb(247, 66, 66);
 
-  --f1: "Poppins";
+  --f1: "Dosis";
+
+  --header-h: 5rem;
+  --main-b-gap: 5rem;
 }
 body {
+  background-color: var(--c3);
   font-family: var(--f1);
   margin: 0;
 }

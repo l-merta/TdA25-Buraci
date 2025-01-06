@@ -10,6 +10,8 @@ import Error from './pages/Error.tsx'
 
 import './styles/index.css'
 import './styles/main.css';
+import './styles/game.css';
+import './styles/game-list.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

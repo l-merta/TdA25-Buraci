@@ -1,141 +1,52 @@
-
-h1 {
-    margin: 0;
+header {
+    color: var(--c3);
+    background-color: var(--c6);
+    font: 700 1.4rem var(--f1);
+    width: 100%;
+    height: var(--header-h);
+    padding: 0 3vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
 }
-.game-board-container {
-    width: 45rem;
-    margin: 0 auto;
+main {
+    //background-color: red;
+    width: 100%;
+    height: calc(100vh - var(--header-h) - var(--main-b-gap));
+    margin-top: var(--header-h);
     display: flex;
     flex-direction: column;
-    align-items: start;
-    gap: 1.0rem;
+    align-items: center;
+    justify-content: center;
 
-    h1 {
-        width: 100%;
-        text-align: center;
-    }
-    .game-board {
-        //background-color: red;
-        aspect-ratio: 1/1;
-        width: 100%;
-        max-width: 45rem;
-        margin: 0 auto;
-        display: grid;
-        //grid-template-columns: repeat(var(--size), 1fr);
-    
-        .field {
-            font: 600 2rem var(--f1);
-            border: 1px solid gray;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: .1s;
-        }
-        .field:hover:not(.field-played) {
-            background-color: rgba(0, 0, 0, 0.15);
-        }
-        .field-empty {
-            color: transparent;
-        }
-        .field-played {
-            cursor: default;
-        }
-    }
-}
-
-.games-list {
-    padding: 0 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    
-    .game {
-        width: 100%;
-        border: 1px solid rgb(214, 214, 214);
-        border-radius: 0.5rem;
-        padding: 0.5rem;
+    nav {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: .12s;
-
-        .text {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-
-            .game-name {
-                font: 500 1.1rem var(--f1);
-            }
-            .att {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-
-                .game-state {
-                    font: 400 0.9rem var(--f1);
-                }
-                .game-difficulty {
-                    color: var(--c1);
-                    background-color: rgb(199, 199, 199);
-                    font: 500 0.9rem var(--f1);
-                    border-radius: 0.3rem;
-                    padding: 0.1rem 0.5rem;
-                }
-                .game-difficulty-beginner {
-                    color: rgb(10, 119, 0);
-                    background-color: rgba(21, 255, 0, 0.25);
-                }
-                .game-difficulty-easy {
-                    color: rgb(80, 102, 0);
-                    background-color: rgba(102, 255, 0, 0.25);
-                }
-                .game-difficulty-medium {
-                    color: rgb(94, 87, 0);
-                    background-color: rgba(238, 255, 0, 0.25);
-                }
-                .game-difficulty-hard {
-                    color: rgb(94, 22, 0);
-                    background-color: rgba(255, 72, 0, 0.25);
-                }
-                .game-difficulty-extreme {
-                    color: var(--c1);
-                    background-color: rgb(199, 199, 199);
-                }
-            }
-        }
-        .actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-    }
-    .game:hover {
-        background-color: rgba(0, 0, 0, 0.03);
+        justify-content: center;
+        gap: 1.0rem;
     }
 }
-.button-main {
-    color: var(--c1);
+.button {
+    color: var(--c2);
     background-color: transparent;
-    font: 500 1.0rem var(--f1);
-    border: 1px solid var(--c1);
-    border-radius: 0.5rem;
-    padding: 0.4rem 0.6rem;
-    transition: .12s;
-    cursor: pointer;
+    font: 600 1.2rem var(--f1);
+    border: none;
+    border-radius: 2rem;
+    padding: 0.7rem 1.8rem;
+    text-decoration: none;
+
+    &.button-1 {
+        color: var(--c4);
+        background-color: var(--c2);
+    }
+    &.button-2 {
+        color: var(--c2);
+        background-color: transparent;
+        border: 1px solid var(--c2);
+    }
 }
-.button-main:hover {
-    color: var(--c2);
-    background-color: var(--c1);
-}
-.button-warning {
-    color: var(--c-warn);
-    border-color: var(--c-warn);
-}
-.button-warning:hover {
-    color: var(--c2);
-    background-color: var(--c-warn);
-}
+
 input[type=text] {
     color: var(--c1);
     background-color: transparent;
