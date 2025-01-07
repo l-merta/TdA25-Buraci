@@ -1,25 +1,67 @@
+.bg-grad {
+  background: rgb(227, 24, 55);
+  background: linear-gradient(90deg, rgba(227, 24, 55, var(--opacity)) 0%, rgba(111, 69, 122, 0) var(--from-edge), rgba(42, 96, 162, 0) calc(100% - var(--from-edge)), rgba(0, 112, 187, var(--opacity)) 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
 header {
   color: var(--c3);
   background-color: var(--c6);
   font: 700 1.4rem var(--f1);
   width: 100%;
   height: var(--header-h);
-  padding: 0 3vw;
+  border-bottom: 1rem solid var(--c2);
+  padding: 0.9rem 3vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
+  z-index: 100;
+}
+header img {
+  height: 120%;
+}
+header a {
+  height: 100%;
 }
 
 main {
   width: 100%;
   height: calc(100vh - var(--header-h) - var(--main-b-gap));
   margin-top: var(--header-h);
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+main img {
+  width: 8rem;
+}
+main h1 {
+  margin: 1rem 0;
+  margin-bottom: 0rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+main h1 .main {
+  font: 800 4rem var(--f1);
+}
+main h1 .sec {
+  font: 700 2.4rem var(--f1);
+}
+main p {
+  font: 400 1.8rem var(--f1);
+  max-width: 50rem;
+  margin: 1.5rem 0;
+  text-align: center;
 }
 main nav {
   display: flex;
@@ -27,23 +69,81 @@ main nav {
   gap: 1rem;
 }
 
+.sec-ai {
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+.sec-ai .s1 {
+  display: flex;
+  flex-direction: column;
+}
+.sec-ai .s1 p {
+  margin: 1rem 0;
+}
+.sec-ai .s1 .actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.sec-ai .s2 .board {
+  background-color: var(--c4);
+  aspect-ratio: 1/1;
+  width: 30rem;
+  border: 1px solid var(--c10);
+  border-radius: 0.8rem;
+}
+
+b.b-red {
+  color: var(--c5);
+}
+b.b-blue {
+  color: var(--c6);
+}
+
 .button {
   color: var(--c2);
   background-color: transparent;
-  font: 600 1.2rem var(--f1);
+  font: 700 1.2rem var(--f1);
+  width: -moz-fit-content;
+  width: fit-content;
   border: none;
-  border-radius: 2rem;
+  border-radius: 0.8rem;
   padding: 0.7rem 1.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-decoration: none;
 }
 .button.button-1 {
-  color: var(--c4);
-  background-color: var(--c2);
+  font: 600 1.6rem var(--f1);
 }
 .button.button-2 {
+  font: 700 1.4rem var(--f1);
+}
+.button.button-black {
+  color: var(--c4);
+  background-color: var(--c2);
+  border: 0px solid var(--c2);
+}
+.button.button-red {
+  color: var(--c4);
+  background-color: var(--c5);
+  border: 0px solid var(--c5);
+}
+.button.button-blue {
+  color: var(--c4);
+  background-color: var(--c6);
+  border: 0px solid var(--c6);
+}
+.button.button-border {
   color: var(--c2);
   background-color: transparent;
-  border: 1px solid var(--c2);
+  border-width: 1px;
 }
 
 input[type=text] {
