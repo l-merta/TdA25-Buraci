@@ -112,7 +112,7 @@ b.b-blue {
   width: -moz-fit-content;
   width: fit-content;
   border: none;
-  border-radius: 0.8rem;
+  border-radius: 0.5rem;
   padding: 0.7rem 1.8rem;
   display: flex;
   justify-content: center;

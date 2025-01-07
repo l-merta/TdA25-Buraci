@@ -36,7 +36,7 @@ function App() {
           <p>Táda je naše šikovné AI, které miluje piškvorky a neudělá ti to jednoduché. Přijmi výzvu, procvič svou strategii a zjisti, jestli dokážeš najít cestu k vítězství! Budeš lepší než Táda, nebo se necháš přechytračit?</p>
           <div className="actions">
             <Link to="/game" className='button button-red'>Vyzkoušej své schopnosti!</Link>
-            <Link to="/game" className='button button-red button-border'>Seznam her</Link>
+            <Link to="/games" className='button button-red button-border'>Seznam her</Link>
           </div>
         </div>
         <div className="s2">
