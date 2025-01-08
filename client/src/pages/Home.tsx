@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import Effect from './../components/Effect';
 import Header from './../components/Header';
-import Footer from './../components/Footer';
+//import Footer from './../components/Footer';
 
 function App() {
   return (
