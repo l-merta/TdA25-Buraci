@@ -9,7 +9,7 @@ const Effect: React.FC = () => {
     if (!canvas || !context) return;
 
     let f = 0; // Frame counter
-    const nbFrames = 100; // Number of frames for animation
+    const nbFrames = 400; // Number of frames for animation
     const easing = 0.01; // Easing factor for smooth transitions
     let c1: string, c2: string; // Colors for background and objects
 

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { Link } from "react-router-dom";
 
 import Effect from './../components/Effect';
+import GameBoard from "./../components/GameBoard";
 import Header from './../components/Header';
 //import Footer from './../components/Footer';
 
@@ -40,7 +41,9 @@ function App() {
           </div>
         </div>
         <div className="s2">
-          <div className="board"></div>
+          <div className="board">
+            <GameBoard size={5} />
+          </div>
         </div>
       </section>
       {/* <section>

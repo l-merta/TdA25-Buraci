@@ -22,6 +22,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
+    const [colors, setColors] = useState<Array<string>>(["cervene", "modre"]); // List of players - their symbols
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
         difficulty: "medium",
@@ -137,11 +138,15 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
             }
         }
     };
+    function getCharImage(char: String) {
+        const playerIndex = players.indexOf(char.toUpperCase());
+        return <img src={"/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png"} alt={char.toUpperCase()} />;
+    }
 
     return (
         <div className="game-board-container">
             {!editMode ? 
-                <h1>{gameData.name}</h1>
+                (gameData.name && <h1>{gameData.name}</h1>)
             :
                 <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
             }
@@ -154,7 +159,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                             key={`${rowIndex}-${colIndex}`} 
                             onClick={() => { onFieldClick(rowIndex, colIndex); }}
                         >
-                            {item || '.'}
+                            {item && getCharImage(item) 
+                            || '.'}
                         </div>
                     ))
                 )}
