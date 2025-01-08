@@ -5,6 +5,11 @@ const Header = () => {
   return (
     <header>
       <img src="/images/logos/Think-different-Academy_LOGO_oficialni-bile.png" alt="" />
+      <div className="actions">
+        <Link to="/game" className='button button-empty'>Seznam her</Link>
+        <Link to="/game" className='button button-empty'>O TdA</Link>
+        <Link to="/game" className='button button-empty'>O týmu a aplikaci</Link>
+      </div>
       <Link to="/game" className='button button-red'>Nová hra</Link>
     </header>
   )

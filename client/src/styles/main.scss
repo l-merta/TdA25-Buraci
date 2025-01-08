@@ -30,6 +30,11 @@ header {
     a {
         height: 100%;
     }
+    .actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 }
 main {
     //background-color: red;
@@ -128,6 +133,12 @@ b {
     }
     &.button-2 {
         font: 700 1.4rem var(--f1);
+    }
+    &.button-empty {
+        color: var(--c3);
+        background-color: transparent;
+        font-weight: 600;
+        border: 0px solid var(--c3);
     }
     &.button-black {
         color: var(--c4);
