@@ -42,6 +42,9 @@
 .game-board-container .wrapper .players .player .name {
   font: 600 1.2rem var(--f1);
 }
+.game-board-container .wrapper .players .player i {
+  animation: scale-up 0.1s ease-in;
+}
 .game-board-container .wrapper .players .player-playing {
   background-color: var(--c13);
 }
@@ -65,13 +68,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.1s;
+  transition: 0.12s;
   cursor: pointer;
 }
 .game-board-container .game-board .field img {
   --size: 60%;
   width: var(--size);
   height: var(--size);
+  animation: scale-up 0.15s ease-in;
 }
 .game-board-container .game-board .field-cervene:hover:not(.field-played) {
   background-color: var(--c11);
@@ -84,6 +88,17 @@
 }
 .game-board-container .game-board .field-played {
   cursor: default;
+}
+.game-board-container .game-board .field-win {
+  background-color: var(--c-win);
+}
+.game-board-container .game-board .field-win-cervene {
+  background-color: var(--c11);
+  animation: scale-pop 0.25s ease-in;
+}
+.game-board-container .game-board .field-win-modre {
+  background-color: var(--c12);
+  animation: scale-pop 0.25s ease-in;
 }
 .game-board-container .game-board-win {
   pointer-events: none;

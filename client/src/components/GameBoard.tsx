@@ -74,6 +74,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
                 setGameData(data);
                 //console.log("Field played successfully:", data, data.uuid);
                 if (data.win) {
+                    console.log(data.win);
                     console.log("Player " + data.win.player + " won!");
                 }
             } catch (error: any) {
@@ -140,9 +141,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
             }
         }
     };
-    function getCharImage(char: String) {
+    function getCharImage(char: String, useGrayScale: boolean) {
         const playerIndex = players.indexOf(char.toUpperCase());
-        return "/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png";
+        if (!useGrayScale)
+            return "/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png";
+        else 
+            return "/images/icons/" + char.toUpperCase() + "_bile.png";
+    }
+    function isWinChar(row: number, col: number) {
+        return {
+            isWin: gameData.win && gameData.win.coordinates.some((coord: any) => coord.row === row && coord.col === col),
+            color: gameData.win && colors[players.indexOf(gameData.win.player.toUpperCase())]
+        }
     }
     function getBeforePlaying() {
         let index = gameData.playing - 1;
@@ -164,7 +174,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
               {playerNames ?
                 <div className="players">
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
-                    <img src={getCharImage(players[0])} alt="" />
+                    <img src={getCharImage(players[0], false)} alt="" />
                     <div className="name">{playerNames && playerNames[0]}</div>
                     {gameData.win && gameData.win.player == players[0] ? 
                         <i className="fa-solid fa-crown"></i>
@@ -175,7 +185,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
                     {gameData.win && gameData.win.player == players[1] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}
-                    <img src={getCharImage(players[1])} alt="" />
+                    <img src={getCharImage(players[1], false)} alt="" />
                   </div>
                 </div> 
               : ""}
@@ -183,12 +193,15 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
                   {gameData.board.map((row: Array<String>, rowIndex: number) => 
                       row.map((item, colIndex) => (
                           <div 
-                              className={"field " + ("field-" + colors[getBeforePlaying()] + " ") + (!item ? "field-empty " : "field-played ")} 
+                              className={"field " + 
+                                ("field-" + colors[getBeforePlaying()] + " ") + 
+                                (!item ? "field-empty " : "field-played ") + 
+                                (gameData.win && isWinChar(rowIndex, colIndex).isWin ? "field-win-" + isWinChar(rowIndex, colIndex).color + " " : " ")} 
                               key={`${rowIndex}-${colIndex}`} 
                               onClick={() => { onFieldClick(rowIndex, colIndex); }}
                           >
                               {item && 
-                                <img src={getCharImage(item)} alt={item.toUpperCase()} /> 
+                                <img src={getCharImage(item, isWinChar(rowIndex, colIndex).isWin)} alt={item.toUpperCase()} /> 
                               || '.'}
                           </div>
                       ))

@@ -169,4 +169,32 @@ input[type=text] {
   border-radius: 0.5rem;
   padding: 0.4rem 0.6rem;
   transition: 0.12s;
+}
+
+@keyframes scale-up {
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1;
+  }
+}
+@keyframes scale-down {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 0;
+  }
+}
+@keyframes scale-pop {
+  0% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.4;
+  }
+  100% {
+    scale: 1;
+  }
 }/*# sourceMappingURL=main.css.map */

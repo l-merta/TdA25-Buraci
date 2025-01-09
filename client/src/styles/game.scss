@@ -4,95 +4,110 @@
     padding-top: 3rem;
 }
 .game-board-container {
-  width: 45rem;
-  margin: 0 auto;
+    width: 45rem;
+    margin: 0 auto;
 
-  h1 {
-      width: 100%;
-      text-align: center;
-  }
-  .wrapper {
-    background-color: var(--c10);
-    width: 100%;
-    //height: 100%;
-    border-radius: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-
-    .players {
+    h1 {
         width: 100%;
-        padding: 0.5rem;
-        padding-bottom: 0;
+        text-align: center;
+    }
+    .wrapper {
+        background-color: var(--c10);
+        width: 100%;
+        //height: 100%;
+        border-radius: 0.5rem;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        align-items: start;
 
-        .player {
-            border-radius: 0.4rem;
-            padding: 0.4rem 0.6rem;
+        .players {
+            width: 100%;
+            padding: 0.5rem;
+            padding-bottom: 0;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            transition: .12s;
 
-            img {
-                height: 1.2rem;
+            .player {
+                border-radius: 0.4rem;
+                padding: 0.4rem 0.6rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: .12s;
+
+                img {
+                    height: 1.2rem;
+                }
+                .name {
+                    font: 600 1.2rem var(--f1);
+                }
+                i {
+                    animation: scale-up 0.1s ease-in;
+                }
             }
-            .name {
-                font: 600 1.2rem var(--f1);
+            .player-playing {
+                background-color: var(--c13);
             }
-        }
-        .player-playing {
-            background-color: var(--c13);
-        }
-        .player-win {
-            background-color: var(--c-win);
+            .player-win {
+                background-color: var(--c-win);
+            }
         }
     }
-  }
-  .game-board {
-      //aspect-ratio: 1/1;
-      width: 100%;
-      height: 100%;
-      max-width: 45rem;
-      margin: 0 auto;
-      padding: 0.8rem;
-      display: grid;
-      gap: 5px;
-  
-      .field {
-        background-color: var(--c4);
-        font: 600 2rem var(--f1);
-        aspect-ratio: 1/1;
-        //border: 3px solid var(--c10);
-        border-radius: 0.3rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: .1s;
-        cursor: pointer;
+    .game-board {
+        //aspect-ratio: 1/1;
+        width: 100%;
+        height: 100%;
+        max-width: 45rem;
+        margin: 0 auto;
+        padding: 0.8rem;
+        display: grid;
+        gap: 5px;
+    
+        .field {
+            background-color: var(--c4);
+            font: 600 2rem var(--f1);
+            aspect-ratio: 1/1;
+            //border: 3px solid var(--c10);
+            border-radius: 0.3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: .12s;
+            cursor: pointer;
 
-        img {
-            --size: 60%;
-            width: var(--size);
-            height: var(--size);
+            img {
+                --size: 60%;
+                width: var(--size);
+                height: var(--size);
+                animation: scale-up 0.15s ease-in;
+            }
         }
-      }
-      .field-cervene:hover:not(.field-played) {
-          background-color: var(--c11);
-      }
-      .field-modre:hover:not(.field-played) {
-          background-color: var(--c12);
-      }
-      .field-empty {
-          color: transparent;
-      }
-      .field-played {
-          cursor: default;
-      }
-  }
-  .game-board-win {
-    pointer-events: none;
-  }
+        .field-cervene:hover:not(.field-played) {
+            background-color: var(--c11);
+        }
+        .field-modre:hover:not(.field-played) {
+            background-color: var(--c12);
+        }
+        .field-empty {
+            color: transparent;
+        }
+        .field-played {
+            cursor: default;
+        }
+        .field-win {
+            background-color: var(--c-win);
+        }
+        .field-win-cervene {
+            background-color: var(--c11);
+            animation: scale-pop 0.25s ease-in;
+        }
+        .field-win-modre {
+            background-color: var(--c12);
+            animation: scale-pop 0.25s ease-in;
+        }
+    }
+    .game-board-win {
+        pointer-events: none;
+    }
 }
