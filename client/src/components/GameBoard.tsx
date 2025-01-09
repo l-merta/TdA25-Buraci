@@ -173,7 +173,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
                   </div>
                 </div> 
               : ""}
-              <div className="game-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
+              <div className={"game-board " + (gameData.win ? "game-board-win " : "")} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
                   {gameData.board.map((row: Array<String>, rowIndex: number) => 
                       row.map((item, colIndex) => (
                           <div 

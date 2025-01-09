@@ -81,4 +81,7 @@
 }
 .game-board-container .game-board .field-played {
   cursor: default;
+}
+.game-board-container .game-board-win {
+  pointer-events: none;
 }/*# sourceMappingURL=game.css.map */

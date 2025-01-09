@@ -89,4 +89,7 @@
           cursor: default;
       }
   }
+  .game-board-win {
+    pointer-events: none;
+  }
 }
