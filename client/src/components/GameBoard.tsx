@@ -12,11 +12,12 @@ interface GameDataProps {
 }
 interface GameBoardProps {
     size: number;
+    replayButton?: boolean;
     playerNames?: Array<String>;
     editMode?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, editMode }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
@@ -33,25 +34,25 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
         gameState: "unknown"
     });
 
+    const fetchGameData = async () => {
+        if (uuid) {
+            try {
+                const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json(); // Parse JSON data
+                setGameData(result);
+                console.log(result);
+            } catch (error: any) {
+                console.log(error.message); // Set error message if there's an issue
+            }
+        }
+    };
+
     // Get game with uuid from API
     useEffect(() => {
-        if (uuid) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const result = await response.json(); // Parse JSON data
-                    setGameData(result);
-                    console.log(result);
-                } catch (error: any) {
-                    console.log(error.message); // Set error message if there's an issue
-                }
-            };
-        
-            fetchData(); // Call the fetch function
-        }
+        fetchGameData(); // Call the fetch function
     }, []); // Empty dependency array means this runs once on mount
 
     async function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
@@ -141,6 +142,19 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
             }
         }
     };
+
+    function resetGame() {
+        setGameData((prevData: any) =>{
+            return {
+                ...prevData,
+                board: Array.from({ length: size }, () => Array(size).fill('')),
+                playing: players.length - 1,
+                win: null
+            }
+        });
+        fetchGameData(); // Fetch the game data again after resetting
+    }
+
     function getCharImage(char: String, useGrayScale: boolean) {
         const playerIndex = players.indexOf(char.toUpperCase());
         if (!useGrayScale)
@@ -148,17 +162,17 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
         else 
             return "/images/icons/" + char.toUpperCase() + "_bile.png";
     }
+
     function isWinChar(row: number, col: number) {
         return {
             isWin: gameData.win && gameData.win.coordinates.some((coord: any) => coord.row === row && coord.col === col),
             color: gameData.win && colors[players.indexOf(gameData.win.player.toUpperCase())]
         }
     }
+
     function getBeforePlaying() {
         let index = gameData.playing - 1;
-        //console.log(index);
         index < 0 ? index = players.length - 1 : index;
-        //console.log(index);
         return index;
     }
 
@@ -180,6 +194,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
                         <i className="fa-solid fa-crown"></i>
                     : ""}
                   </div>
+                  {replayButton ?
+                    <button className='replay' onClick={resetGame}>
+                        <i className="fa-solid fa-repeat"></i>
+                        <span>Hrát znovu</span>
+                    </button>
+                  : ""}
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
                     <div className="name">{playerNames && playerNames[1]}</div>
                     {gameData.win && gameData.win.player == players[1] ? 

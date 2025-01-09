@@ -2,7 +2,17 @@
 
 const Footer = () => {
   return (
-    <footer>Footer - Think Different Academy</footer>
+    <footer>
+      <div className="names">
+        <img src="/images/logos/Think-different-Academy_LOGO_textove-bile2.png" alt="" />
+        <span className="team">Vytvořil tým Buráci</span>
+      </div>
+      <div className="social">
+        <a href="https://github.com/l-merta/TdA25-Buraci" target="_blank">
+          <i className="fa-brands fa-github"></i>
+        </a>
+      </div>
+    </footer>
   )
 }
 

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Effect from './../components/Effect';
 import GameBoard from "./../components/GameBoard";
 import Header from './../components/Header';
-//import Footer from './../components/Footer';
+import Footer from './../components/Footer';
 
 function App() {
   return (
@@ -42,10 +42,11 @@ function App() {
         </div>
         <div className="s2">
           <div className="board">
-            <GameBoard size={5} playerNames={["Táda", "Táda"]} />
+            <GameBoard size={10} playerNames={["Táda", "Táda"]} />
           </div>
         </div>
       </section>
+      <Footer />
       {/* <section>
         <h2>O Think Different Academy</h2>
       </section>

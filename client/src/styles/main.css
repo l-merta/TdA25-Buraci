@@ -80,6 +80,7 @@ main nav {
   width: 100%;
   max-width: 70rem;
   margin: 0 auto;
+  padding-bottom: 3rem;
   display: flex;
   justify-content: center;
   align-items: start;
@@ -104,6 +105,45 @@ main nav {
 .sec-ai .s2 .board .game-board-container {
   width: 100%;
   height: 100%;
+}
+
+footer {
+  color: var(--c3);
+  background-color: var(--c2);
+  width: 100%;
+  height: var(--footer-h);
+  margin-top: 4rem;
+  padding: 1.5rem 3vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+footer .names {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+footer .names img {
+  height: 100%;
+}
+footer .names .team {
+  color: var(--c3);
+  opacity: 0.6;
+  font: 500 1.1rem var(--f1);
+}
+footer .social {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+footer .social a {
+  color: var(--c3);
+  font-size: 2rem;
+  transition: 0.12s;
+}
+footer .social a:hover {
+  scale: 0.95;
 }
 
 b.b-red {
@@ -158,6 +198,30 @@ b.b-blue {
   color: var(--c2);
   background-color: transparent;
   border-width: 1px;
+}
+
+.replay {
+  background-color: var(--c13);
+  font: 600 1.1rem var(--f1);
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: 0.12s;
+  cursor: pointer;
+}
+.replay i {
+  font-size: 1rem;
+}
+
+.replay:hover {
+  opacity: 0.8;
+}
+
+.replay:focus {
+  outline: none;
 }
 
 input[type=text] {

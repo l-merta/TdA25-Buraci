@@ -23,6 +23,7 @@
   --f-test-2: #cccccc;
 
   --header-h: 5.5rem;
+  --footer-h: 5.5rem;
   --main-b-gap: 5rem;
 }
 body {
@@ -31,7 +32,7 @@ body {
   background-color: var(--c3); */
   font-family: var(--f1);
   margin: 0;
-  margin-bottom: 10rem;
+  /* margin-bottom: 10rem; */
   overflow-x: hidden;
 
   --opacity: 0.25;
