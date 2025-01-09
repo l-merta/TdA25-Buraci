@@ -15,7 +15,7 @@ header {
     font: 700 1.4rem var(--f1);
     width: 100%;
     height: var(--header-h);
-    border-bottom: 1.0rem solid var(--c2);
+    border-bottom: 1.0rem solid var(--bg-contr);
     padding: 0.9rem 3vw;
     display: flex;
     justify-content: space-between;
@@ -28,6 +28,7 @@ header {
         height: 120%;
     }
     a {
+        color: var(--c3) !important;
         height: 100%;
         display: flex;
         align-items: center;
@@ -36,6 +37,22 @@ header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+    }
+    .actions-2 {
+        display: flex;
+        align-items: center;
+        gap: 1.0rem;
+
+        .theme-switch {
+            opacity: 0.9;
+            color: var(--c3);
+            font-size: 1.6rem;
+            background-color: transparent;
+            width: fit-content;
+            height: fit-content;
+            border: none;
+            cursor: pointer;
+        }
     }
 }
 main {
@@ -52,6 +69,7 @@ main {
         width: 8rem;
     }
     h1 {
+        color: var(--font-color);
         margin: 1.0rem 0;
         margin-bottom: 0rem;
         display: flex;
@@ -162,7 +180,7 @@ b {
     }
 }
 .button {
-    color: var(--c2);
+    color: var(--font-color);
     background-color: transparent;
     font: 700 1.2rem var(--f1);
     width: fit-content;
@@ -181,10 +199,10 @@ b {
         font: 700 1.4rem var(--f1);
     }
     &.button-empty {
-        color: var(--c3);
+        color: var(--font-color);
         background-color: transparent;
         font-weight: 600;
-        border: 0px solid var(--c3);
+        border: 0px solid var(--font-color);
     }
     &.button-black {
         color: var(--c4);
@@ -202,7 +220,7 @@ b {
         border: 0px solid var(--c6);
     }
     &.button-border {
-        color: var(--c2);
+        color: var(--font-color);
         background-color: transparent;
         border-width: 1px;
     }

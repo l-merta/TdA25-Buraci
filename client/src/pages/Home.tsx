@@ -1,5 +1,4 @@
-//@ts-ignore
-import React, { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
 
 import Effect from './../components/Effect';
@@ -8,13 +7,34 @@ import Header from './../components/Header';
 import Footer from './../components/Footer';
 
 function App() {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
+
+  useEffect(() => {
+    const handleStorageChange = (e: any) => {
+      if (e.key === 'theme') {
+        const newTheme = e.value || 'theme-light';
+        console.log('Theme changed to', newTheme);
+        setTheme(newTheme);
+      }
+    };
+
+    document.addEventListener('itemInserted', handleStorageChange);
+
+    return () => {
+      document.removeEventListener('itemInserted', handleStorageChange);
+    };
+  }, []);
+
   return (
     <>
       <Header />
       <div className="bg-grad"></div>
       <main>
         <Effect />
-        <img src="/images/logos/Think-different-Academy_LOGO_cerny.png" alt="" />
+        <img src={theme && theme == "theme-light" ? 
+          "/images/logos/Think-different-Academy_LOGO_cerny.png" :
+          "/images/logos/Think-different-Academy_LOGO_bily.png"} 
+        alt="" />
         <h1>
           <span className='main'>Think different</span>
           <span className='sec'>Academy</span>

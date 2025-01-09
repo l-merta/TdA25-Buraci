@@ -15,7 +15,7 @@ header {
   font: 700 1.4rem var(--f1);
   width: 100%;
   height: var(--header-h);
-  border-bottom: 1rem solid var(--c2);
+  border-bottom: 1rem solid var(--bg-contr);
   padding: 0.9rem 3vw;
   display: flex;
   justify-content: space-between;
@@ -28,6 +28,7 @@ header img {
   height: 120%;
 }
 header a {
+  color: var(--c3) !important;
   height: 100%;
   display: flex;
   align-items: center;
@@ -36,6 +37,23 @@ header .actions {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+header .actions-2 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+header .actions-2 .theme-switch {
+  opacity: 0.9;
+  color: var(--c3);
+  font-size: 1.6rem;
+  background-color: transparent;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  border: none;
+  cursor: pointer;
 }
 
 main {
@@ -52,6 +70,7 @@ main img {
   width: 8rem;
 }
 main h1 {
+  color: var(--font-color);
   margin: 1rem 0;
   margin-bottom: 0rem;
   display: flex;
@@ -154,7 +173,7 @@ b.b-blue {
 }
 
 .button {
-  color: var(--c2);
+  color: var(--font-color);
   background-color: transparent;
   font: 700 1.2rem var(--f1);
   width: -moz-fit-content;
@@ -174,10 +193,10 @@ b.b-blue {
   font: 700 1.4rem var(--f1);
 }
 .button.button-empty {
-  color: var(--c3);
+  color: var(--font-color);
   background-color: transparent;
   font-weight: 600;
-  border: 0px solid var(--c3);
+  border: 0px solid var(--font-color);
 }
 .button.button-black {
   color: var(--c4);
@@ -195,7 +214,7 @@ b.b-blue {
   border: 0px solid var(--c6);
 }
 .button.button-border {
-  color: var(--c2);
+  color: var(--font-color);
   background-color: transparent;
   border-width: 1px;
 }

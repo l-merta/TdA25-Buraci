@@ -1,7 +1,24 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const Effect: React.FC = () => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const handleStorageChange = (e: any) => {
+      if (e.key === 'theme') {
+        const newTheme = e.value || 'theme-light';
+        console.log('Theme changed to', newTheme);
+        setTheme(newTheme);
+      }
+    };
+
+    document.addEventListener('itemInserted', handleStorageChange);
+
+    return () => {
+      document.removeEventListener('itemInserted', handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas: any = canvasRef.current;
@@ -57,13 +74,13 @@ const Effect: React.FC = () => {
 
     // Change colors based on theme
     function changeColors() {
-      let theme = localStorage.getItem('theme');
+      //let theme = localStorage.getItem('theme');
       //theme = "dark";
-      if (theme === 'dark') {
+      if (theme === 'theme-dark') {
         c1 = '#1A1A1A'; // Background color
         c2 = '#2e2e2e'; // Font color
       } else {
-        c1 = '#FFFFFF';
+        c1 = '#F6F6F6';
         c2 = '#cccccc';
       }
     }
@@ -127,7 +144,7 @@ const Effect: React.FC = () => {
     }
 
     setup();
-  }, []);
+  }, [theme]);
 
   return <canvas ref={canvasRef} style={{ position: 'absolute', top: -100, left: 0, zIndex: -2 }} />;
 };
