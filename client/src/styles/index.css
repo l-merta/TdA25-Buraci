@@ -13,6 +13,7 @@
   --c12: rgba(0, 112, 187, 0.8);
   --c13: #dddddd;
   --c-warn: rgb(247, 66, 66);
+  --c-win: rgba(255, 208, 0, 0.76);
 
   --f1: "Dosis";
   --f2: "Poppins";
@@ -31,6 +32,7 @@ body {
   font-family: var(--f1);
   margin: 0;
   margin-bottom: 10rem;
+  overflow-x: hidden;
 
   --opacity: 0.25;
   --from-edge: 40%;

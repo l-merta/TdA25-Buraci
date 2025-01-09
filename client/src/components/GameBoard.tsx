@@ -163,12 +163,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) =>
             <div className="wrapper">
               {playerNames ?
                 <div className="players">
-                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing" : "")}>
+                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
                     <img src={getCharImage(players[0])} alt="" />
                     <div className="name">{playerNames && playerNames[0]}</div>
+                    {gameData.win && gameData.win.player == players[0] ? 
+                        <i className="fa-solid fa-crown"></i>
+                    : ""}
                   </div>
-                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing" : "")}>
+                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
                     <div className="name">{playerNames && playerNames[1]}</div>
+                    {gameData.win && gameData.win.player == players[1] ? 
+                        <i className="fa-solid fa-crown"></i>
+                    : ""}
                     <img src={getCharImage(players[1])} alt="" />
                   </div>
                 </div> 

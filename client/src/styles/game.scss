@@ -12,41 +12,44 @@
       text-align: center;
   }
   .wrapper {
-      background-color: var(--c10);
-      width: 100%;
-      //height: 100%;
-      border-radius: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: start;
+    background-color: var(--c10);
+    width: 100%;
+    //height: 100%;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
 
-      .players {
-          width: 100%;
-          padding: 0.5rem;
-          padding-bottom: 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+    .players {
+        width: 100%;
+        padding: 0.5rem;
+        padding-bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-          .player {
-              border-radius: 0.4rem;
-              padding: 0.4rem 0.6rem;
-              display: flex;
-              align-items: center;
-              gap: 0.6rem;
-              transition: .12s;
+        .player {
+            border-radius: 0.4rem;
+            padding: 0.4rem 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: .12s;
 
-              img {
-                  height: 1.2rem;
-              }
-              .name {
-                  font: 600 1.2rem var(--f1);
-              }
-          }
-          .player-playing {
-              background-color: var(--c13);
-          }
-      }
+            img {
+                height: 1.2rem;
+            }
+            .name {
+                font: 600 1.2rem var(--f1);
+            }
+        }
+        .player-playing {
+            background-color: var(--c13);
+        }
+        .player-win {
+            background-color: var(--c-win);
+        }
+    }
   }
   .game-board {
       //aspect-ratio: 1/1;

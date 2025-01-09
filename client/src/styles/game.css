@@ -33,7 +33,7 @@
   padding: 0.4rem 0.6rem;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   transition: 0.12s;
 }
 .game-board-container .wrapper .players .player img {
@@ -44,6 +44,9 @@
 }
 .game-board-container .wrapper .players .player-playing {
   background-color: var(--c13);
+}
+.game-board-container .wrapper .players .player-win {
+  background-color: var(--c-win);
 }
 .game-board-container .game-board {
   width: 100%;

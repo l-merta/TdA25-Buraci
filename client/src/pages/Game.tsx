@@ -10,7 +10,7 @@ const Game = () => {
       <div className="bg-grad"></div>
       <div className="main-game">
         {/* <Link to="/games">Games</Link> */}
-        <GameBoard size={15} />
+        <GameBoard size={15} playerNames={["Hráč 1", "Hráč 2"]} />
       </div>
     </>
   )
