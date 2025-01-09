@@ -13,7 +13,7 @@
   text-align: center;
 }
 .game-board-container .wrapper {
-  background-color: var(--c10);
+  background-color: var(--bg-color3);
   width: 100%;
   border-radius: 0.5rem;
   display: flex;
@@ -29,6 +29,7 @@
   align-items: center;
 }
 .game-board-container .wrapper .players .player {
+  color: var(--font-color);
   border-radius: 0.4rem;
   padding: 0.4rem 0.6rem;
   display: flex;
@@ -46,7 +47,7 @@
   animation: scale-up 0.1s ease-in;
 }
 .game-board-container .wrapper .players .player-playing {
-  background-color: var(--c13);
+  background-color: var(--bg-color2);
 }
 .game-board-container .wrapper .players .player-win {
   background-color: var(--c-win);
@@ -60,7 +61,7 @@
   gap: 5px;
 }
 .game-board-container .game-board .field {
-  background-color: var(--c4);
+  background-color: var(--bg-color2);
   font: 600 2rem var(--f1);
   aspect-ratio: 1/1;
   border-radius: 0.3rem;

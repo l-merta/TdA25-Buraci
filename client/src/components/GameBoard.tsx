@@ -34,6 +34,24 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
         gameState: "unknown"
     });
 
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
+
+    useEffect(() => {
+        const handleStorageChange = (e: any) => {
+        if (e.key === 'theme') {
+            const newTheme = e.value || 'theme-light';
+            console.log('Theme changed to', newTheme);
+            setTheme(newTheme);
+        }
+        };
+
+        document.addEventListener('itemInserted', handleStorageChange);
+
+        return () => {
+        document.removeEventListener('itemInserted', handleStorageChange);
+        };
+    }, []);
+
     const fetchGameData = async () => {
         if (uuid) {
             try {
@@ -160,7 +178,10 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
         if (!useGrayScale)
             return "/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png";
         else 
-            return "/images/icons/" + char.toUpperCase() + "_bile.png";
+            if (theme == "theme-light")
+                return "/images/icons/" + char.toUpperCase() + "_bile.png";
+            else 
+                return "/images/icons/" + char.toUpperCase() + "_cerne.png";    
     }
 
     function isWinChar(row: number, col: number) {
