@@ -103,14 +103,23 @@ main nav {
   display: flex;
   justify-content: center;
   align-items: start;
-  gap: 2rem;
+  gap: 3rem;
 }
 .sec-ai .s1 {
   display: flex;
   flex-direction: column;
 }
-.sec-ai .s1 p {
+.sec-ai .s1 .text {
+  display: flex;
+  align-items: end;
+  gap: 1.5rem;
+}
+.sec-ai .s1 .text p {
   margin: 1rem 0;
+}
+.sec-ai .s1 .text img {
+  opacity: 0.8;
+  width: 10rem;
 }
 .sec-ai .s1 .actions {
   display: flex;
@@ -127,8 +136,8 @@ main nav {
 }
 
 footer {
-  color: var(--c3);
-  background-color: var(--c2);
+  color: var(--font-contr);
+  background-color: var(--bg-contr);
   width: 100%;
   height: var(--footer-h);
   margin-top: 4rem;
@@ -147,7 +156,6 @@ footer .names img {
   height: 100%;
 }
 footer .names .team {
-  color: var(--c3);
   opacity: 0.6;
   font: 500 1.1rem var(--f1);
 }
@@ -157,7 +165,7 @@ footer .social {
   gap: 1rem;
 }
 footer .social a {
-  color: var(--c3);
+  color: var(--font-contr);
   font-size: 2rem;
   transition: 0.12s;
 }

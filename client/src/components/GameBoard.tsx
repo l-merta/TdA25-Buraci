@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from './../components/ThemeHandler';
 
 interface GameDataProps {
     uuid: string;
@@ -21,6 +22,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
     const apiUrl = import.meta.env.VITE_API_URL;
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
+    const theme = useTheme();
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
@@ -33,24 +35,6 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
         playing: players.length - 1,
         gameState: "unknown"
     });
-
-    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
-
-    useEffect(() => {
-        const handleStorageChange = (e: any) => {
-        if (e.key === 'theme') {
-            const newTheme = e.value || 'theme-light';
-            console.log('Theme changed to', newTheme);
-            setTheme(newTheme);
-        }
-        };
-
-        document.addEventListener('itemInserted', handleStorageChange);
-
-        return () => {
-        document.removeEventListener('itemInserted', handleStorageChange);
-        };
-    }, []);
 
     const fetchGameData = async () => {
         if (uuid) {

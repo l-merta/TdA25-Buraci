@@ -30,6 +30,7 @@
 }
 .theme-light {
   --font-color: var(--c2);
+  --font-contr: var(--c3);
   --bg-color: var(--c3);
   --bg-color2: var(--c10);
   --bg-color3: var(--c13);
@@ -37,6 +38,7 @@
 }
 .theme-dark {
   --font-color: var(--c3);
+  --font-contr: var(--c2);
   --bg-color: var(--c2);
   --bg-color2: var(--c14);
   --bg-color3: var(--c15);

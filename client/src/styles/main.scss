@@ -103,14 +103,24 @@ main {
     display: flex;
     justify-content: center;
     align-items: start;
-    gap: 2.0rem;
+    gap: 3.0rem;
 
     .s1 {
         display: flex;
         flex-direction: column;
+        
+        .text {
+            display: flex;
+            align-items: end;
+            gap: 1.5rem;
 
-        p {
-            margin: 1.0rem 0;
+            p {
+                margin: 1.0rem 0;
+            }
+            img {
+                opacity: 0.8;
+                width: 10rem;
+            }
         }
         .actions {
             display: flex;
@@ -131,8 +141,8 @@ main {
     }
 }
 footer {
-    color: var(--c3);
-    background-color: var(--c2);
+    color: var(--font-contr);
+    background-color: var(--bg-contr);
     width: 100%;
     height: var(--footer-h);
     margin-top: 4rem;
@@ -151,7 +161,6 @@ footer {
             height: 100%;
         }
         .team {
-            color: var(--c3);
             opacity: 0.6;
             font: 500 1.1rem var(--f1);
         }
@@ -162,7 +171,7 @@ footer {
         gap: 1.0rem;
 
         a {
-            color: var(--c3);
+            color: var(--font-contr);
             font-size: 2.0rem;
             transition: .12s;
         }

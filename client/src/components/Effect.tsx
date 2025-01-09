@@ -1,24 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { useTheme } from './../components/ThemeHandler';
 
 const Effect: React.FC = () => {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
+  const theme = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const handleStorageChange = (e: any) => {
-      if (e.key === 'theme') {
-        const newTheme = e.value || 'theme-light';
-        console.log('Theme changed to', newTheme);
-        setTheme(newTheme);
-      }
-    };
-
-    document.addEventListener('itemInserted', handleStorageChange);
-
-    return () => {
-      document.removeEventListener('itemInserted', handleStorageChange);
-    };
-  }, []);
 
   useEffect(() => {
     const canvas: any = canvasRef.current;
