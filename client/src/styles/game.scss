@@ -6,22 +6,53 @@
 .game-board-container {
   width: 45rem;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 1.0rem;
 
   h1 {
       width: 100%;
       text-align: center;
   }
-  .game-board {
+  .wrapper {
       background-color: var(--c10);
+      width: 100%;
+      //height: 100%;
+      border-radius: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+
+      .players {
+          width: 100%;
+          padding: 0.5rem;
+          padding-bottom: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .player {
+              border-radius: 0.4rem;
+              padding: 0.4rem 0.6rem;
+              display: flex;
+              align-items: center;
+              gap: 0.6rem;
+              transition: .12s;
+
+              img {
+                  height: 1.2rem;
+              }
+              .name {
+                  font: 600 1.2rem var(--f1);
+              }
+          }
+          .player-playing {
+              background-color: var(--c13);
+          }
+      }
+  }
+  .game-board {
       //aspect-ratio: 1/1;
       width: 100%;
       height: 100%;
       max-width: 45rem;
-      border-radius: 0.5rem;
       margin: 0 auto;
       padding: 0.8rem;
       display: grid;

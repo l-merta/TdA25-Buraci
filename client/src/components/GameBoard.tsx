@@ -12,10 +12,11 @@ interface GameDataProps {
 }
 interface GameBoardProps {
     size: number;
+    playerNames?: Array<String>;
     editMode?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, playerNames, editMode }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
@@ -141,7 +142,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
     };
     function getCharImage(char: String) {
         const playerIndex = players.indexOf(char.toUpperCase());
-        return <img src={"/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png"} alt={char.toUpperCase()} />;
+        return "/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png";
     }
     function getBeforePlaying() {
         let index = gameData.playing - 1;
@@ -159,19 +160,34 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                 <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
             }
             {editMode && <button onClick={onSaveClick} className="button-main">Uložit a zapnout hru</button>}
-            <div className="game-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
-                {gameData.board.map((row: Array<String>, rowIndex: number) => 
-                    row.map((item, colIndex) => (
-                        <div 
-                            className={"field " + ("field-" + colors[getBeforePlaying()] + " ") + (!item ? "field-empty " : "field-played ")} 
-                            key={`${rowIndex}-${colIndex}`} 
-                            onClick={() => { onFieldClick(rowIndex, colIndex); }}
-                        >
-                            {item && getCharImage(item) 
-                            || '.'}
-                        </div>
-                    ))
-                )}
+            <div className="wrapper">
+              {playerNames ?
+                <div className="players">
+                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing" : "")}>
+                    <img src={getCharImage(players[0])} alt="" />
+                    <div className="name">{playerNames && playerNames[0]}</div>
+                  </div>
+                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing" : "")}>
+                    <div className="name">{playerNames && playerNames[1]}</div>
+                    <img src={getCharImage(players[1])} alt="" />
+                  </div>
+                </div> 
+              : ""}
+              <div className="game-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
+                  {gameData.board.map((row: Array<String>, rowIndex: number) => 
+                      row.map((item, colIndex) => (
+                          <div 
+                              className={"field " + ("field-" + colors[getBeforePlaying()] + " ") + (!item ? "field-empty " : "field-played ")} 
+                              key={`${rowIndex}-${colIndex}`} 
+                              onClick={() => { onFieldClick(rowIndex, colIndex); }}
+                          >
+                              {item && 
+                                <img src={getCharImage(item)} alt={item.toUpperCase()} /> 
+                              || '.'}
+                          </div>
+                      ))
+                  )}
+              </div>
             </div>
         </div>
     );

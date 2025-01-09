@@ -42,7 +42,7 @@ function App() {
         </div>
         <div className="s2">
           <div className="board">
-            <GameBoard size={5} />
+            <GameBoard size={5} playerNames={["Táda", "Táda"]} />
           </div>
         </div>
       </section>
