@@ -22,6 +22,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
+    //@ts-ignore
     const [colors, setColors] = useState<Array<string>>(["cervene", "modre"]); // List of players - their symbols
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
@@ -142,6 +143,13 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         const playerIndex = players.indexOf(char.toUpperCase());
         return <img src={"/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png"} alt={char.toUpperCase()} />;
     }
+    function getBeforePlaying() {
+        let index = gameData.playing - 1;
+        //console.log(index);
+        index < 0 ? index = players.length - 1 : index;
+        //console.log(index);
+        return index;
+    }
 
     return (
         <div className="game-board-container">
@@ -155,7 +163,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                 {gameData.board.map((row: Array<String>, rowIndex: number) => 
                     row.map((item, colIndex) => (
                         <div 
-                            className={"field " + (!item ? "field-empty " : "field-played ")} 
+                            className={"field " + ("field-" + colors[getBeforePlaying()] + " ") + (!item ? "field-empty " : "field-played ")} 
                             key={`${rowIndex}-${colIndex}`} 
                             onClick={() => { onFieldClick(rowIndex, colIndex); }}
                         >

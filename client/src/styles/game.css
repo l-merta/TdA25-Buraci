@@ -43,8 +43,11 @@
   width: var(--size);
   height: var(--size);
 }
-.game-board-container .game-board .field:hover:not(.field-played) {
-  background-color: rgba(0, 0, 0, 0.15);
+.game-board-container .game-board .field-cervene:hover:not(.field-played) {
+  background-color: var(--c11);
+}
+.game-board-container .game-board .field-modre:hover:not(.field-played) {
+  background-color: var(--c12);
 }
 .game-board-container .game-board .field-empty {
   color: transparent;

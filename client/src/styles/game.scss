@@ -45,8 +45,11 @@
             height: var(--size);
         }
       }
-      .field:hover:not(.field-played) {
-          background-color: rgba(0, 0, 0, 0.15);
+      .field-cervene:hover:not(.field-played) {
+          background-color: var(--c11);
+      }
+      .field-modre:hover:not(.field-played) {
+          background-color: var(--c12);
       }
       .field-empty {
           color: transparent;
