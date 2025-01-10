@@ -50,6 +50,7 @@ body {
   background-color: var(--c3); */
   background-color: var(--bg-color);
   font-family: var(--f1);
+  /* min-height: 100vh; */
   margin: 0;
   /* margin-bottom: 10rem; */
   transition: color .12s background-color .12s;

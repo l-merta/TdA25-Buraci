@@ -26,7 +26,6 @@ const GameList = () => {
         }
         const result = await response.json(); // Parse JSON data
         setGames(result);
-        console.log(result);
       } catch (error: any) {
         console.log(error.message); // Set error message if there's an issue
       }
@@ -63,7 +62,7 @@ const GameList = () => {
   }
 
   return (
-    <div className="games-list" style={{ maxWidth: "45rem"}}>
+    <div className="games-list">
       {games && games.map((game) => (
         <div className="game" key={game.uuid}>
           <div className="text">

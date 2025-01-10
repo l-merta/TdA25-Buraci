@@ -1,7 +1,23 @@
+.main-games {
+  min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
+  margin-top: var(--header-h);
+  padding-top: 3rem;
+}
+.main-games h1 {
+  font: 700 2rem var(--f1);
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 2rem;
+}
+
 .games-list {
+  width: 100%;
+  max-width: 85rem;
   padding: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
 }
 .games-list .game {

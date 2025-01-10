@@ -6,7 +6,7 @@ let connection;
 const connectToDatabase = async () => {
   if (connection) {
     console.log("Database connection already established.");
-    return;
+    return connection; // Return the existing connection
   }
 
   try {
@@ -16,7 +16,8 @@ const connectToDatabase = async () => {
       password: process.env.DB_PASSWORD, // MySQL password from .env file
       database: process.env.DB_NAME,      // MySQL database name from .env file
     });
-    //console.log("Connected to MySQL database.");
+    console.log("Connected to MySQL database.");
+    return connection; // Return the new connection
   } catch (err) {
     console.error("Error connecting to MySQL database:", err);
     throw err;
