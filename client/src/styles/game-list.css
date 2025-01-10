@@ -70,6 +70,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  --game-dif-op: 0.8;
 }
 .games-list .game .att .game-state {
   color: var(--font-color);
@@ -83,24 +84,39 @@
   padding: 0.1rem 0.5rem;
 }
 .games-list .game .att .game-difficulty-beginner {
-  color: rgb(10, 119, 0);
-  background-color: rgba(21, 255, 0, 0.25);
+  background-color: var(--c-beginner);
+}
+.games-list .game .att .game-difficulty-beginner span {
+  opacity: var(--game-dif-op);
+  color: var(--font-color);
 }
 .games-list .game .att .game-difficulty-easy {
-  color: rgb(80, 102, 0);
-  background-color: rgba(102, 255, 0, 0.25);
+  background-color: var(--c-easy);
+}
+.games-list .game .att .game-difficulty-easy span {
+  opacity: var(--game-dif-op);
+  color: var(--font-color);
 }
 .games-list .game .att .game-difficulty-medium {
-  color: rgb(94, 87, 0);
-  background-color: rgba(238, 255, 0, 0.25);
+  background-color: var(--c-medium);
+}
+.games-list .game .att .game-difficulty-medium span {
+  opacity: var(--game-dif-op);
+  color: var(--font-color);
 }
 .games-list .game .att .game-difficulty-hard {
-  color: rgb(94, 22, 0);
-  background-color: rgba(255, 72, 0, 0.25);
+  background-color: var(--c-hard);
+}
+.games-list .game .att .game-difficulty-hard span {
+  opacity: var(--game-dif-op);
+  color: var(--font-color);
 }
 .games-list .game .att .game-difficulty-extreme {
-  color: var(--c1);
-  background-color: rgb(199, 199, 199);
+  opacity: 0.45;
+  background-color: var(--bg-contr);
+}
+.games-list .game .att .game-difficulty-extreme span {
+  color: var(--font-contr);
 }
 .games-list .game-test {
   height: 30rem;

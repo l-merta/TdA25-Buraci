@@ -84,7 +84,9 @@ const GameList = () => {
             </div>
           </div>
           <div className="att">
-            <span className={"game-difficulty game-difficulty-" + game.difficulty}>{game.difficulty}</span>
+            <span className={"game-difficulty game-difficulty-" + game.difficulty}>
+              <span>{game.difficulty}</span>
+            </span>
             <span className="game-state">{game.gameState}</span>
           </div>
           {/* <div className="text">
