@@ -173,6 +173,17 @@ footer .social a:hover {
   scale: 0.95;
 }
 
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loading i {
+  background-color: green;
+}
+
 b.b-red {
   color: var(--c5);
 }

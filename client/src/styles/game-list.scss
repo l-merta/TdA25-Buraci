@@ -35,6 +35,7 @@
         .text {
             width: 100%;
             display: flex;
+            justify-content: space-between;
             gap: 0.8rem;
 
             .img-cont {
@@ -47,6 +48,10 @@
                     width: 80%;
                     margin: 0 auto;
                 }
+            }
+            .group {
+              display: flex;
+              gap: 0.8rem;
             }
             .s2 {
                 display: flex;
@@ -64,6 +69,51 @@
                     button, a {
                         font-size: 1.0rem;
                         padding: 0.4rem 1.2rem;
+                    }
+                }
+            }
+            .s3 {
+                width: fit-content;
+                position: relative;
+
+                .button-dots {
+                    color: var(--font-color);
+                    aspect-ratio: 1/1;
+                    width: 2.5rem;
+                    border-radius: 50%;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    transition: .12s;
+                }
+                .button-dots:hover {
+                    background-color: var(--bg-color3);
+                }
+                .popup {
+                    background-color: var(--bg-color2);
+                    border: 2px solid var(--bg-color3);
+                    border-radius: 0.5rem;
+                    padding: 0.5rem;
+                    position: absolute;
+                    right: 0;
+                    top: 2.6rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    z-index: 10;
+
+                    button {
+                        width: 100%;
+                        border: 1px solid var(--bg-color3);
+                        padding: 0.4rem 1.5rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.6rem;
+                        white-space: nowrap;
+                    }
+                    .button-edit:hover {
+                        background-color: var(--bg-color3);
                     }
                 }
             }
@@ -148,6 +198,6 @@
   border-color: var(--c-warn);
 }
 .button-warning:hover {
-  color: var(--c2);
+  color: var(--font-contr);
   background-color: var(--c-warn);
 }
