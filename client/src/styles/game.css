@@ -9,6 +9,7 @@
   margin: 0 auto;
 }
 .game-board-container h1 {
+  color: var(--font-color);
   width: 100%;
   text-align: center;
 }

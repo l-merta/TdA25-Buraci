@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useTheme, themeToImg } from './ThemeHandler';
 
 interface GamesProps {
   uuid: string;
@@ -14,6 +16,7 @@ interface GamesProps {
 const GameList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate(); // Initialize useNavigate
+  const theme = useTheme();
 
   const [games, setGames] = useState<Array<GamesProps>>([]);
 
@@ -66,6 +69,25 @@ const GameList = () => {
       {games && games.map((game) => (
         <div className="game" key={game.uuid}>
           <div className="text">
+            <div className="img-cont">
+              <img src={"/images/icons/zarivka_" + game.difficulty + "_" + themeToImg(theme, ".png")} alt="Obtížnost" />
+            </div>
+            <div className="s2">
+              <span className="game-name">{game.name}</span>
+              <div className="actions">
+                <Link to={"/game/" + game.uuid} className="button button-blue">Hrát</Link>
+                {/* <button onClick={() => playGame(game.uuid)} className="button button-blue">Hrát</button> */}
+                <button className="button button-red button-border">Náhled</button>
+                {/* <button onClick={() => editGame(game.uuid)} className="button-main"><i className="fa-regular fa-pen-to-square"></i></button> */}
+                {/* <button onClick={() => deleteGame(game.uuid)} className="button-main button-warning"><i className="fa-regular fa-trash"></i></button> */}
+              </div>
+            </div>
+          </div>
+          <div className="att">
+            <span className={"game-difficulty game-difficulty-" + game.difficulty}>{game.difficulty}</span>
+            <span className="game-state">{game.gameState}</span>
+          </div>
+          {/* <div className="text">
             <span className="game-name">{game.name}</span>
             <div className="att">
               <span className={"game-difficulty game-difficulty-" + game.difficulty}>{game.difficulty}</span>
@@ -76,7 +98,7 @@ const GameList = () => {
             <button onClick={() => playGame(game.uuid)} className="button-main">Hrát</button>
             <button onClick={() => editGame(game.uuid)} className="button-main"><i className="fa-regular fa-pen-to-square"></i></button>
             <button onClick={() => deleteGame(game.uuid)} className="button-main button-warning"><i className="fa-regular fa-trash"></i></button>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

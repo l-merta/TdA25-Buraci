@@ -35,6 +35,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
         playing: players.length - 1,
         gameState: "unknown"
     });
+    const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
 
     const fetchGameData = async () => {
         if (uuid) {
@@ -44,8 +45,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json(); // Parse JSON data
+                setFirstMoveAfterLoad(true);
                 setGameData(result);
-                console.log(result);
             } catch (error: any) {
                 console.log(error.message); // Set error message if there's an issue
             }
@@ -74,10 +75,9 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
                 }
 
                 const data = await response.json();
+                setFirstMoveAfterLoad(false);
                 setGameData(data);
-                //console.log("Field played successfully:", data, data.uuid);
                 if (data.win) {
-                    console.log(data.win);
                     console.log("Player " + data.win.player + " won!");
                 }
             } catch (error: any) {
@@ -178,6 +178,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
     function getBeforePlaying() {
         let index = gameData.playing - 1;
         index < 0 ? index = players.length - 1 : index;
+        if (firstMoveAfterLoad)
+            return gameData.playing;
         return index;
     }
 

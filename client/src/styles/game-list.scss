@@ -4,6 +4,7 @@
     padding-top: 3rem;
 
     h1 {
+        color: var(--font-color);
         font: 700 2.0rem var(--f1);
         width: 100%;
         text-align: center;
@@ -12,77 +13,104 @@
     }
 }
 .games-list {
-  width: 100%;
-  max-width: 85rem;
-  padding: 0 0.5rem;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  
-  .game {
-      width: 100%;
-      border: 1px solid rgb(214, 214, 214);
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: .12s;
+    width: 100%;
+    max-width: 85rem;
+    padding: 0 0.5rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    
+    .game {
+        width: 100%;
+        background-color: var(--bg-color);
+        border: 1px solid var(--bg-color3);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        transition: .12s;
 
-      .text {
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
+        .text {
+            width: 100%;
+            display: flex;
+            gap: 0.8rem;
 
-          .game-name {
-              font: 500 1.1rem var(--f1);
-          }
-          .att {
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
+            .img-cont {
+                width: 4rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
-              .game-state {
-                  font: 400 0.9rem var(--f1);
-              }
-              .game-difficulty {
-                  color: var(--c1);
-                  background-color: rgb(199, 199, 199);
-                  font: 500 0.9rem var(--f1);
-                  border-radius: 0.3rem;
-                  padding: 0.1rem 0.5rem;
-              }
-              .game-difficulty-beginner {
-                  color: rgb(10, 119, 0);
-                  background-color: rgba(21, 255, 0, 0.25);
-              }
-              .game-difficulty-easy {
-                  color: rgb(80, 102, 0);
-                  background-color: rgba(102, 255, 0, 0.25);
-              }
-              .game-difficulty-medium {
-                  color: rgb(94, 87, 0);
-                  background-color: rgba(238, 255, 0, 0.25);
-              }
-              .game-difficulty-hard {
-                  color: rgb(94, 22, 0);
-                  background-color: rgba(255, 72, 0, 0.25);
-              }
-              .game-difficulty-extreme {
-                  color: var(--c1);
-                  background-color: rgb(199, 199, 199);
-              }
-          }
-      }
-      .actions {
-          display: flex;
-          gap: 0.5rem;
-      }
-  }
-  .game:hover {
-      background-color: rgba(0, 0, 0, 0.03);
-  }
+                img {
+                    width: 80%;
+                    margin: 0 auto;
+                }
+            }
+            .s2 {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+
+                .game-name {
+                    color: var(--font-color);
+                    font: 600 1.2rem var(--f1);
+                }
+                .actions {
+                    display: flex;
+                    gap: 0.5rem;
+
+                    button, a {
+                        font-size: 1.0rem;
+                        padding: 0.4rem 1.2rem;
+                    }
+                }
+            }
+        }
+        .att {
+            width: 100%;
+            height: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .game-state {
+                color: var(--font-color);
+                font: 400 0.9rem var(--f1);
+            }
+            .game-difficulty {
+                color: var(--c1);
+                background-color: rgb(199, 199, 199);
+                font: 500 0.9rem var(--f1);
+                border-radius: 0.3rem;
+                padding: 0.1rem 0.5rem;
+            }
+            .game-difficulty-beginner {
+                color: rgb(10, 119, 0);
+                background-color: rgba(21, 255, 0, 0.25);
+            }
+            .game-difficulty-easy {
+                color: rgb(80, 102, 0);
+                background-color: rgba(102, 255, 0, 0.25);
+            }
+            .game-difficulty-medium {
+                color: rgb(94, 87, 0);
+                background-color: rgba(238, 255, 0, 0.25);
+            }
+            .game-difficulty-hard {
+                color: rgb(94, 22, 0);
+                background-color: rgba(255, 72, 0, 0.25);
+            }
+            .game-difficulty-extreme {
+                color: var(--c1);
+                background-color: rgb(199, 199, 199);
+            }
+        }
+    }
+    .game-test {
+        height: 30rem;
+    }
 }
 .button-main {
   color: var(--c1);

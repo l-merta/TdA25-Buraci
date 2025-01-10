@@ -193,6 +193,7 @@ b.b-blue {
   justify-content: center;
   align-items: center;
   text-decoration: none;
+  cursor: pointer;
 }
 .button.button-1 {
   font: 600 1.6rem var(--f1);

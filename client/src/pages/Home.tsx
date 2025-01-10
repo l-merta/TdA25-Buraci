@@ -7,8 +7,6 @@ import GameBoard from "./../components/GameBoard";
 import Header from './../components/Header';
 import Footer from './../components/Footer';
 
-import GameList from './../components/GameList';
-
 function App() {
   const theme = useTheme();
 
@@ -37,7 +35,6 @@ function App() {
           {/* <Link to="/create" className='button button-blue'>Vytvořit hru</Link> */}
         </nav>
       </main>
-      <GameList></GameList>
       <section className='sec-ai'>
         <div className="s1">
           <h2>Zkus porazit Tádu!</h2>
