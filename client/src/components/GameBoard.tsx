@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTheme } from './../components/ThemeHandler';
 
 interface GameDataProps {
     uuid: string;
@@ -12,16 +13,21 @@ interface GameDataProps {
 }
 interface GameBoardProps {
     size: number;
+    replayButton?: boolean;
+    playerNames?: Array<String>;
     editMode?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, editMode }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
+    const theme = useTheme();
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
+    //@ts-ignore
+    const [colors, setColors] = useState<Array<string>>(["cervene", "modre"]); // List of players - their symbols
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
         difficulty: "medium",
@@ -30,25 +36,25 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         gameState: "unknown"
     });
 
+    const fetchGameData = async () => {
+        if (uuid) {
+            try {
+                const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json(); // Parse JSON data
+                setGameData(result);
+                console.log(result);
+            } catch (error: any) {
+                console.log(error.message); // Set error message if there's an issue
+            }
+        }
+    };
+
     // Get game with uuid from API
     useEffect(() => {
-        if (uuid) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const result = await response.json(); // Parse JSON data
-                    setGameData(result);
-                    console.log(result);
-                } catch (error: any) {
-                    console.log(error.message); // Set error message if there's an issue
-                }
-            };
-        
-            fetchData(); // Call the fetch function
-        }
+        fetchGameData(); // Call the fetch function
     }, []); // Empty dependency array means this runs once on mount
 
     async function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
@@ -71,6 +77,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
                 setGameData(data);
                 //console.log("Field played successfully:", data, data.uuid);
                 if (data.win) {
+                    console.log(data.win);
                     console.log("Player " + data.win.player + " won!");
                 }
             } catch (error: any) {
@@ -138,26 +145,93 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, editMode }) => {
         }
     };
 
+    function resetGame() {
+        setGameData((prevData: any) =>{
+            return {
+                ...prevData,
+                board: Array.from({ length: size }, () => Array(size).fill('')),
+                playing: players.length - 1,
+                win: null
+            }
+        });
+        fetchGameData(); // Fetch the game data again after resetting
+    }
+
+    function getCharImage(char: String, useGrayScale: boolean) {
+        const playerIndex = players.indexOf(char.toUpperCase());
+        if (!useGrayScale)
+            return "/images/icons/" + char.toUpperCase() + "_" + colors[playerIndex] + ".png";
+        else 
+            if (theme == "theme-light")
+                return "/images/icons/" + char.toUpperCase() + "_bile.png";
+            else 
+                return "/images/icons/" + char.toUpperCase() + "_cerne.png";    
+    }
+
+    function isWinChar(row: number, col: number) {
+        return {
+            isWin: gameData.win && gameData.win.coordinates.some((coord: any) => coord.row === row && coord.col === col),
+            color: gameData.win && colors[players.indexOf(gameData.win.player.toUpperCase())]
+        }
+    }
+
+    function getBeforePlaying() {
+        let index = gameData.playing - 1;
+        index < 0 ? index = players.length - 1 : index;
+        return index;
+    }
+
     return (
         <div className="game-board-container">
             {!editMode ? 
-                <h1>{gameData.name}</h1>
+                (gameData.name && <h1>{gameData.name}</h1>)
             :
                 <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
             }
             {editMode && <button onClick={onSaveClick} className="button-main">Uložit a zapnout hru</button>}
-            <div className="game-board" style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
-                {gameData.board.map((row: Array<String>, rowIndex: number) => 
-                    row.map((item, colIndex) => (
-                        <div 
-                            className={"field " + (!item ? "field-empty " : "field-played ")} 
-                            key={`${rowIndex}-${colIndex}`} 
-                            onClick={() => { onFieldClick(rowIndex, colIndex); }}
-                        >
-                            {item || '.'}
-                        </div>
-                    ))
-                )}
+            <div className="wrapper">
+              {playerNames ?
+                <div className="players">
+                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
+                    <img src={getCharImage(players[0], false)} alt="" />
+                    <div className="name">{playerNames && playerNames[0]}</div>
+                    {gameData.win && gameData.win.player == players[0] ? 
+                        <i className="fa-solid fa-crown"></i>
+                    : ""}
+                  </div>
+                  {replayButton ?
+                    <button className='replay' onClick={resetGame}>
+                        <i className="fa-solid fa-repeat"></i>
+                        <span>Hrát znovu</span>
+                    </button>
+                  : ""}
+                  <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
+                    <div className="name">{playerNames && playerNames[1]}</div>
+                    {gameData.win && gameData.win.player == players[1] ? 
+                        <i className="fa-solid fa-crown"></i>
+                    : ""}
+                    <img src={getCharImage(players[1], false)} alt="" />
+                  </div>
+                </div> 
+              : ""}
+              <div className={"game-board " + (gameData.win ? "game-board-win " : "")} style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}>
+                  {gameData.board.map((row: Array<String>, rowIndex: number) => 
+                      row.map((item, colIndex) => (
+                          <div 
+                              className={"field " + 
+                                ("field-" + colors[getBeforePlaying()] + " ") + 
+                                (!item ? "field-empty " : "field-played ") + 
+                                (gameData.win && isWinChar(rowIndex, colIndex).isWin ? "field-win-" + isWinChar(rowIndex, colIndex).color + " " : " ")} 
+                              key={`${rowIndex}-${colIndex}`} 
+                              onClick={() => { onFieldClick(rowIndex, colIndex); }}
+                          >
+                              {item && 
+                                <img src={getCharImage(item, isWinChar(rowIndex, colIndex).isWin)} alt={item.toUpperCase()} /> 
+                              || '.'}
+                          </div>
+                      ))
+                  )}
+              </div>
             </div>
         </div>
     );

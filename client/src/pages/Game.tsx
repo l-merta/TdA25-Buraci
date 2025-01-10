@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 
+import Header from "./../components/Header";
 import GameBoard from "./../components/GameBoard";
 
 const Game = () => {
   return (
     <>
-      <Link to="/games">Games</Link>
-      <h1>Game page</h1>
-      <GameBoard size={15} />
+      <Header />
+      <div className="bg-grad"></div>
+      <div className="main-game">
+        {/* <Link to="/games">Games</Link> */}
+        <GameBoard size={15} replayButton={true} playerNames={["Hráč 1", "Hráč 2"]} />
+      </div>
     </>
   )
 }
