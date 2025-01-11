@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from './../components/ThemeHandler';
 
+import Loading from './Loading';
+
 interface GameDataProps {
     uuid: string;
     createdAt: string;
@@ -13,16 +15,23 @@ interface GameDataProps {
 }
 interface GameBoardProps {
     size: number;
+    uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
     editMode?: boolean;
+    onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, editMode }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
     const theme = useTheme();
+    const params = useParams<{ uuid: string }>();
+
+    // Set the uuid from params if it's not provided as a prop
+    if (!uuid) {
+        uuid = params.uuid;
+    }
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
@@ -36,15 +45,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
         gameState: "unknown"
     });
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
+    const [isLoading, setIsLoading] = useState(uuid ? true : false);
 
     const fetchGameData = async () => {
         if (uuid) {
             try {
+                setIsLoading(true);
                 const response = await fetch(apiUrl + "games/" + uuid); // Replace with your API URL
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json(); // Parse JSON data
+                setIsLoading(false);
                 setFirstMoveAfterLoad(true);
                 setGameData(result);
             } catch (error: any) {
@@ -183,10 +195,14 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
         return index;
     }
 
-    return (
+    if (isLoading) {
+      return <Loading />;
+    }
+    else {
+      return (
         <div className="game-board-container">
             {!editMode ? 
-                (gameData.name && <h1>{gameData.name}</h1>)
+                (gameData.name && !onlyBoard && <h1>{gameData.name}</h1>)
             :
                 <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
             }
@@ -236,7 +252,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, replayButton, playerNames, 
               </div>
             </div>
         </div>
-    );
+      );
+    }
 };
 
 export default GameBoard;
