@@ -69,4 +69,10 @@ const closeDatabase = async () => {
   }
 };
 
-module.exports = { connectToDatabase, getDb, closeDatabase };
+const refreshDatabaseConnection = async () => {
+  await closeDatabase();
+  await connectToDatabase();
+  console.log("Database connection refreshed.");
+};
+
+module.exports = { connectToDatabase, getDb, closeDatabase, refreshDatabaseConnection };
