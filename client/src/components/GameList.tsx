@@ -12,8 +12,11 @@ interface GamesProps {
   gameState: string;
   board: Array<String>;
 }
+interface GameListProps {
+  gameSett: any;
+}
 
-const GameList = () => {
+const GameList:React.FC<GameListProps> = ({ gameSett }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [games, setGames] = useState<Array<GamesProps>>([]);
@@ -45,7 +48,7 @@ const GameList = () => {
     return (
       <div className="games-list">
         {games && games.map((game) => (
-          <GameItem game={game} setGames={setGames} />
+          <GameItem game={game} setGames={setGames} key={game.uuid} gameSett={gameSett} />
         ))}
       </div>
     );

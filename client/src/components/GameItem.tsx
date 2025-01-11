@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { useTheme, themeToImg } from './ThemeHandler';
 
@@ -8,9 +8,10 @@ import GameBoard from './GameBoard';
 interface GameProps {
   game: any;
   setGames: any;
+  gameSett: any;
 }
 
-const GameItem:React.FC<GameProps> = ({ game, setGames }) => {
+const GameItem:React.FC<GameProps> = ({ game, setGames, gameSett }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const theme = useTheme();
 
@@ -72,7 +73,7 @@ const GameItem:React.FC<GameProps> = ({ game, setGames }) => {
   }, [popupVisible]);
 
   return (
-    <div className="game" key={game.uuid}>
+    <div className="game">
       <div className="text">
         <div className="group">
           <div className="img-cont">
@@ -81,7 +82,10 @@ const GameItem:React.FC<GameProps> = ({ game, setGames }) => {
           <div className="s2">
             <span className="game-name">{game.name}</span>
             <div className="actions">
-              <Link to={"/game/" + game.uuid} className="button button-blue">Hrát</Link>
+              <Link to={"/game/" + game.uuid}
+                state={gameSett}
+                className="button button-blue"
+              >Hrát</Link>
               {/* <button className="button button-red button-border">Náhled</button> */}
             </div>
           </div>
@@ -115,7 +119,7 @@ const GameItem:React.FC<GameProps> = ({ game, setGames }) => {
         </span>
         <span className="game-state">{game.gameState}</span>
       </div>
-      <GameBoard size={15} uuid={game.uuid} onlyBoard={true} />
+      <GameBoard size={15} uuid={game.uuid} onlyBoard={true} ai={[0, 0]} />
     </div>
   )
 }

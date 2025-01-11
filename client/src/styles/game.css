@@ -89,6 +89,9 @@
 .game-board-container .game-board .field-played {
   cursor: default;
 }
+.game-board-container .game-board .field-ai {
+  pointer-events: none;
+}
 .game-board-container .game-board .field-win {
   background-color: var(--c-win);
 }
