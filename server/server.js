@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connectToDatabase, getDb, closeDatabase } = require("./db");
-const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, checkPotentialWin } = require("./gameplay");
+const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, playFieldAi } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
@@ -162,17 +162,25 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
 
 // Endpoint for handling game field clicks
 app.put("/api/v1/gameFieldClick", async (req, res) => {
-  const { row, col, board } = req.body;
+  const { row, col, board, ai } = req.body;
   const newGameData = { 
     ...req.body, 
-    board: playField(row, col, board, getPlaying(board)), 
+    //board: playField(row, col, board, getPlaying(board)), 
     playing: getPlaying(board),
     win: null
   }
 
-  // Check win
-  //console.log("win check: ", checkWin(newGameData.board, 5, players));
-  //console.log("poten. win check: ", checkPotentialWin(newGameData.board, 4, players));
+  newGameData.nextPlaying = newGameData.playing == players.length - 1 ? 0 : newGameData.playing + 1;
+
+  //console.log("Someone is playing - " + players[getPlaying(board)] + " - " + ai[getPlaying(board)]);
+  if (ai[getPlaying(board)] == 1) {
+    //console.log("AI is playing");
+    newGameData.board = playFieldAi(board, getPlaying(board))
+  }
+  else {
+    newGameData.board = playField(row, col, board, getPlaying(board));
+  }
+
   newGameData.win = checkWin(newGameData.board, 5, players);
 
   try {

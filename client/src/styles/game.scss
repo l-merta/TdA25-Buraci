@@ -96,6 +96,9 @@
         .field-played {
             cursor: default;
         }
+        .field-ai {
+            pointer-events: none;
+        }
         .field-win {
             background-color: var(--c-win);
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from './../components/ThemeHandler';
 
@@ -15,6 +15,7 @@ interface GameDataProps {
 }
 interface GameBoardProps {
     size: number;
+    ai: Array<Number>;
     uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
@@ -22,7 +23,7 @@ interface GameBoardProps {
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const theme = useTheme();
@@ -42,10 +43,14 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, uuid, replayButton, playerN
         difficulty: "medium",
         board: Array.from({ length: size }, () => Array(size).fill('')),
         playing: players.length - 1,
+        nextPlaying: 0,
         gameState: "unknown"
     });
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
     const [isLoading, setIsLoading] = useState(uuid ? true : false);
+    const initialMoveMade = useRef(false);
+    const aiMoveInProgress = useRef(false);
+    const [gameDataLoaded, setGameDataLoaded] = useState(false);
 
     const fetchGameData = async () => {
         if (uuid) {
@@ -59,44 +64,101 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, uuid, replayButton, playerN
                 setIsLoading(false);
                 setFirstMoveAfterLoad(true);
                 setGameData(result);
+                setGameDataLoaded(true);
             } catch (error: any) {
                 console.log(error.message); // Set error message if there's an issue
             }
+        }
+        else {
+            setGameDataLoaded(true);
         }
     };
 
     // Get game with uuid from API
     useEffect(() => {
-        fetchGameData(); // Call the fetch function
-    }, []); // Empty dependency array means this runs once on mount
+        fetchGameData();
+    }, []);
 
-    async function onFieldClick(row: number, col: number) { // Function triggered when a field is clicked
-        if (gameData.board[row][col] === '') { // Check if the clicked field is empty
-            try {
-                const response = await fetch(`${apiUrl}gameFieldClick`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ ...gameData, row: row, col: col }),
-                });
+    const onFieldClick = async (row: number, col: number) => {
+        if ((gameData.board[row][col] && ai[getBeforePlaying()] !== 1) || gameData.win) return; // If the field is already played or the game is won, return
+        if (aiMoveInProgress.current) return;
+        aiMoveInProgress.current = true;
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || "Failed to play field in game");
-                }
+        try {
+            const response = await fetch(`${apiUrl}gameFieldClick`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...gameData, row: row, col: col, ai: ai }),
+            });
 
-                const data = await response.json();
-                setFirstMoveAfterLoad(false);
-                setGameData(data);
-                if (data.win) {
-                    console.log("Player " + data.win.player + " won!");
-                }
-            } catch (error: any) {
-                console.error("Error playing field:", error.message);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to play field in game");
+            }
+
+            const data = await response.json();
+            setFirstMoveAfterLoad(false);
+            setGameData(data);
+        } catch (error: any) {
+            console.error("Error playing field:", error.message);
+        } finally {
+            aiMoveInProgress.current = false;
+        }
+    };
+
+    useEffect(() => {
+        if (gameData.win) {
+            console.log("Player " + gameData.win.player + " won!");
+
+            if (ai[0] == 1 && ai[1] == 1) {
+                setTimeout(() => {
+                    resetGame();
+                }, 2000);
+            }
+        } else {
+            if (gameDataLoaded && ai[gameData.nextPlaying] == 1) {
+                console.log("AI is playing...");
+                setTimeout(() => {
+                    onFieldClick(0, 0); // Play the AI move
+                }, 500);
             }
         }
-    }
+    }, [gameData, gameDataLoaded]);
+
+    // Initial move for the first AI player
+    useEffect(() => {
+        if (uuid) {
+            // Load game data using uuid
+            const loadGameData = async () => {
+                try {
+                    const response = await fetch(`${apiUrl}games/${uuid}`);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || "Failed to load game data");
+                    }
+                    const data = await response.json();
+                    setGameData(data);
+                    setGameDataLoaded(true);
+                } catch (error: any) {
+                    console.error("Error loading game data:", error.message);
+                }
+            };
+            loadGameData();
+        } else {
+            setGameDataLoaded(true);
+        }
+    }, [uuid]);
+
+    useEffect(() => {
+        if ((gameDataLoaded && !initialMoveMade.current && ai[getBeforePlaying()] === 1 && !gameData.win) || gameDataLoaded && !initialMoveMade.current && ai[0] === 1 && gameData.playing == 0 && !gameData.win) {
+            initialMoveMade.current = true;
+            setTimeout(() => {
+                onFieldClick(0, 0); // Play the AI move
+            }, 500);
+        }
+    }, [gameDataLoaded, initialMoveMade]);
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGameData((prevGameData: GameBoardProps) => {
@@ -158,11 +220,14 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, uuid, replayButton, playerN
     };
 
     function resetGame() {
+        setGameDataLoaded(false);
+        initialMoveMade.current = false;
         setGameData((prevData: any) =>{
             return {
                 ...prevData,
                 board: Array.from({ length: size }, () => Array(size).fill('')),
                 playing: players.length - 1,
+                nextPlaying: 0,
                 win: null
             }
         });
@@ -239,7 +304,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, uuid, replayButton, playerN
                               className={"field " + 
                                 ("field-" + colors[getBeforePlaying()] + " ") + 
                                 (!item ? "field-empty " : "field-played ") + 
-                                (gameData.win && isWinChar(rowIndex, colIndex).isWin ? "field-win-" + isWinChar(rowIndex, colIndex).color + " " : " ")} 
+                                (gameData.win && isWinChar(rowIndex, colIndex).isWin ? "field-win-" + isWinChar(rowIndex, colIndex).color + " " : " ") +
+                                (ai[getBeforePlaying()] == 1 ? "field-ai " : " ")} 
                               key={`${rowIndex}-${colIndex}`} 
                               onClick={() => { onFieldClick(rowIndex, colIndex); }}
                           >
