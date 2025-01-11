@@ -1,72 +1,192 @@
+.main-games {
+    min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
+    margin-top: var(--header-h);
+    padding-top: 3rem;
+
+    h1 {
+        color: var(--font-color);
+        font: 700 2.0rem var(--f1);
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        margin-bottom: 2.0rem;
+    }
+}
 .games-list {
-  padding: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  
-  .game {
-      width: 100%;
-      border: 1px solid rgb(214, 214, 214);
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: .12s;
+    width: 100%;
+    max-width: 85rem;
+    padding: 0 0.5rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    
+    .game {
+        width: 100%;
+        background-color: var(--bg-color2);
+        border: 1px solid var(--bg-color3);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        transition: .12s;
 
-      .text {
-          display: flex;
-          flex-direction: column;
-          gap: 0.4rem;
+        .text {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            gap: 0.8rem;
 
-          .game-name {
-              font: 500 1.1rem var(--f1);
-          }
-          .att {
+            .img-cont {
+                width: 4rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                    width: 80%;
+                    margin: 0 auto;
+                }
+            }
+            .group {
               display: flex;
-              align-items: center;
-              gap: 0.5rem;
+              gap: 0.8rem;
+            }
+            .s2 {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
 
-              .game-state {
-                  font: 400 0.9rem var(--f1);
-              }
-              .game-difficulty {
-                  color: var(--c1);
-                  background-color: rgb(199, 199, 199);
-                  font: 500 0.9rem var(--f1);
-                  border-radius: 0.3rem;
-                  padding: 0.1rem 0.5rem;
-              }
-              .game-difficulty-beginner {
-                  color: rgb(10, 119, 0);
-                  background-color: rgba(21, 255, 0, 0.25);
-              }
-              .game-difficulty-easy {
-                  color: rgb(80, 102, 0);
-                  background-color: rgba(102, 255, 0, 0.25);
-              }
-              .game-difficulty-medium {
-                  color: rgb(94, 87, 0);
-                  background-color: rgba(238, 255, 0, 0.25);
-              }
-              .game-difficulty-hard {
-                  color: rgb(94, 22, 0);
-                  background-color: rgba(255, 72, 0, 0.25);
-              }
-              .game-difficulty-extreme {
-                  color: var(--c1);
-                  background-color: rgb(199, 199, 199);
-              }
-          }
-      }
-      .actions {
-          display: flex;
-          gap: 0.5rem;
-      }
-  }
-  .game:hover {
-      background-color: rgba(0, 0, 0, 0.03);
-  }
+                .game-name {
+                    color: var(--font-color);
+                    font: 600 1.2rem var(--f1);
+                }
+                .actions {
+                    display: flex;
+                    gap: 0.5rem;
+
+                    button, a {
+                        font-size: 1.0rem;
+                        padding: 0.4rem 1.8rem;
+                    }
+                }
+            }
+            .s3 {
+                width: fit-content;
+                position: relative;
+
+                .button-dots {
+                    color: var(--font-color);
+                    aspect-ratio: 1/1;
+                    width: 2.5rem;
+                    border-radius: 50%;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    transition: .12s;
+                }
+                .button-dots:hover {
+                    background-color: var(--bg-color3);
+                }
+                .popup {
+                    background-color: var(--bg-color2);
+                    border: 2px solid var(--bg-color3);
+                    border-radius: 0.5rem;
+                    padding: 0.5rem;
+                    position: absolute;
+                    right: 0;
+                    top: 2.6rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    z-index: 10;
+
+                    button, a {
+                        width: 100%;
+                        border: 1px solid var(--bg-color3);
+                        padding: 0.4rem 1.5rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.6rem;
+                        white-space: nowrap;
+                    }
+                    .button-edit:hover {
+                        background-color: var(--bg-color3);
+                    }
+                }
+            }
+        }
+        .att {
+            width: 100%;
+            height: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            --game-dif-op: 0.8;
+
+            .game-state {
+                color: var(--font-color);
+                font: 400 0.9rem var(--f1);
+            }
+            .game-difficulty {
+                color: var(--c1);
+                background-color: rgb(199, 199, 199);
+                font: 500 0.9rem var(--f1);
+                border-radius: 0.3rem;
+                padding: 0.1rem 0.5rem;
+            }
+            .game-difficulty-beginner {
+                background-color: var(--c-beginner);
+                span {
+                  opacity: var(--game-dif-op);
+                  color: var(--font-color);
+                }
+            }
+            .game-difficulty-easy {
+                background-color: var(--c-easy);
+                span {
+                  opacity: var(--game-dif-op);
+                  color: var(--font-color);
+                }
+            }
+            .game-difficulty-medium {
+                background-color: var(--c-medium);
+                span {
+                    opacity: var(--game-dif-op);
+                    color: var(--font-color);
+                }
+            }
+            .game-difficulty-hard {
+                background-color: var(--c-hard);
+                span {
+                    opacity: var(--game-dif-op);
+                    color: var(--font-color);
+                }
+            }
+            .game-difficulty-extreme {
+                opacity: 0.45;
+                background-color: var(--bg-contr);
+                span {
+                    color: var(--font-contr);
+                }
+            }
+        }
+        .game-board-container {
+            width: 100%;
+            pointer-events: none;
+            
+            .game-board {
+              padding: 0.5rem;
+              gap: 0.2rem;
+            }
+        }
+    }
+    .game-test {
+        height: 30rem;
+    }
 }
 .button-main {
   color: var(--c1);
@@ -87,6 +207,6 @@
   border-color: var(--c-warn);
 }
 .button-warning:hover {
-  color: var(--c2);
+  color: var(--font-contr);
   background-color: var(--c-warn);
 }

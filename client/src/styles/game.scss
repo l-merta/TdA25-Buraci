@@ -8,6 +8,7 @@
     margin: 0 auto;
 
     h1 {
+        color: var(--font-color);
         width: 100%;
         text-align: center;
     }
@@ -66,7 +67,7 @@
     
         .field {
             background-color: var(--bg-color2);
-            font: 600 2rem var(--f1);
+            //font: 600 2rem var(--f1);
             aspect-ratio: 1/1;
             //border: 3px solid var(--c10);
             border-radius: 0.3rem;

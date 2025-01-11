@@ -9,6 +9,7 @@
   margin: 0 auto;
 }
 .game-board-container h1 {
+  color: var(--font-color);
   width: 100%;
   text-align: center;
 }
@@ -62,7 +63,6 @@
 }
 .game-board-container .game-board .field {
   background-color: var(--bg-color2);
-  font: 600 2rem var(--f1);
   aspect-ratio: 1/1;
   border-radius: 0.3rem;
   display: flex;

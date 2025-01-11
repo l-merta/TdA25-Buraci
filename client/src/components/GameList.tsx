@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
+import Loading from './Loading';
+import GameItem from './GameItem';
 
 interface GamesProps {
   uuid: string;
@@ -13,20 +15,21 @@ interface GamesProps {
 
 const GameList = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
-  const navigate = useNavigate(); // Initialize useNavigate
 
   const [games, setGames] = useState<Array<GamesProps>>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(apiUrl + "games"); // Replace with your API URL
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json(); // Parse JSON data
+        setIsLoading(false);
         setGames(result);
-        console.log(result);
       } catch (error: any) {
         console.log(error.message); // Set error message if there's an issue
       }
@@ -34,54 +37,19 @@ const GameList = () => {
 
     fetchData(); // Call the fetch function
   }, []); // Empty dependency array means this runs once on mount
-  
-  function playGame(uuid: string) {
-    navigate(`/game/${uuid}`); // Redirect to the game page
+
+  if (isLoading) {
+    return <Loading />;
   }
-
-  async function editGame(uuid: string) {
-    // Redirect to the edit page
-    navigate(`/create/${uuid}`);
+  else {
+    return (
+      <div className="games-list">
+        {games && games.map((game) => (
+          <GameItem game={game} setGames={setGames} />
+        ))}
+      </div>
+    );
   }
-
-  async function deleteGame(uuid: string) {
-    try {
-      const response = await fetch(`${apiUrl}games/${uuid}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Remove the deleted game from the state
-      setGames(games.filter(game => game.uuid !== uuid));
-      console.log(`Game with UUID ${uuid} deleted successfully.`);
-    } catch (error: any) {
-      console.log(error.message); // Handle error
-    }
-  }
-
-  return (
-    <div className="games-list" style={{ maxWidth: "45rem"}}>
-      {games && games.map((game) => (
-        <div className="game" key={game.uuid}>
-          <div className="text">
-            <span className="game-name">{game.name}</span>
-            <div className="att">
-              <span className={"game-difficulty game-difficulty-" + game.difficulty}>{game.difficulty}</span>
-              <span className="game-state">{game.gameState}</span>
-            </div>
-          </div>
-          <div className="actions">
-            <button onClick={() => playGame(game.uuid)} className="button-main">Hrát</button>
-            <button onClick={() => editGame(game.uuid)} className="button-main"><i className="fa-regular fa-pen-to-square"></i></button>
-            <button onClick={() => deleteGame(game.uuid)} className="button-main button-warning"><i className="fa-regular fa-trash"></i></button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
 }
 
 export default GameList;

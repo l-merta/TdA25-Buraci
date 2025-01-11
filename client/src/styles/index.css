@@ -13,9 +13,15 @@
   --c12: rgba(0, 112, 187, 0.8);
   --c13: #dddddd;
   --c14: #111111;
-  --c15: #161616;
+  --c15: #1f1f1f;
   --c-warn: rgb(247, 66, 66);
   --c-win: rgba(255, 208, 0, 0.6);
+
+  --c-beginner: rgba(21, 255, 0, 0.3);
+  --c-easy: rgba(102, 255, 0, 0.3);
+  --c-medium: rgba(238, 255, 0, 0.3);
+  --c-hard: rgba(255, 72, 0, 0.3);
+  --c-extreme: rgb(199, 199, 199);
 
   --f1: "Dosis";
   --f2: "Poppins";
@@ -50,6 +56,7 @@ body {
   background-color: var(--c3); */
   background-color: var(--bg-color);
   font-family: var(--f1);
+  /* min-height: 100vh; */
   margin: 0;
   /* margin-bottom: 10rem; */
   transition: color .12s background-color .12s;
