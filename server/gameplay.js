@@ -17,7 +17,8 @@ const getPlaying = (board) => {
   return nextPlayerIndex;
 };
 
-const playField = (row, col, board, player) => { // Function to update game fields, row and col = field position, player = player index in the players list
+const playField = (row, col, board, player) => {
+  console.log(row, col, player);
   const newFields = board.map((r) => [...r]);
   newFields[row][col] = players[player];
   return newFields;
@@ -28,7 +29,7 @@ const determineGameState = (board) => {
   const moves = board.flat().filter(cell => cell !== '').length;
   const rounds = Math.ceil(moves / 2);
 
-  if (checkPotentialWin(board, 4, players)) return 'endgame';
+  if (checkPotentialWin(board, 5, players)) return 'endgame';
   if (rounds <= 5) return 'opening';
   if (rounds >= 6) return 'midgame';
   return 'unknown';
@@ -97,65 +98,101 @@ const checkWin = (board, winLength, players) => {
   return null; // No winner
 };
 
-const checkPotentialWin = (board, winLength, players) => {
+const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpots = 1) => {
   const numRows = board.length;
   const numCols = board[0].length;
+  let results = [];
+
+  if (!forPlayer) {
+    forPlayer = players[getPlaying(board)];
+  }
 
   const checkDirection = (row, col, rowDir, colDir, player) => {
-    if (board[row][col] !== player) return null;
+    const sequence = [];
+    const coordinates = [];
+    let gapIndex = -1;
 
-    const coordinates = [{ row, col }];
-
-    for (let i = 1; i < winLength; i++) {
+    for (let i = 0; i < winLength; i++) {
       const newRow = row + i * rowDir;
       const newCol = col + i * colDir;
       if (
         newRow < 0 || newRow >= numRows ||
-        newCol < 0 || newCol >= numCols ||
-        board[newRow][newCol] !== player
+        newCol < 0 || newCol >= numCols
       ) {
-        return null;
+        break;
       }
+      sequence.push(board[newRow][newCol]);
       coordinates.push({ row: newRow, col: newCol });
+      if (board[newRow][newCol] === '' && gapIndex === -1) {
+        gapIndex = i;
+      }
     }
 
-    // Check if the next move can complete the win
-    const nextRow = row + winLength * rowDir;
-    const nextCol = col + winLength * colDir;
-    const prevRow = row - rowDir;
-    const prevCol = col - colDir;
+    const result = checkSequence(sequence, emptySpots);
+    if (result && result.seq === player) {
+      const potentialCoordinates = [];
 
-    const nextCellEmpty = nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] === '';
-    const prevCellEmpty = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] === '';
-
-    if (nextCellEmpty || prevCellEmpty) {
-      // Check if the potential win is blockable
-      const nextCellBlocked = nextRow >= 0 && nextRow < numRows && nextCol >= 0 && nextCol < numCols && board[nextRow][nextCol] !== '' && board[nextRow][nextCol] !== player;
-      const prevCellBlocked = prevRow >= 0 && prevRow < numRows && prevCol >= 0 && prevCol < numCols && board[prevRow][prevCol] !== '' && board[prevRow][prevCol] !== player;
-
-      if (nextCellBlocked && prevCellBlocked) {
-        //console.log("returning null protože blocked obě strany");
-        return null; // Blocked on both sides
+      // If there's a gap, return only the gap coordinate
+      if (gapIndex !== -1 && gapIndex !== 0 && gapIndex !== winLength - 1) {
+        console.log("returning gap");
+        const gapRow = row + gapIndex * rowDir;
+        const gapCol = col + gapIndex * colDir;
+        return { player, coordinates: [{ row: gapRow, col: gapCol }] };
       }
 
-      // Check if the next player is the same as the player with the potential win
-      const moves = board.flat().filter(cell => cell !== '').length;
-      const nextPlayer = players[moves % players.length];
-      if (nextPlayer !== player) {
-        //console.log("returning null protože další hráč to blokne");
-        return null; // The next player will block the potential win
+      // Check the cell before the sequence
+      const beforeRow = row - rowDir;
+      const beforeCol = col - colDir;
+      if (beforeRow >= 0 && beforeRow < numRows && beforeCol >= 0 && beforeCol < numCols && board[beforeRow][beforeCol] === '') {
+        potentialCoordinates.push({ row: beforeRow, col: beforeCol });
       }
 
-      //console.log("returning win pro " + player);
-      return { player, coordinates };
+      // Check the cell after the sequence
+      let afterRow = row + (winLength - 1) * rowDir + rowDir;
+      let afterCol = col + (winLength - 1) * colDir + colDir;
+      if (rowDir == 1)
+        afterRow--;
+      if (colDir == 1)
+        afterCol--;
+      if (afterRow >= 0 && afterRow < numRows && afterCol >= 0 && afterCol < numCols && board[afterRow][afterCol] === '') {
+        potentialCoordinates.push({ row: afterRow, col: afterCol });
+      }
+
+      return { player, coordinates: potentialCoordinates };
     }
 
+    return null;
+  };
+
+  const checkSequence = (sequence, emptySpots) => {
+    let count = 1;
+    let emptyCount = 0;
+    let curChar = sequence[0];
+
+    if (winLength === 1) return { seq: curChar, winArr: sequence };
+
+    for (let i = 1; i < sequence.length; i++) {
+      if (sequence[i] === curChar) {
+        count++;
+        if (count >= winLength && curChar !== '') return { seq: curChar, winArr: sequence };
+      } else if (sequence[i] === '' && emptyCount < emptySpots) {
+        emptyCount++;
+        count++;
+        if (count >= winLength && curChar !== '') return { seq: curChar, winArr: sequence };
+      } else {
+        count = 1;
+        emptyCount = 0;
+        curChar = sequence[i];
+      }
+    }
     return null;
   };
 
   for (let row = 0; row < numRows; row++) {
     for (let col = 0; col < numCols; col++) {
       for (const player of players) {
+        if (forPlayer && player !== forPlayer) continue;
+
         const directions = [
           checkDirection(row, col, 0, 1, player),  // Horizontal
           checkDirection(row, col, 1, 0, player),  // Vertical
@@ -165,17 +202,19 @@ const checkPotentialWin = (board, winLength, players) => {
 
         for (const result of directions) {
           if (result) {
-            return result;
+            results.push(result);
           }
         }
       }
     }
   }
 
-  return null; // No potential win
+  return results.length > 0 ? results : null; // Return potential wins or null if none found
 };
 
 const playFieldAi = (board, aiPlayerIndex) => {
+  const opp = aiPlayerIndex === 0 ? 1 : 0;
+
   const findRandomMove = (board) => {
     const emptyCells = [];
     for (let row = 0; row < board.length; row++) {
@@ -188,10 +227,65 @@ const playFieldAi = (board, aiPlayerIndex) => {
     return emptyCells[Math.floor(Math.random() * emptyCells.length)];
   };
 
+  // Make a potential win move
+  const ai_pot_move = checkPotentialWin(board, 5, players, players[aiPlayerIndex]);
+  if (ai_pot_move) {
+    console.log("AI playing winning move");
+    const coords = [];
+    ai_pot_move[0].coordinates.forEach((coor) => {
+      console.log(coor, board[coor.row][coor.col]);
+      if (!board[coor.row][coor.col]) {
+        console.log("row, col: ", coor.row, coor.col);
+        coords.push(coor);
+      }
+    });
+    if (coords.length > 0) {
+      const coord = coords[Math.floor(Math.random() * coords.length)];
+      return playField(coord.row, coord.col, board, aiPlayerIndex);
+    }
+  }
+
+  // Make a potential win move
+  const opp_pot_move = checkPotentialWin(board, 5, players, players[opp]);
+  if (opp_pot_move) {
+    console.log("AI defending opps winning move");
+    const coords = [];
+    opp_pot_move[0].coordinates.forEach((coor) => {
+      console.log(coor, board[coor.row][coor.col]);
+      if (!board[coor.row][coor.col]) {
+        console.log("row, col: ", coor.row, coor.col);
+        coords.push(coor);
+      }
+    });
+    if (coords.length > 0) {
+      const coord = coords[Math.floor(Math.random() * coords.length)];
+      return playField(coord.row, coord.col, board, aiPlayerIndex);
+    }
+  }
+
+  // Make a potential win -2 move
+  const opp_pot_move2 = checkPotentialWin(board, 4, players, players[opp]);
+  if (opp_pot_move2) {
+    console.log("AI defending opps almost winning move");
+    const coords = [];
+    opp_pot_move2[0].coordinates.forEach((coor) => {
+      console.log(coor, board[coor.row][coor.col]);
+      if (!board[coor.row][coor.col]) {
+        console.log("row, col: ", coor.row, coor.col);
+        coords.push(coor);
+      }
+    });
+    if (coords.length > 0) {
+      const coord = coords[Math.floor(Math.random() * coords.length)];
+      return playField(coord.row, coord.col, board, aiPlayerIndex);
+    }
+  }
+
   // Make a random move
-  const move = findRandomMove(board);
-  if (move) {
-    return playField(move.row, move.col, board, aiPlayerIndex);
+  const rand_move = findRandomMove(board);
+  if (rand_move) {
+    console.log("AI playing random");
+    return playField(rand_move.row, rand_move.col, board, aiPlayerIndex);
   }
 
   return board; // No move possible
