@@ -54,6 +54,53 @@ header {
             cursor: pointer;
         }
     }
+    .burger-menu {
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+
+        .burger-button {
+            color: var(--c3);
+            background-color: transparent;
+            font-size: 1.4rem;
+            aspect-ratio: 1/1;
+            height: 100%;
+            border: none;
+            border-radius: 50%;
+            padding: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .theme-switch {
+            opacity: 0.9;
+            color: var(--c3);
+            font-size: 1.6rem;
+            background-color: transparent;
+            width: fit-content;
+            height: fit-content;
+            border: none;
+            cursor: pointer;
+        }
+        .burger-nav {
+            position: absolute;
+            top: var(--header-h);
+            right: 0;
+            background-color: var(--c6);
+            width: 100%;
+            padding: 0 0.5rem;
+            padding-bottom: 1.0rem;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 0.5rem;
+
+            a {
+                width: 100%;
+            }
+        }
+    }
 }
 main {
     //background-color: red;
@@ -320,6 +367,16 @@ input[type=text] {
           }
       }
   }
+}
+@media screen and (max-width: 900px) {
+    header {
+        .actions, .actions-2 {
+            display: none;
+        }
+        .burger-menu {
+            display: flex;
+        }
+    }
 }
 @media screen and (max-width: 500px) {
     :root {

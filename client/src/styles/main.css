@@ -55,6 +55,53 @@ header .actions-2 .theme-switch {
   border: none;
   cursor: pointer;
 }
+header .burger-menu {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+header .burger-menu .burger-button {
+  color: var(--c3);
+  background-color: transparent;
+  font-size: 1.4rem;
+  aspect-ratio: 1/1;
+  height: 100%;
+  border: none;
+  border-radius: 50%;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+header .burger-menu .theme-switch {
+  opacity: 0.9;
+  color: var(--c3);
+  font-size: 1.6rem;
+  background-color: transparent;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  border: none;
+  cursor: pointer;
+}
+header .burger-menu .burger-nav {
+  position: absolute;
+  top: var(--header-h);
+  right: 0;
+  background-color: var(--c6);
+  width: 100%;
+  padding: 0 0.5rem;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+}
+header .burger-menu .burger-nav a {
+  width: 100%;
+}
 
 main {
   width: 100%;
@@ -321,6 +368,14 @@ input[type=text] {
   }
   .sec-ai .s2 .board {
     width: 100%;
+  }
+}
+@media screen and (max-width: 900px) {
+  header .actions, header .actions-2 {
+    display: none;
+  }
+  header .burger-menu {
+    display: flex;
   }
 }
 @media screen and (max-width: 500px) {
