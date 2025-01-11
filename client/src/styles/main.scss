@@ -65,6 +65,7 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     img {
         width: 8rem;
     }
@@ -78,6 +79,7 @@ main {
 
         .main {
             font: 800 4.0rem var(--f1);
+            text-align: center;
         }
         .sec {
             font: 700 2.4rem var(--f1);
@@ -90,8 +92,10 @@ main {
         text-align: center;
     }
     nav {
+        padding: 0 0.5rem;
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
         gap: 1.0rem;
     }
 }
@@ -99,6 +103,7 @@ main {
     width: 100%;
     max-width: 70rem;
     margin: 0 auto;
+    padding: 0 0.5rem;
     padding-bottom: 3.0rem;
     display: flex;
     justify-content: center;
@@ -125,6 +130,7 @@ main {
         .actions {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
         }
     }
@@ -293,4 +299,45 @@ input[type=text] {
     0% {scale: 1;}
     50% {scale: 1.4;}
     100% {scale: 1;}
+}
+
+@media screen and (max-width: 1150px) {
+  .sec-ai {
+      flex-direction: column;
+      align-items: center;
+
+      .s1 {
+          .text {
+              margin-bottom: 1.0rem;
+              flex-direction: column;
+              align-items: start;
+              gap: 0.5;
+          }
+          .actions {
+              justify-content: center;
+          }
+      }
+      .s2 {
+          .board {
+              width: 100%;
+          }
+      }
+  }
+}
+@media screen and (max-width: 500px) {
+  main nav {
+      a {
+          width: 100% !important;
+      }
+  }
+  .sec-ai {
+      .text {
+          p {
+              text-align: center;
+          }
+      }
+      a {
+          width: 100%;
+      }
+  }
 }

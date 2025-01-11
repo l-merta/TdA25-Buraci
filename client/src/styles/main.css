@@ -79,6 +79,7 @@ main h1 {
 }
 main h1 .main {
   font: 800 4rem var(--f1);
+  text-align: center;
 }
 main h1 .sec {
   font: 700 2.4rem var(--f1);
@@ -90,8 +91,10 @@ main p {
   text-align: center;
 }
 main nav {
+  padding: 0 0.5rem;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -99,6 +102,7 @@ main nav {
   width: 100%;
   max-width: 70rem;
   margin: 0 auto;
+  padding: 0 0.5rem;
   padding-bottom: 3rem;
   display: flex;
   justify-content: center;
@@ -124,6 +128,7 @@ main nav {
 .sec-ai .s1 .actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 .sec-ai .s2 .board {
@@ -300,5 +305,34 @@ input[type=text] {
   }
   100% {
     scale: 1;
+  }
+}
+@media screen and (max-width: 1150px) {
+  .sec-ai {
+    flex-direction: column;
+    align-items: center;
+  }
+  .sec-ai .s1 .text {
+    margin-bottom: 1rem;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5;
+  }
+  .sec-ai .s1 .actions {
+    justify-content: center;
+  }
+  .sec-ai .s2 .board {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  main nav a {
+    width: 100% !important;
+  }
+  .sec-ai .text p {
+    text-align: center;
+  }
+  .sec-ai a {
+    width: 100%;
   }
 }/*# sourceMappingURL=main.css.map */
