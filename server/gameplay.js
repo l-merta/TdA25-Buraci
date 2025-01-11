@@ -176,37 +176,6 @@ const checkPotentialWin = (board, winLength, players) => {
 };
 
 const playFieldAi = (board, aiPlayerIndex) => {
-  const opponentPlayerIndex = (aiPlayerIndex + 1) % players.length;
-  const winLength = 5; // Assuming win length is 5, adjust if different
-
-  const findBlockingMove = (board, playerIndex) => {
-    for (let row = 0; row < board.length; row++) {
-      for (let col = 0; col < board[row].length; col++) {
-        if (board[row][col] === '') {
-          const newBoard = playField(row, col, board, playerIndex);
-          if (checkPotentialWin(newBoard, winLength - 1, players)) {
-            return { row, col };
-          }
-        }
-      }
-    }
-    return null;
-  };
-
-  const findBuildingMove = (board, playerIndex) => {
-    for (let row = 0; row < board.length; row++) {
-      for (let col = 0; col < board[row].length; col++) {
-        if (board[row][col] === '') {
-          const newBoard = playField(row, col, board, playerIndex);
-          if (checkPotentialWin(newBoard, winLength - 2, players)) {
-            return { row, col };
-          }
-        }
-      }
-    }
-    return null;
-  };
-
   const findRandomMove = (board) => {
     const emptyCells = [];
     for (let row = 0; row < board.length; row++) {
@@ -219,20 +188,8 @@ const playFieldAi = (board, aiPlayerIndex) => {
     return emptyCells[Math.floor(Math.random() * emptyCells.length)];
   };
 
-  // Try to block the opponent
-  let move = findBlockingMove(board, opponentPlayerIndex);
-  if (move) {
-    return playField(move.row, move.col, board, aiPlayerIndex);
-  }
-
-  // Try to build up AI's own territory
-  move = findBuildingMove(board, aiPlayerIndex);
-  if (move) {
-    return playField(move.row, move.col, board, aiPlayerIndex);
-  }
-
-  // Fallback to a random move
-  move = findRandomMove(board);
+  // Make a random move
+  const move = findRandomMove(board);
   if (move) {
     return playField(move.row, move.col, board, aiPlayerIndex);
   }
