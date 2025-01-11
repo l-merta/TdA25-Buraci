@@ -165,6 +165,7 @@ footer .names .team {
   font: 500 1.1rem var(--f1);
 }
 footer .social {
+  height: 100%;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -184,9 +185,6 @@ footer .social a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.loading i {
-  background-color: green;
 }
 
 b.b-red {
@@ -326,6 +324,9 @@ input[type=text] {
   }
 }
 @media screen and (max-width: 500px) {
+  :root {
+    --footer-h: 10.0rem;
+  }
   main nav a {
     width: 100% !important;
   }
@@ -334,5 +335,16 @@ input[type=text] {
   }
   .sec-ai a {
     width: 100%;
+  }
+  footer .names {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+  }
+  footer .names img {
+    height: 50%;
+  }
+  footer .social {
+    align-items: start;
   }
 }/*# sourceMappingURL=main.css.map */
