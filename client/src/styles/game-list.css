@@ -19,6 +19,13 @@
   margin: 0 auto;
   margin-bottom: 1.2rem;
 }
+.main-games .play-actions {
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
 
 .game-modes {
   width: 100%;
@@ -27,14 +34,17 @@
   margin-bottom: 2rem;
   display: flex;
   justify-content: start;
-  align-items: center;
   gap: 1rem;
 }
 .game-modes .mode {
+  flex: 1;
+  height: 1;
   background-color: var(--bg-color2);
   border: 1px solid var(--bg-color3);
   border-radius: 0.5rem;
   padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
   transition: 0.15s;
   cursor: pointer;
 }
@@ -42,16 +52,17 @@
   color: var(--c6);
   font: 700 2rem var(--f1);
   margin: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 .game-modes .mode p {
   opacity: 0.8;
   color: var(--font-color);
   font: 500 1.2rem var(--f1);
   margin: 0;
+  text-align: start;
 }
 .game-modes .mode:hover {
   scale: 1.05;
@@ -60,7 +71,7 @@
   scale: 1;
 }
 .game-modes .mode-active {
-  border-color: var(--c6);
+  border: 3px solid var(--c6);
 }
 
 .games-list {
