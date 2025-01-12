@@ -18,12 +18,15 @@
         max-width: 85rem;
         margin: 0 auto;
         margin-bottom: 1.2rem;
+        padding: 0 0.5rem;
     }
     .play-actions {
         width: 100%;
         margin-bottom: 2.0rem;
+        padding: 0 0.5rem;
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
         gap: 1.0rem;
   }
 }
@@ -32,8 +35,10 @@
     max-width: 85rem;
     margin: 0 auto;
     margin-bottom: 2.0rem;
-    display: flex;
-    justify-content: start;
+    padding: 0 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: center;
     gap: 1.0rem;
 
     .mode {
@@ -272,4 +277,36 @@
 .button-warning:hover {
   color: var(--font-contr);
   background-color: var(--c-warn);
+}
+
+@media screen and (max-width: 1200px) {
+    .game-modes {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .games-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 810px) {
+  .games-list {
+      grid-template-columns: repeat(1, 1fr);
+  }
+}
+@media screen and (max-width: 750px) {
+    .game-modes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 500px) {
+    .game-modes {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .play-actions {
+        button, a {
+          width: 100%;
+        }
+    }
+}
+@media screen and (max-width: 360px) {
+  
 }

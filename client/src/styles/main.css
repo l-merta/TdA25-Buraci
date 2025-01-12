@@ -30,8 +30,22 @@ header img {
 header a {
   color: var(--c3) !important;
   height: 100%;
+  position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
+}
+header a .line {
+  background-color: var(--c3);
+  width: 0%;
+  height: 0.2rem;
+  border-radius: 0.5rem;
+  position: absolute;
+  bottom: -0.1rem;
+  transition: 0.12s;
+}
+header a:hover .line {
+  width: 80%;
 }
 header .actions {
   display: flex;
@@ -54,6 +68,57 @@ header .actions-2 .theme-switch {
   height: fit-content;
   border: none;
   cursor: pointer;
+}
+header .burger-menu {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+header .burger-menu .burger-button {
+  color: var(--c3);
+  background-color: transparent;
+  font-size: 1.4rem;
+  aspect-ratio: 1/1;
+  height: 100%;
+  border: none;
+  border-radius: 50%;
+  padding: 0.8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.12s;
+  cursor: pointer;
+}
+header .burger-menu .burger-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+header .burger-menu .theme-switch {
+  opacity: 0.9;
+  color: var(--c3);
+  font-size: 1.6rem;
+  background-color: transparent;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  border: none;
+  cursor: pointer;
+}
+header .burger-menu .burger-nav {
+  position: absolute;
+  top: var(--header-h);
+  right: 0;
+  background-color: var(--c6);
+  width: 100%;
+  padding: 0 0.5rem;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+}
+header .burger-menu .burger-nav a {
+  width: 100%;
 }
 
 main {
@@ -79,6 +144,7 @@ main h1 {
 }
 main h1 .main {
   font: 800 4rem var(--f1);
+  text-align: center;
 }
 main h1 .sec {
   font: 700 2.4rem var(--f1);
@@ -90,8 +156,10 @@ main p {
   text-align: center;
 }
 main nav {
+  padding: 0 0.5rem;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -99,6 +167,7 @@ main nav {
   width: 100%;
   max-width: 70rem;
   margin: 0 auto;
+  padding: 0 0.5rem;
   padding-bottom: 3rem;
   display: flex;
   justify-content: center;
@@ -124,6 +193,7 @@ main nav {
 .sec-ai .s1 .actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 .sec-ai .s2 .board {
@@ -160,6 +230,7 @@ footer .names .team {
   font: 500 1.1rem var(--f1);
 }
 footer .social {
+  height: 100%;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -179,9 +250,6 @@ footer .social a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.loading i {
-  background-color: green;
 }
 
 b.b-red {
@@ -204,6 +272,7 @@ b.b-blue {
   justify-content: center;
   align-items: center;
   text-decoration: none;
+  transition: 0.12s;
   cursor: pointer;
 }
 .button.button-1 {
@@ -237,6 +306,10 @@ b.b-blue {
   color: var(--font-color);
   background-color: transparent;
   border-width: 1px;
+}
+
+.button:hover {
+  opacity: 0.8;
 }
 
 .replay {
@@ -300,5 +373,56 @@ input[type=text] {
   }
   100% {
     scale: 1;
+  }
+}
+@media screen and (max-width: 1150px) {
+  .sec-ai {
+    flex-direction: column;
+    align-items: center;
+  }
+  .sec-ai .s1 .text {
+    margin-bottom: 1rem;
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5;
+  }
+  .sec-ai .s1 .actions {
+    justify-content: center;
+  }
+  .sec-ai .s2 .board {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 900px) {
+  header .actions, header .actions-2 {
+    display: none;
+  }
+  header .burger-menu {
+    display: flex;
+  }
+}
+@media screen and (max-width: 500px) {
+  :root {
+    --footer-h: 10.0rem;
+  }
+  main nav a {
+    width: 100% !important;
+  }
+  .sec-ai .text p {
+    text-align: center;
+  }
+  .sec-ai a {
+    width: 100%;
+  }
+  footer .names {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+  }
+  footer .names img {
+    height: 50%;
+  }
+  footer .social {
+    align-items: start;
   }
 }/*# sourceMappingURL=main.css.map */

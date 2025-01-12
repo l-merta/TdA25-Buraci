@@ -1,0 +1,5 @@
+.main-tda {
+    min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
+    margin-top: var(--header-h);
+    padding-top: 3rem;
+}

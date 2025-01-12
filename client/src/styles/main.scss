@@ -30,8 +30,25 @@ header {
     a {
         color: var(--c3) !important;
         height: 100%;
+        position: relative;
         display: flex;
+        justify-content: center;
         align-items: center;
+
+        .line {
+            background-color: var(--c3);
+            width: 0%;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            position: absolute;
+            bottom: -0.1rem;
+            transition: .12s;
+        }
+    }
+    a:hover {
+        .line {
+            width: 80%;
+        }
     }
     .actions {
         display: flex;
@@ -54,6 +71,57 @@ header {
             cursor: pointer;
         }
     }
+    .burger-menu {
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+
+        .burger-button {
+            color: var(--c3);
+            background-color: transparent;
+            font-size: 1.4rem;
+            aspect-ratio: 1/1;
+            height: 100%;
+            border: none;
+            border-radius: 50%;
+            padding: 0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: .12s;
+            cursor: pointer;
+        }
+        .burger-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .theme-switch {
+            opacity: 0.9;
+            color: var(--c3);
+            font-size: 1.6rem;
+            background-color: transparent;
+            width: fit-content;
+            height: fit-content;
+            border: none;
+            cursor: pointer;
+        }
+        .burger-nav {
+            position: absolute;
+            top: var(--header-h);
+            right: 0;
+            background-color: var(--c6);
+            width: 100%;
+            padding: 0 0.5rem;
+            padding-bottom: 1.0rem;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 0.5rem;
+
+            a {
+                width: 100%;
+            }
+        }
+    }
 }
 main {
     //background-color: red;
@@ -65,6 +133,7 @@ main {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     img {
         width: 8rem;
     }
@@ -78,6 +147,7 @@ main {
 
         .main {
             font: 800 4.0rem var(--f1);
+            text-align: center;
         }
         .sec {
             font: 700 2.4rem var(--f1);
@@ -90,8 +160,10 @@ main {
         text-align: center;
     }
     nav {
+        padding: 0 0.5rem;
         display: flex;
         justify-content: center;
+        flex-wrap: wrap;
         gap: 1.0rem;
     }
 }
@@ -99,6 +171,7 @@ main {
     width: 100%;
     max-width: 70rem;
     margin: 0 auto;
+    padding: 0 0.5rem;
     padding-bottom: 3.0rem;
     display: flex;
     justify-content: center;
@@ -125,6 +198,7 @@ main {
         .actions {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 0.5rem;
         }
     }
@@ -166,6 +240,7 @@ footer {
         }
     }
     .social {
+        height: 100%;
         display: flex;
         align-items: center;
         gap: 1.0rem;
@@ -181,15 +256,11 @@ footer {
     }
 }
 .loading {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  i {
-    background-color: green;
-  }
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 b {
     &.b-red {
@@ -211,6 +282,7 @@ b {
     justify-content: center;
     align-items: center;
     text-decoration: none;
+    transition: .12s;
     cursor: pointer;
 
     &.button-1 {
@@ -245,6 +317,9 @@ b {
         background-color: transparent;
         border-width: 1px;
     }
+}
+.button:hover {
+    opacity: 0.8;
 }
 .replay {
     color: var(--font-color);
@@ -293,4 +368,72 @@ input[type=text] {
     0% {scale: 1;}
     50% {scale: 1.4;}
     100% {scale: 1;}
+}
+
+@media screen and (max-width: 1150px) {
+  .sec-ai {
+      flex-direction: column;
+      align-items: center;
+
+      .s1 {
+          .text {
+              margin-bottom: 1.0rem;
+              flex-direction: column;
+              align-items: start;
+              gap: 0.5;
+          }
+          .actions {
+              justify-content: center;
+          }
+      }
+      .s2 {
+          .board {
+              width: 100%;
+          }
+      }
+  }
+}
+@media screen and (max-width: 900px) {
+    header {
+        .actions, .actions-2 {
+            display: none;
+        }
+        .burger-menu {
+            display: flex;
+        }
+    }
+}
+@media screen and (max-width: 500px) {
+    :root {
+        --footer-h: 10.0rem;
+    }
+    main nav {
+        a {
+            width: 100% !important;
+        }
+    }
+    .sec-ai {
+        .text {
+            p {
+                text-align: center;
+            }
+        }
+        a {
+            width: 100%;
+        }
+    }
+    footer {
+        .names {
+            flex-direction: column;
+            align-items: start;
+            gap: 0.5rem;
+
+            img {
+                height: 50%;
+            }
+        }
+        .social {
+            align-items: start;
+        }
+    }
 }
