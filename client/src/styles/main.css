@@ -272,6 +272,7 @@ b.b-blue {
   justify-content: center;
   align-items: center;
   text-decoration: none;
+  transition: 0.12s;
   cursor: pointer;
 }
 .button.button-1 {
@@ -305,6 +306,10 @@ b.b-blue {
   color: var(--font-color);
   background-color: transparent;
   border-width: 1px;
+}
+
+.button:hover {
+  opacity: 0.8;
 }
 
 .replay {

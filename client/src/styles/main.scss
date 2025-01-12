@@ -282,6 +282,7 @@ b {
     justify-content: center;
     align-items: center;
     text-decoration: none;
+    transition: .12s;
     cursor: pointer;
 
     &.button-1 {
@@ -316,6 +317,9 @@ b {
         background-color: transparent;
         border-width: 1px;
     }
+}
+.button:hover {
+    opacity: 0.8;
 }
 .replay {
     color: var(--font-color);

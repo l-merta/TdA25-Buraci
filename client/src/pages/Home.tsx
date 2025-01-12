@@ -9,6 +9,12 @@ import Footer from './../components/Footer';
 
 function App() {
   const theme = useTheme();
+  const aiGameSett = {
+    id: 1,
+    gameMode: "ai",
+    playerNames: ["Hráč 1", "Táda"],
+    ai: [0, 1]
+  }
 
   return (
     <>
@@ -44,7 +50,7 @@ function App() {
             <img src={"/images/icons/zarivka_playing_" + themeToImg(theme, ".png")} alt="Táda" />
           </div>
           <div className="actions">
-            <Link to="/game" className='button button-red'>Vyzkoušej své schopnosti!</Link>
+            <Link to="/game" state={aiGameSett} className='button button-red'>Vyzkoušej své schopnosti!</Link>
             <Link to="/games" className='button button-red button-border'>Seznam her</Link>
           </div>
         </div>
