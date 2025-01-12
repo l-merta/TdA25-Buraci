@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { connectToDatabase, getDb, closeDatabase } = require("./db");
+const { connectToDatabase, getDb, closeDatabase, refreshDatabaseConnection } = require("./db");
 const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, playFieldAi } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
@@ -15,6 +15,9 @@ app.use(express.static("public")); // Slouží statické soubory z Reactu
 
 // Database connection
 connectToDatabase();
+
+// Refresh database connection every 12 hours
+setInterval(refreshDatabaseConnection, 12 * 60 * 60 * 1000);
 
 // API Endpoints
 app.post("/api/v1/games", async (req, res) => {
