@@ -30,8 +30,25 @@ header {
     a {
         color: var(--c3) !important;
         height: 100%;
+        position: relative;
         display: flex;
+        justify-content: center;
         align-items: center;
+
+        .line {
+            background-color: var(--c3);
+            width: 0%;
+            height: 0.2rem;
+            border-radius: 0.5rem;
+            position: absolute;
+            bottom: -0.1rem;
+            transition: .12s;
+        }
+    }
+    a:hover {
+        .line {
+            width: 80%;
+        }
     }
     .actions {
         display: flex;
@@ -71,7 +88,11 @@ header {
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: .12s;
             cursor: pointer;
+        }
+        .burger-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
         .theme-switch {
             opacity: 0.9;

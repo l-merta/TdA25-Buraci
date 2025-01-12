@@ -35,9 +35,18 @@ const Header = () => {
     <header>
       <Link to="/"><img src="/images/logos/Think-different-Academy_LOGO_oficialni-bile.png" alt="" /></Link>
       <div className="actions">
-        <Link to="/games" className='button button-empty'>Seznam her</Link>
-        <Link to="/think-different-academy" className='button button-empty'>O TdA</Link>
-        <Link to="/about-team" className='button button-empty'>O týmu a aplikaci</Link>
+        <Link to="/games" className='button button-empty'>
+          <span>Seznam her</span>
+          <div className="line"></div>
+        </Link>
+        <Link to="/think-different-academy" className='button button-empty'>
+          <span>O TdA</span>
+          <div className="line"></div>
+        </Link>
+        <Link to="/about-team" className='button button-empty'>
+          <span>O týmu a aplikaci</span>
+          <div className="line"></div>
+        </Link>
       </div>
       <div className="actions-2">
         <button className="theme-switch" onClick={switchColorTheme}>
