@@ -98,6 +98,50 @@ const checkWin = (board, winLength, players) => {
   return null; // No winner
 };
 
+// Helper function to get available spots before and after the sequence
+function getAvailableSpots(sequence, board, numRows, numCols) {
+  const potentialCoordinates = [];
+  const rowDir = sequence[1].row - sequence[0].row;
+  const colDir = sequence[1].col - sequence[0].col;
+
+  // Check the cell before the sequence
+  const beforeRow = sequence[0].row - rowDir;
+  const beforeCol = sequence[0].col - colDir;
+  if (beforeRow >= 0 && beforeRow < numRows && beforeCol >= 0 && beforeCol < numCols && board[beforeRow][beforeCol] === '') {
+    potentialCoordinates.push({ row: beforeRow, col: beforeCol });
+  }
+
+  // Check the cell after the sequence
+  const afterRow = sequence[sequence.length - 1].row + rowDir;
+  const afterCol = sequence[sequence.length - 1].col + colDir;
+  if (afterRow >= 0 && afterRow < numRows && afterCol >= 0 && afterCol < numCols && board[afterRow][afterCol] === '') {
+    potentialCoordinates.push({ row: afterRow, col: afterCol });
+  }
+
+  return potentialCoordinates;
+}
+
+/*
+// Refactored checkPotentialWin function
+function checkPotentialWin(sequence, board, numRows, numCols, winLength, forPlayer = null) {
+  const gapIndex = sequence.findIndex(coord => board[coord.row][coord.col] === '');
+
+  // If there's a gap, return only the gap coordinate
+  if (gapIndex !== -1 && gapIndex !== 0 && gapIndex !== sequence.length - 1) {
+    console.log("returning gap");
+    const gapRow = sequence[gapIndex].row;
+    const gapCol = sequence[gapIndex].col;
+    return { player: forPlayer, coordinates: [{ row: gapRow, col: gapCol }] };
+  }
+
+  // Get available spots before and after the sequence
+  const potentialCoordinates = getAvailableSpots(sequence, board, numRows, numCols);
+
+  console.log(potentialCoordinates);
+  return { player: forPlayer, coordinates: potentialCoordinates };
+}
+*/
+
 const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpots = 1) => {
   const numRows = board.length;
   const numCols = board[0].length;
@@ -140,6 +184,7 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
         return { player, coordinates: [{ row: gapRow, col: gapCol }] };
       }
 
+      /*
       // Check the cell before the sequence
       const beforeRow = row - rowDir;
       const beforeCol = col - colDir;
@@ -159,6 +204,7 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
       }
 
       return { player, coordinates: potentialCoordinates };
+      */
     }
 
     return null;
@@ -208,6 +254,8 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
       }
     }
   }
+
+  //const avaSpots = 
 
   return results.length > 0 ? results : null; // Return potential wins or null if none found
 };
