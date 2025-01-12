@@ -56,6 +56,7 @@ const validateBoard = (board) => {
 const checkWin = (board, winLength, players) => {
   const numRows = board.length;
   const numCols = board[0].length;
+  const results = [];
 
   const checkDirection = (row, col, rowDir, colDir) => {
     const player = board[row][col];
@@ -89,13 +90,13 @@ const checkWin = (board, winLength, players) => {
 
       for (const result of directions) {
         if (result) {
-          return result;
+          results.push(result);
         }
       }
     }
   }
 
-  return null; // No winner
+  return results.length > 0 ? results : null; // Return all possible wins or null if none found
 };
 
 // Helper function to get available spots before and after the sequence
@@ -120,27 +121,6 @@ function getAvailableSpots(sequence, board, numRows, numCols) {
 
   return potentialCoordinates;
 }
-
-/*
-// Refactored checkPotentialWin function
-function checkPotentialWin(sequence, board, numRows, numCols, winLength, forPlayer = null) {
-  const gapIndex = sequence.findIndex(coord => board[coord.row][coord.col] === '');
-
-  // If there's a gap, return only the gap coordinate
-  if (gapIndex !== -1 && gapIndex !== 0 && gapIndex !== sequence.length - 1) {
-    console.log("returning gap");
-    const gapRow = sequence[gapIndex].row;
-    const gapCol = sequence[gapIndex].col;
-    return { player: forPlayer, coordinates: [{ row: gapRow, col: gapCol }] };
-  }
-
-  // Get available spots before and after the sequence
-  const potentialCoordinates = getAvailableSpots(sequence, board, numRows, numCols);
-
-  console.log(potentialCoordinates);
-  return { player: forPlayer, coordinates: potentialCoordinates };
-}
-*/
 
 const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpots = 1) => {
   const numRows = board.length;
@@ -181,7 +161,7 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
         console.log("returning gap");
         const gapRow = row + gapIndex * rowDir;
         const gapCol = col + gapIndex * colDir;
-        return { player, coordinates: [{ row: gapRow, col: gapCol }] };
+        return { player, coordinates: { row: gapRow, col: gapCol } };
       }
 
       /*
@@ -255,8 +235,31 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
     }
   }
 
-  //const avaSpots = 
+  const possibleWin = checkWin(board, winLength - 1, players);
+  const avaSpots = [];
+  if (possibleWin) {
+    console.log("poss win: ", possibleWin);
+    possibleWin.forEach((win) => {
+      const as = getAvailableSpots(win.coordinates, board, numRows, numCols);
+      if (as) {
+        avaSpots.push({
+          player: win.player,
+          coordinates: as
+        });
+      }
+    });
+    console.log("avaSpots: ", avaSpots);
+  }
+  if (avaSpots.length > 0) {
+    avaSpots.forEach((spot) => {
+      if (spot.player === forPlayer)
+        spot.coordinates.forEach((coor) => {
+            results.push({ coordinates: coor });
+        });
+    });
+  }
 
+  console.log("returning results: ", results);
   return results.length > 0 ? results : null; // Return potential wins or null if none found
 };
 
@@ -280,12 +283,8 @@ const playFieldAi = (board, aiPlayerIndex) => {
   if (ai_pot_move) {
     console.log("AI playing winning move");
     const coords = [];
-    ai_pot_move[0].coordinates.forEach((coor) => {
-      console.log(coor, board[coor.row][coor.col]);
-      if (!board[coor.row][coor.col]) {
-        console.log("row, col: ", coor.row, coor.col);
-        coords.push(coor);
-      }
+    ai_pot_move.forEach((move) => {
+      coords.push(move.coordinates);
     });
     if (coords.length > 0) {
       const coord = coords[Math.floor(Math.random() * coords.length)];
@@ -298,14 +297,11 @@ const playFieldAi = (board, aiPlayerIndex) => {
   if (opp_pot_move) {
     console.log("AI defending opps winning move");
     const coords = [];
-    opp_pot_move[0].coordinates.forEach((coor) => {
-      console.log(coor, board[coor.row][coor.col]);
-      if (!board[coor.row][coor.col]) {
-        console.log("row, col: ", coor.row, coor.col);
-        coords.push(coor);
-      }
+    opp_pot_move.forEach((move) => {
+      coords.push(move.coordinates);
     });
     if (coords.length > 0) {
+      console.log("coords: ", coords);
       const coord = coords[Math.floor(Math.random() * coords.length)];
       return playField(coord.row, coord.col, board, aiPlayerIndex);
     }
@@ -316,12 +312,8 @@ const playFieldAi = (board, aiPlayerIndex) => {
   if (opp_pot_move2) {
     console.log("AI defending opps almost winning move");
     const coords = [];
-    opp_pot_move2[0].coordinates.forEach((coor) => {
-      console.log(coor, board[coor.row][coor.col]);
-      if (!board[coor.row][coor.col]) {
-        console.log("row, col: ", coor.row, coor.col);
-        coords.push(coor);
-      }
+    opp_pot_move2.forEach((move) => {
+      coords.push(move.coordinates);
     });
     if (coords.length > 0) {
       const coord = coords[Math.floor(Math.random() * coords.length)];
