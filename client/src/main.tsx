@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from './pages/Home.tsx';
 import Game from './pages/Game.tsx';
 import GameList from './pages/Games.tsx';
+import OnlineRoom from './pages/OnlineRoom.tsx';
 import Create from './pages/Create.tsx';
 import Tda from './pages/Tda.tsx';
 import Team from './pages/Team.tsx';
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/game" element={<Game />} />
         <Route path="/game/:uuid" element={<Game />} />
         <Route path="/games" element={<GameList />} />
+        <Route path="/online" element={<OnlineRoom />} />
         <Route path="/create" element={<Create />} />
         <Route path="/create/:uuid" element={<Create />} />
         <Route path="/think-different-academy" element={<Tda />} />
