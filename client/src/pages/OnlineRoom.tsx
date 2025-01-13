@@ -39,6 +39,10 @@ function OnlineRoom() {
       socket.emit("message", { message: "Hello, server!" });
     });
 
+    socket.on("reply", (data) => {
+      console.log(data.message);
+    });
+
     return () => {
       socket.disconnect();
     };

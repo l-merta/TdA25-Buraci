@@ -31,6 +31,7 @@ module.exports = (server) => {
 
       socket.on("message", (data) => {
         console.log(`Received message from room ${roomId}: ${data.message}`);
+        socket.emit("reply", { message: "Server replying to " + data.message });
       });
 
       socket.on("disconnect", () => {
