@@ -44,7 +44,7 @@ app.post("/api/v1/games", async (req, res) => {
   };
 
   try {
-    const db = getDb();
+    const db = await getDb();
     await db.run(
       `INSERT INTO games (uuid, createdAt, updatedAt, name, difficulty, gameState, board) VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -66,7 +66,7 @@ app.post("/api/v1/games", async (req, res) => {
 
 app.get("/api/v1/games", async (req, res) => {
   try {
-    const db = getDb();
+    const db = await getDb();
     const rows = await db.all(`SELECT * FROM games`);
     rows.forEach(row => {
       row.board = JSON.parse(row.board); // Convert board back to JSON
@@ -82,7 +82,7 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
-    const db = getDb();
+    const db = await getDb();
     const row = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
     if (!row) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
@@ -119,7 +119,7 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
 
   try {
     //await connectToDatabase();
-    const db = getDb();
+    const db = await getDb();
     const result = await db.run(
       `UPDATE games SET name = ?, difficulty = ?, gameState = ?, board = ?, updatedAt = ? WHERE uuid = ?`,
       [updatedGame.name, updatedGame.difficulty, updatedGame.gameState, JSON.stringify(updatedGame.board), updatedGame.updatedAt, uuid]
@@ -148,7 +148,7 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
 
   try {
     //await connectToDatabase();
-    const db = getDb();
+    const db = await getDb();
     const result = await db.run(`DELETE FROM games WHERE uuid = ?`, [uuid]);
     if (result.affectedRows === 0) {
       //await closeDatabase();

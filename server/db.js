@@ -24,9 +24,14 @@ const connectToDatabase = async () => {
   }
 };
 
-const getDb = () => {
+const getDb = async () => {
   if (!connection) {
-    throw new Error("Database connection not initialized. Call connectToDatabase first.");
+    console.warn("Database connection not initialized. Attempting to reconnect...");
+    try {
+      await connectToDatabase();
+    } catch (err) {
+      console.warn("Failed to reconnect to the database.");
+    }
   }
   return {
     run: async (sql, params = []) => {
