@@ -22,7 +22,7 @@ const Games = () => {
     {
       id: 2,
       gameMode: "online",
-      playerNames: ["Hráč 1", "Hráč 2"],
+      playerNames: ["Online hráč 1", "Online hráč 2"],
       ai: [0, 0]
     },
     {
@@ -73,7 +73,7 @@ const Games = () => {
           </button>
         </div>
         <div className="play-actions">
-          <Link to="/game/" state={gameSett} className="button button-1 button-red">Nová hra</Link>
+          <Link to={gameSett.gameMode != "online" ? "/game/" : "/online/"} state={gameSett} className="button button-1 button-red">Nová hra</Link>
           <Link to="/create/" className="button button-1 button-red button-border">Vytvořit hru</Link>
         </div>
         <GameList gameSett={gameSett} />

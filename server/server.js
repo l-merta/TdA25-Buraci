@@ -4,6 +4,7 @@ const { connectToDatabase, getDb, closeDatabase, refreshDatabaseConnection } = r
 const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, playFieldAi, checkPotentialWin } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
+const http = require("http");
 
 const app = express();
 const PORT = process.env.PORT || 5200;
@@ -18,6 +19,12 @@ connectToDatabase();
 
 // Refresh database connection every 30 minutes
 setInterval(refreshDatabaseConnection, 0.5 * 60 * 60 * 1000);
+
+// Create HTTP server
+const server = http.createServer(app);
+
+// Import and use WebSocket server
+require("./online")(server);
 
 // API Endpoints
 app.post("/api/v1/games", async (req, res) => {
@@ -239,6 +246,7 @@ app.get("*", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
-app.listen(PORT, () => {
+// Start the server
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
