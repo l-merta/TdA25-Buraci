@@ -28,6 +28,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/game/:uuid" element={<Game />} />
         <Route path="/games" element={<GameList />} />
         <Route path="/online" element={<OnlineRoom />} />
+        <Route path="/online/:id" element={<OnlineRoom />} />
         <Route path="/create" element={<Create />} />
         <Route path="/create/:uuid" element={<Create />} />
         <Route path="/think-different-academy" element={<Tda />} />
