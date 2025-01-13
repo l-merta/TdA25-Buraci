@@ -18,7 +18,6 @@ const getPlaying = (board) => {
 };
 
 const playField = (row, col, board, player) => {
-  console.log(row, col, player);
   const newFields = board.map((r) => [...r]);
   newFields[row][col] = players[player];
   return newFields;
@@ -56,6 +55,7 @@ const validateBoard = (board) => {
 const checkWin = (board, winLength, players) => {
   const numRows = board.length;
   const numCols = board[0].length;
+  const results = [];
 
   const checkDirection = (row, col, rowDir, colDir) => {
     const player = board[row][col];
@@ -89,14 +89,37 @@ const checkWin = (board, winLength, players) => {
 
       for (const result of directions) {
         if (result) {
-          return result;
+          results.push(result);
         }
       }
     }
   }
 
-  return null; // No winner
+  return results.length > 0 ? results : null; // Return all possible wins or null if none found
 };
+
+// Helper function to get available spots before and after the sequence
+function getAvailableSpots(sequence, board, numRows, numCols) {
+  const potentialCoordinates = [];
+  const rowDir = sequence[1].row - sequence[0].row;
+  const colDir = sequence[1].col - sequence[0].col;
+
+  // Check the cell before the sequence
+  const beforeRow = sequence[0].row - rowDir;
+  const beforeCol = sequence[0].col - colDir;
+  if (beforeRow >= 0 && beforeRow < numRows && beforeCol >= 0 && beforeCol < numCols && board[beforeRow][beforeCol] === '') {
+    potentialCoordinates.push({ row: beforeRow, col: beforeCol });
+  }
+
+  // Check the cell after the sequence
+  const afterRow = sequence[sequence.length - 1].row + rowDir;
+  const afterCol = sequence[sequence.length - 1].col + colDir;
+  if (afterRow >= 0 && afterRow < numRows && afterCol >= 0 && afterCol < numCols && board[afterRow][afterCol] === '') {
+    potentialCoordinates.push({ row: afterRow, col: afterCol });
+  }
+
+  return potentialCoordinates;
+}
 
 const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpots = 1) => {
   const numRows = board.length;
@@ -134,12 +157,12 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
 
       // If there's a gap, return only the gap coordinate
       if (gapIndex !== -1 && gapIndex !== 0 && gapIndex !== winLength - 1) {
-        console.log("returning gap");
         const gapRow = row + gapIndex * rowDir;
         const gapCol = col + gapIndex * colDir;
-        return { player, coordinates: [{ row: gapRow, col: gapCol }] };
+        return { player, coordinates: { row: gapRow, col: gapCol } };
       }
 
+      /*
       // Check the cell before the sequence
       const beforeRow = row - rowDir;
       const beforeCol = col - colDir;
@@ -159,6 +182,7 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
       }
 
       return { player, coordinates: potentialCoordinates };
+      */
     }
 
     return null;
@@ -209,6 +233,29 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
     }
   }
 
+  const possibleWin = checkWin(board, winLength - 1, players);
+  const avaSpots = [];
+  if (possibleWin) {
+    possibleWin.forEach((win) => {
+      const as = getAvailableSpots(win.coordinates, board, numRows, numCols);
+      if (as) {
+        avaSpots.push({
+          player: win.player,
+          coordinates: as
+        });
+      }
+    });
+  }
+  if (avaSpots.length > 0) {
+    avaSpots.forEach((spot) => {
+      if (spot.player === forPlayer)
+        spot.coordinates.forEach((coor) => {
+            results.push({ coordinates: coor });
+        });
+    });
+  }
+
+  //console.log("returning results: ", results);
   return results.length > 0 ? results : null; // Return potential wins or null if none found
 };
 
@@ -230,14 +277,10 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a potential win move
   const ai_pot_move = checkPotentialWin(board, 5, players, players[aiPlayerIndex]);
   if (ai_pot_move) {
-    console.log("AI playing winning move");
+    //console.log("AI playing winning move");
     const coords = [];
-    ai_pot_move[0].coordinates.forEach((coor) => {
-      console.log(coor, board[coor.row][coor.col]);
-      if (!board[coor.row][coor.col]) {
-        console.log("row, col: ", coor.row, coor.col);
-        coords.push(coor);
-      }
+    ai_pot_move.forEach((move) => {
+      coords.push(move.coordinates);
     });
     if (coords.length > 0) {
       const coord = coords[Math.floor(Math.random() * coords.length)];
@@ -248,16 +291,13 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a potential win move
   const opp_pot_move = checkPotentialWin(board, 5, players, players[opp]);
   if (opp_pot_move) {
-    console.log("AI defending opps winning move");
+    //console.log("AI defending opps winning move");
     const coords = [];
-    opp_pot_move[0].coordinates.forEach((coor) => {
-      console.log(coor, board[coor.row][coor.col]);
-      if (!board[coor.row][coor.col]) {
-        console.log("row, col: ", coor.row, coor.col);
-        coords.push(coor);
-      }
+    opp_pot_move.forEach((move) => {
+      coords.push(move.coordinates);
     });
     if (coords.length > 0) {
+      //console.log("coords: ", coords);
       const coord = coords[Math.floor(Math.random() * coords.length)];
       return playField(coord.row, coord.col, board, aiPlayerIndex);
     }
@@ -266,14 +306,10 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a potential win -2 move
   const opp_pot_move2 = checkPotentialWin(board, 4, players, players[opp]);
   if (opp_pot_move2) {
-    console.log("AI defending opps almost winning move");
+    //console.log("AI defending opps almost winning move");
     const coords = [];
-    opp_pot_move2[0].coordinates.forEach((coor) => {
-      console.log(coor, board[coor.row][coor.col]);
-      if (!board[coor.row][coor.col]) {
-        console.log("row, col: ", coor.row, coor.col);
-        coords.push(coor);
-      }
+    opp_pot_move2.forEach((move) => {
+      coords.push(move.coordinates);
     });
     if (coords.length > 0) {
       const coord = coords[Math.floor(Math.random() * coords.length)];
@@ -284,7 +320,7 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a random move
   const rand_move = findRandomMove(board);
   if (rand_move) {
-    console.log("AI playing random");
+    //console.log("AI playing random");
     return playField(rand_move.row, rand_move.col, board, aiPlayerIndex);
   }
 

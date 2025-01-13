@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const { connectToDatabase, getDb, closeDatabase } = require("./db");
-const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, playFieldAi } = require("./gameplay");
+const { connectToDatabase, getDb, closeDatabase, refreshDatabaseConnection } = require("./db");
+const { players, getPlaying, playField, determineGameState, validateBoard, checkWin, playFieldAi, checkPotentialWin } = require("./gameplay");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 
@@ -15,6 +15,9 @@ app.use(express.static("public")); // Slouží statické soubory z Reactu
 
 // Database connection
 connectToDatabase();
+
+// Refresh database connection every 30 minutes
+setInterval(refreshDatabaseConnection, 0.5 * 60 * 60 * 1000);
 
 // API Endpoints
 app.post("/api/v1/games", async (req, res) => {
@@ -41,7 +44,7 @@ app.post("/api/v1/games", async (req, res) => {
   };
 
   try {
-    const db = getDb();
+    const db = await getDb();
     await db.run(
       `INSERT INTO games (uuid, createdAt, updatedAt, name, difficulty, gameState, board) VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -63,7 +66,7 @@ app.post("/api/v1/games", async (req, res) => {
 
 app.get("/api/v1/games", async (req, res) => {
   try {
-    const db = getDb();
+    const db = await getDb();
     const rows = await db.all(`SELECT * FROM games`);
     rows.forEach(row => {
       row.board = JSON.parse(row.board); // Convert board back to JSON
@@ -79,7 +82,7 @@ app.get("/api/v1/games/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
-    const db = getDb();
+    const db = await getDb();
     const row = await db.get(`SELECT * FROM games WHERE uuid = ?`, [uuid]);
     if (!row) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
@@ -116,7 +119,7 @@ app.put("/api/v1/games/:uuid", async (req, res) => {
 
   try {
     //await connectToDatabase();
-    const db = getDb();
+    const db = await getDb();
     const result = await db.run(
       `UPDATE games SET name = ?, difficulty = ?, gameState = ?, board = ?, updatedAt = ? WHERE uuid = ?`,
       [updatedGame.name, updatedGame.difficulty, updatedGame.gameState, JSON.stringify(updatedGame.board), updatedGame.updatedAt, uuid]
@@ -145,7 +148,7 @@ app.delete("/api/v1/games/:uuid", async (req, res) => {
 
   try {
     //await connectToDatabase();
-    const db = getDb();
+    const db = await getDb();
     const result = await db.run(`DELETE FROM games WHERE uuid = ?`, [uuid]);
     if (result.affectedRows === 0) {
       //await closeDatabase();
@@ -181,7 +184,12 @@ app.put("/api/v1/gameFieldClick", async (req, res) => {
     newGameData.board = playField(row, col, board, getPlaying(board));
   }
 
-  newGameData.win = checkWin(newGameData.board, 5, players);
+  checkPotentialWin(newGameData.board, 5, players);
+  const win = checkWin(newGameData.board, 5, players);
+  if (win)
+    newGameData.win = win[0];
+  else 
+    newGameData.win = null;
 
   try {
     res.json(newGameData);
