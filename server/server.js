@@ -16,8 +16,8 @@ app.use(express.static("public")); // Slouží statické soubory z Reactu
 // Database connection
 connectToDatabase();
 
-// Refresh database connection every 12 hours
-setInterval(refreshDatabaseConnection, 12 * 60 * 60 * 1000);
+// Refresh database connection every 30 minutes
+setInterval(refreshDatabaseConnection, 0.5 * 60 * 60 * 1000);
 
 // API Endpoints
 app.post("/api/v1/games", async (req, res) => {
@@ -190,7 +190,7 @@ app.put("/api/v1/gameFieldClick", async (req, res) => {
     newGameData.win = win[0];
   else 
     newGameData.win = null;
-  
+
   try {
     res.json(newGameData);
   } catch (error) {
