@@ -15,6 +15,7 @@ import './styles/index.css';
 import './styles/main.css';
 import './styles/game.css';
 import './styles/game-list.css';
+import './styles/online.css'
 import './styles/tda.css';
 import './styles/team-page.css';
 import './styles/error-page.css';

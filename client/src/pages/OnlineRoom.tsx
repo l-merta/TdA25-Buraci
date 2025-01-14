@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 import GameBoard from "./../components/GameBoard";
+import PlayerItem from "./../components/PlayerItem";
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
 
@@ -96,20 +97,33 @@ function OnlineRoom() {
       <>
         <Header />
         <div className="bg-grad"></div>
-        <div className="main-tda">
-          <h1>Online Room - {roomId}</h1>
-          <h2>Players:</h2>
-          <ul>
-            {players.map((player, index) => (
-              <li key={index}>{player.playerName} - {player.playerChar}</li>
-            ))}
-          </ul>
-          {player?.playerHost &&
-            <>
-            <button onClick={switchChars}>Switch Chars</button>
-            <button onClick={startGame}>Start Game</button>
-            </>
-          }
+        <div className="main-room">
+          <div className="code-cont">
+            <h3>Kód místnosti</h3>
+            <div className="group">
+              <button><i className="fa-solid fa-copy"></i></button>
+              <span className="code">{roomId}</span>
+            </div>
+          </div>
+          <div className="players">
+            {players && players.length > 0 && 
+              <>
+                <PlayerItem player={players[0]} index={0} />
+                {!player?.playerHost &&
+                  <button onClick={switchChars}><i className="fa-solid fa-repeat"></i></button>
+                }
+                {players.length > 1 && <PlayerItem player={players[1]} index={1} />}
+              </>
+            }
+          </div>
+          <div className="actions">
+            {!player?.playerHost &&
+              <>
+              <button onClick={switchChars}>Switch Chars</button>
+              <button onClick={startGame}>Start Game</button>
+              </>
+            }
+          </div>
         </div>
         <Footer />
       </>
@@ -120,7 +134,7 @@ function OnlineRoom() {
       <>
       <Header />
       <div className="bg-grad"></div>
-      <div className="main-tda">
+      <div className="main-game">
         <GameBoard 
           size={15} 
           replayButton={true}
@@ -132,7 +146,6 @@ function OnlineRoom() {
           isHost={player?.playerHost}
         />
       </div>
-      <Footer />
       </>
     )
   }
