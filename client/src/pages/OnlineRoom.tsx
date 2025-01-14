@@ -53,7 +53,7 @@ function OnlineRoom() {
         navigate("/online/" + data.roomId);
       }
       else if (data.type == "error") {
-        navigate("/error");
+        navigate("/error", { state: data });
       }
     });
 
@@ -75,7 +75,6 @@ function OnlineRoom() {
     socket.on("updateRoom", (data) => {
       console.log("Room updated", data);
       setRoom(data);
-      //setGameStarted(data.gameStarted);
     });
 
     return () => {
@@ -93,7 +92,6 @@ function OnlineRoom() {
   }
 
   if (!room?.gameStarted) {
-    console.log("game not started");
     return (
       <>
         <Header />
@@ -125,11 +123,13 @@ function OnlineRoom() {
       <div className="main-tda">
         <GameBoard 
           size={15} 
+          replayButton={true}
           ai={[0, 0]} 
           uuid={gameSett.uuid}
           playerNames={players.map((player) => player.playerName)} 
           playerCurr={players.map((player) => player.playerCurr ? 1 : 0)}
           socket={socketRef.current}
+          isHost={player?.playerHost}
         />
       </div>
       <Footer />

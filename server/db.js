@@ -25,12 +25,13 @@ const connectToDatabase = async () => {
 };
 
 const getDb = async () => {
-  if (!connection) {
-    console.warn("Database connection not initialized. Attempting to reconnect...");
+  if (!connection || connection.connection._closing) {
+    console.warn("Database connection not initialized or closed. Attempting to reconnect...");
     try {
       await connectToDatabase();
     } catch (err) {
       console.warn("Failed to reconnect to the database.");
+      throw err;
     }
   }
   return {

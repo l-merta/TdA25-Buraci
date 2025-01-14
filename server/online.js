@@ -1,4 +1,5 @@
 const { Server } = require("socket.io");
+const { players, getPlaying, playField, checkWin, checkPotentialWin } = require("./gameplay");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -90,18 +91,53 @@ module.exports = (server) => {
         emitRoomData(rooms[roomId]);
       });
 
-      socket.on("playField", () => {
+      socket.on("playField", (data) => {
         console.log(`Field played`);
-        socket.emit("reply", { message: "Server replying to " + data.message });
+
+        const { row, col, board, ai } = data;
+        const newGameData = { 
+          ...data, 
+          playing: getPlaying(board),
+          win: null
+        }
+
+        newGameData.nextPlaying = newGameData.playing == players.length - 1 ? 0 : newGameData.playing + 1;
+
+        newGameData.board = playField(row, col, board, getPlaying(board));
+
+        checkPotentialWin(newGameData.board, 5, players);
+        const win = checkWin(newGameData.board, 5, players);
+        if (win)
+          newGameData.win = win[0];
+        else 
+          newGameData.win = null;
+
+        emitPlayFieldProcessed(rooms[roomId], newGameData);
+      });
+
+      socket.on("resetGame", () => {
+        emitResetGameProcessed(rooms[roomId]);
       });
 
       socket.on("disconnect", () => {
         console.log(`Client disconnected from room ${roomId}`);
-        rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
-        if (rooms[roomId].players.length === 0) {
-          delete rooms[roomId];
-        } else {
-          emitPlayerList(rooms[roomId]);
+        const disconnectedPlayer = rooms[roomId].players.find(client => client.socket === socket);
+        
+        if (disconnectedPlayer.playerHost) {
+          emitRedirect(rooms[roomId], {
+            type: "error",
+            error: "hostDisconnected",
+            message: "Zakladatel hry se odpojil"
+          });
+        } 
+        else {
+          rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
+
+          if (rooms[roomId].players.length === 0) {
+            delete rooms[roomId];
+          } else {
+            emitPlayerList(rooms[roomId]);
+          }
         }
       });
     }
@@ -135,6 +171,21 @@ module.exports = (server) => {
 
     room.players.forEach(client => {
       client.socket.emit("updateRoom", sanitizedRoom);
+    });
+  }
+  function emitPlayFieldProcessed(room, gameData) {
+    room.players.forEach(client => {
+      client.socket.emit("playFieldProcessed", gameData);
+    });
+  }
+  function emitResetGameProcessed(room) {
+    room.players.forEach(client => {
+      client.socket.emit("resetGameProcessed");
+    });
+  }
+  function emitRedirect(room, redirectData) {
+    room.players.forEach(client => {
+      client.socket.emit("redirect", redirectData);
     });
   }
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Socket } from "socket.io-client";
 import { useTheme } from './../components/ThemeHandler';
 
 import Loading from './Loading';
@@ -19,6 +18,7 @@ interface GameBoardProps {
     ai: Array<Number>;
     playerCurr: Array<Number>;
     socket?: any;
+    isHost?: boolean;
     uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
@@ -26,7 +26,7 @@ interface GameBoardProps {
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const theme = useTheme();
@@ -122,9 +122,21 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, uui
           }
         }
         else {
-          socket.emit("playField");
+          socket.emit("playField", { ...gameData, row: row, col: col, ai: ai });
         }
     };
+    useEffect(() => {
+        if (socket) {
+            socket.on("playFieldProcessed", (newGameData: any) => {
+                setGameData(newGameData);
+                setFirstMoveAfterLoad(false);
+                aiMoveInProgress.current = false;
+            });
+            socket.on("resetGameProcessed", () => {
+                resetGame();
+            });
+        }
+    });
 
     useEffect(() => {
         if (gameData.win) {
@@ -237,6 +249,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, uui
         }
     };
 
+    function onResetGameClick() {
+        if (!online)
+          resetGame();
+        else
+          socket.emit("resetGame");
+    }
     function resetGame() {
         setGameDataLoaded(false);
         initialMoveMade.current = false;
@@ -295,19 +313,19 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, uui
                 <div className="players">
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
                     <img src={getCharImage(players[0], false)} alt="" />
-                    <div className="name">{playerNames && playerNames[0]} - {playerCurr[0] == 1 ? "já" : ""}</div>
+                    <div className="name">{playerNames && playerNames[0]}</div>
                     {gameData.win && gameData.win.player == players[0] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}
                   </div>
-                  {replayButton ?
-                    <button className='replay' onClick={resetGame}>
+                  {replayButton && ((online && isHost) || !online) ?
+                    <button className='replay' onClick={onResetGameClick}>
                         <i className="fa-solid fa-repeat"></i>
                         <span>Hrát znovu</span>
                     </button>
                   : ""}
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
-                    <div className="name">{playerNames && playerNames[1]} - {playerCurr[1] == 1 ? "já" : ""}</div>
+                    <div className="name">{playerNames && playerNames[1]}</div>
                     {gameData.win && gameData.win.player == players[1] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}

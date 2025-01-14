@@ -9,7 +9,7 @@ import OnlineRoom from './pages/OnlineRoom.tsx';
 import Create from './pages/Create.tsx';
 import Tda from './pages/Tda.tsx';
 import Team from './pages/Team.tsx';
-import PageNotFound from './pages/PageNotFound.tsx';
+import PageNotFound from './pages/ErrorPage.tsx';
 
 import './styles/index.css';
 import './styles/main.css';
