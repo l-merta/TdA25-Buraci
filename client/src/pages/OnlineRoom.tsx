@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
@@ -10,12 +10,25 @@ interface GameSettProps {
   playerNames: Array<String>;
   ai: Array<Number>;
 }
+interface RoomProps {
+  gameStarted: boolean;
+  players: Array<PlayerProps>;
+}
+interface PlayerProps {
+  playerName: string;
+  playerChar: string;
+  playerCurr: boolean;
+  playerHost: boolean;
+}
 
 function OnlineRoom() {
   const location = useLocation();
   const navigate = useNavigate();
   const { id: roomId } = useParams<{ id: string }>();
-  const [players, setPlayers] = useState<string[]>([]);
+  const [players, setPlayers] = useState<PlayerProps[]>([]);
+  const [player, setPlayer] = useState<PlayerProps | null>();
+  const [room, setRoom] = useState<RoomProps | null>(null);
+  const socketRef = useRef<Socket | null>(null);
   //@ts-ignore
   const gameSett: GameSettProps = location.state || {
     // Default values
@@ -29,6 +42,7 @@ function OnlineRoom() {
     const socket = io(wsUrl, {
       query: { roomId }
     });
+    socketRef.current = socket;
 
     socket.on("redirect", (data) => {
       if (data.type == "room") {
@@ -52,6 +66,11 @@ function OnlineRoom() {
     socket.on("updatePlayers", (data) => {
       console.log("Players updated", data);
       setPlayers(data.players);
+      setPlayer(data.players.find((player: PlayerProps) => player.playerCurr));
+    });
+    socket.on("updateRoom", (data) => {
+      console.log("Room updated", data);
+      setRoom(data);
     });
 
     return () => {
@@ -59,22 +78,51 @@ function OnlineRoom() {
     };
   }, [roomId, navigate]);
 
-  return (
-    <>
+  function switchChars() {
+    if (socketRef.current)
+      socketRef.current.emit("switchChar");
+  }
+  function startGame() {
+    if (socketRef.current)
+      socketRef.current.emit("startGame");
+  }
+
+  if (!room?.gameStarted) {
+    return (
+      <>
+        <Header />
+        <div className="bg-grad"></div>
+        <div className="main-tda">
+          <h1>Online Room - {roomId}</h1>
+          <h2>Players:</h2>
+          <ul>
+            {players.map((player, index) => (
+              <li key={index}>{player.playerName} - {player.playerChar}</li>
+            ))}
+          </ul>
+          {player?.playerHost &&
+            <>
+            <button onClick={switchChars}>Switch Chars</button>
+            <button onClick={startGame}>Start Game</button>
+            </>
+          }
+        </div>
+        <Footer />
+      </>
+    );
+  }
+  else {
+    return (
+      <>
       <Header />
       <div className="bg-grad"></div>
       <div className="main-tda">
-        <h1>Online Room - {roomId}</h1>
-        <h2>Players:</h2>
-        <ul>
-          {players.map((player, index) => (
-            <li key={index}>{player}</li>
-          ))}
-        </ul>
+        <h1>Game Started</h1>
       </div>
       <Footer />
-    </>
-  );
+      </>
+    )
+  }
 }
 
 export default OnlineRoom;

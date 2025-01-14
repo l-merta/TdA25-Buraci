@@ -32,7 +32,6 @@ module.exports = (server) => {
         roomId: newRoomId
       });
     } else {
-      // Error handling
       if (!rooms[roomId]) {
         console.log("room does not exist");
         socket.emit("redirect", { 
@@ -42,7 +41,8 @@ module.exports = (server) => {
         });
         return;
       }
-      if (rooms[roomId].length >= 2) {
+
+      if (rooms[roomId].players.length >= 2) {
         console.log("room is full");
         socket.emit("redirect", { 
           type: "error",
@@ -59,13 +59,14 @@ module.exports = (server) => {
 
       socket.emit("welcome", { 
         message: "Welcome to the room!", 
-        //players: rooms[roomId].map(client => client.playerName) 
+        players: rooms[roomId].players.map(client => client.playerName) 
       });
 
-      rooms[roomId].players.forEach(client => {
-        client.socket.emit("updatePlayers", { 
-          players: rooms[roomId].players.map(client => client.playerName)
-        });
+      emitPlayerList(rooms[roomId]);
+
+      socket.on("message", (data) => {
+        console.log(`Received message from room ${roomId}: ${data.message}`);
+        socket.emit("reply", { message: "Server replying to " + data.message });
       });
 
       socket.on("switchChar", () => {
@@ -75,16 +76,14 @@ module.exports = (server) => {
         });
 
         // Emit updated player list
-        rooms[roomId].players.forEach(client => {
-          client.socket.emit("updatePlayers", { 
-            players: rooms[roomId].players.map(client => client.playerName)
-          });
-        });
+        emitPlayerList(rooms[roomId]);
       });
+      socket.on("startGame", () => {
+        // Set started to true
+        rooms[roomId].gameStarted = true;
 
-      socket.on("message", (data) => {
-        console.log(`Received message from room ${roomId}: ${data.message}`);
-        socket.emit("reply", { message: "Server replying to " + data.message });
+        // Emit updated room data
+        emitRoomData(rooms[roomId]);
       });
 
       socket.on("disconnect", () => {
@@ -93,13 +92,40 @@ module.exports = (server) => {
         if (rooms[roomId].players.length === 0) {
           delete rooms[roomId];
         } else {
-          rooms[roomId].players.forEach(client => {
-            client.socket.emit("updatePlayers", { 
-              players: rooms[roomId].players.map(client => client.playerName)
-            });
-          });
+          emitPlayerList(rooms[roomId]);
         }
       });
     }
   });
+
+  function emitPlayerList(room) {
+    const players = room.players.map(player => ({
+      playerName: player.playerName,
+      playerChar: player.playerChar,
+      playerHost: player.playerHost,
+      playerCurr: false // This will be set to true for the current player
+    }));
+
+    room.players.forEach(client => {
+      const updatedPlayers = players.map(player => ({
+        ...player,
+        playerCurr: player.playerName === client.playerName
+      }));
+      client.socket.emit("updatePlayers", { players: updatedPlayers });
+    });
+  }
+  function emitRoomData(room) {
+    const sanitizedRoom = {
+      gameStarted: room.gameStarted,
+      players: room.players.map(player => ({
+        playerName: player.playerName,
+        playerChar: player.playerChar,
+        playerHost: player.playerHost
+      }))
+    };
+
+    room.players.forEach(client => {
+      client.socket.emit("updateRoom", sanitizedRoom);
+    });
+  }
 };
