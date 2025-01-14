@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 
@@ -14,7 +14,8 @@ interface GameSettProps {
 function OnlineRoom() {
   const location = useLocation();
   const navigate = useNavigate();
-  let { id: roomId } = useParams<{ id: string }>();
+  const { id: roomId } = useParams<{ id: string }>();
+  const [players, setPlayers] = useState<string[]>([]);
   //@ts-ignore
   const gameSett: GameSettProps = location.state || {
     // Default values
@@ -25,22 +26,32 @@ function OnlineRoom() {
 
   useEffect(() => {
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-    console.log(wsUrl);
     const socket = io(wsUrl, {
       query: { roomId }
     });
 
     socket.on("redirect", (data) => {
-      navigate(`/online/${data.roomId}`);
+      if (data.type == "room") {
+        navigate("/online/" + data.roomId);
+      }
+      else if (data.type == "error") {
+        navigate("/error");
+      }
     });
 
     socket.on("welcome", (data) => {
       console.log(data.message);
+      //setPlayers(data.players);
       socket.emit("message", { message: "Hello, server!" });
     });
 
     socket.on("reply", (data) => {
       console.log(data.message);
+    });
+
+    socket.on("updatePlayers", (data) => {
+      console.log("Players updated", data);
+      setPlayers(data.players);
     });
 
     return () => {
@@ -54,6 +65,12 @@ function OnlineRoom() {
       <div className="bg-grad"></div>
       <div className="main-tda">
         <h1>Online Room - {roomId}</h1>
+        <h2>Players:</h2>
+        <ul>
+          {players.map((player, index) => (
+            <li key={index}>{player}</li>
+          ))}
+        </ul>
       </div>
       <Footer />
     </>
