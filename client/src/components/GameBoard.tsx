@@ -16,6 +16,7 @@ interface GameDataProps {
 interface GameBoardProps {
     size: number;
     ai: Array<Number>;
+    playerCurr: Array<Number>;
     uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
@@ -23,7 +24,7 @@ interface GameBoardProps {
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const theme = useTheme();
@@ -46,11 +47,17 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
         nextPlaying: 0,
         gameState: "unknown"
     });
+    const [online, setOnline] = useState(false);
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
     const [isLoading, setIsLoading] = useState(uuid ? true : false);
     const initialMoveMade = useRef(false);
     const aiMoveInProgress = useRef(false);
     const [gameDataLoaded, setGameDataLoaded] = useState(false);
+
+    if (playerCurr[0] == 1 || playerCurr[1] == 1) {
+      console.log("is online game");
+      setOnline(true);
+    }
 
     const fetchGameData = async () => {
         if (uuid) {
@@ -277,7 +284,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
                 <div className="players">
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
                     <img src={getCharImage(players[0], false)} alt="" />
-                    <div className="name">{playerNames && playerNames[0]}</div>
+                    <div className="name">{playerNames && playerNames[0]} - {playerCurr[0] == 1 ? "já" : ""}</div>
                     {gameData.win && gameData.win.player == players[0] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}
@@ -289,7 +296,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
                     </button>
                   : ""}
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
-                    <div className="name">{playerNames && playerNames[1]}</div>
+                    <div className="name">{playerNames && playerNames[1]} - {playerCurr[1] == 1 ? "já" : ""}</div>
                     {gameData.win && gameData.win.player == players[1] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}

@@ -2,11 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
+import GameBoard from "./../components/GameBoard";
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
 
 interface GameSettProps {
   gameMode: string;
+  uuid: string;
   playerNames: Array<String>;
   ai: Array<Number>;
 }
@@ -33,6 +35,7 @@ function OnlineRoom() {
   const gameSett: GameSettProps = location.state || {
     // Default values
     gameMode: "online",
+    uuid: "",
     playerNames: ["Hráč 1", "Hráč 2"],
     ai: [0, 0]
   };
@@ -87,7 +90,7 @@ function OnlineRoom() {
       socketRef.current.emit("startGame");
   }
 
-  if (!room?.gameStarted) {
+  if (room && !room.gameStarted) {
     return (
       <>
         <Header />
@@ -117,7 +120,13 @@ function OnlineRoom() {
       <Header />
       <div className="bg-grad"></div>
       <div className="main-tda">
-        <h1>Game Started</h1>
+        <GameBoard 
+          size={15} 
+          ai={[0, 0]} 
+          uuid={gameSett.uuid}
+          playerNames={players.map((player) => player.playerName)} 
+          playerCurr={[1, 0]}
+        />
       </div>
       <Footer />
       </>

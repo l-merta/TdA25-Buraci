@@ -119,7 +119,7 @@ const GameItem:React.FC<GameProps> = ({ game, setGames, gameSett }) => {
         </span>
         <span className="game-state">{game.gameState}</span>
       </div>
-      <GameBoard size={15} uuid={game.uuid} onlyBoard={true} ai={[0, 0]} />
+      <GameBoard size={15} uuid={game.uuid} onlyBoard={true} ai={[0, 0]} playerCurr={[0, 0]} />
     </div>
   )
 }

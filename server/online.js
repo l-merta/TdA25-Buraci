@@ -75,9 +75,13 @@ module.exports = (server) => {
           client.playerChar = client.playerChar === "X" ? "O" : "X";
         });
 
+        // Ensure player with playerChar "X" is at index 0 and player with playerChar "O" is at index 1
+        rooms[roomId].players.sort((a, b) => (a.playerChar === "X" ? -1 : 1));
+
         // Emit updated player list
         emitPlayerList(rooms[roomId]);
       });
+      
       socket.on("startGame", () => {
         // Set started to true
         rooms[roomId].gameStarted = true;
