@@ -30,6 +30,7 @@ function OnlineRoom() {
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const [player, setPlayer] = useState<PlayerProps | null>();
   const [room, setRoom] = useState<RoomProps | null>(null);
+  //const [gameStarted, setGameStarted] = useState(false);
   const socketRef = useRef<Socket | null>(null);
   //@ts-ignore
   const gameSett: GameSettProps = location.state || {
@@ -74,6 +75,7 @@ function OnlineRoom() {
     socket.on("updateRoom", (data) => {
       console.log("Room updated", data);
       setRoom(data);
+      //setGameStarted(data.gameStarted);
     });
 
     return () => {
@@ -90,7 +92,8 @@ function OnlineRoom() {
       socketRef.current.emit("startGame");
   }
 
-  if (room && !room.gameStarted) {
+  if (!room?.gameStarted) {
+    console.log("game not started");
     return (
       <>
         <Header />
@@ -125,7 +128,8 @@ function OnlineRoom() {
           ai={[0, 0]} 
           uuid={gameSett.uuid}
           playerNames={players.map((player) => player.playerName)} 
-          playerCurr={[1, 0]}
+          playerCurr={players.map((player) => player.playerCurr ? 1 : 0)}
+          socket={socketRef.current}
         />
       </div>
       <Footer />

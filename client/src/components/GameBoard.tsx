@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Socket } from "socket.io-client";
 import { useTheme } from './../components/ThemeHandler';
 
 import Loading from './Loading';
@@ -17,6 +18,7 @@ interface GameBoardProps {
     size: number;
     ai: Array<Number>;
     playerCurr: Array<Number>;
+    socket?: any;
     uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
@@ -24,7 +26,7 @@ interface GameBoardProps {
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const theme = useTheme();
@@ -47,6 +49,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, repla
         nextPlaying: 0,
         gameState: "unknown"
     });
+    //@ts-ignore
     const [online, setOnline] = useState(false);
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
     const [isLoading, setIsLoading] = useState(uuid ? true : false);
@@ -54,10 +57,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, repla
     const aiMoveInProgress = useRef(false);
     const [gameDataLoaded, setGameDataLoaded] = useState(false);
 
-    if (playerCurr[0] == 1 || playerCurr[1] == 1) {
-      console.log("is online game");
-      setOnline(true);
-    }
+    useEffect(() => {
+        if (playerCurr[0] === 1 || playerCurr[1] === 1) {
+            console.log("is online game");
+            setOnline(true);
+        }
+    }, [playerCurr]);
 
     const fetchGameData = async () => {
         if (uuid) {
@@ -89,9 +94,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, repla
     const onFieldClick = async (row: number, col: number) => {
         if ((gameData.board[row][col] && ai[getBeforePlaying()] !== 1) || gameData.win) return; // If the field is already played or the game is won, return
         if (aiMoveInProgress.current) return;
+
         aiMoveInProgress.current = true;
 
-        try {
+        if (!online) {
+          try {
             const response = await fetch(`${apiUrl}gameFieldClick`, {
                 method: "PUT",
                 headers: {
@@ -108,10 +115,14 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, repla
             const data = await response.json();
             setFirstMoveAfterLoad(false);
             setGameData(data);
-        } catch (error: any) {
-            console.error("Error playing field:", error.message);
-        } finally {
-            aiMoveInProgress.current = false;
+          } catch (error: any) {
+              console.error("Error playing field:", error.message);
+          } finally {
+              aiMoveInProgress.current = false;
+          }
+        }
+        else {
+          socket.emit("playField");
         }
     };
 
@@ -312,7 +323,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, uuid, repla
                                 ("field-" + colors[getBeforePlaying()] + " ") + 
                                 (!item ? "field-empty " : "field-played ") + 
                                 (gameData.win && isWinChar(rowIndex, colIndex).isWin ? "field-win-" + isWinChar(rowIndex, colIndex).color + " " : " ") +
-                                (ai[getBeforePlaying()] == 1 ? "field-ai " : " ")} 
+                                (ai[getBeforePlaying()] == 1 ? "field-ai " : " ") +
+                                (online && playerCurr[gameData.playing] == 1 ? "field-opp " : " ")} 
                               key={`${rowIndex}-${colIndex}`} 
                               onClick={() => { onFieldClick(rowIndex, colIndex); }}
                           >

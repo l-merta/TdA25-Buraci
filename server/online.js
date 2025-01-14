@@ -58,7 +58,7 @@ module.exports = (server) => {
       rooms[roomId].players.push({ socket, playerName, playerChar, playerHost });
 
       socket.emit("welcome", { 
-        message: "Welcome to the room!", 
+        message: "WebSocket connection established - love, server", 
         players: rooms[roomId].players.map(client => client.playerName) 
       });
 
@@ -81,13 +81,18 @@ module.exports = (server) => {
         // Emit updated player list
         emitPlayerList(rooms[roomId]);
       });
-      
+
       socket.on("startGame", () => {
         // Set started to true
         rooms[roomId].gameStarted = true;
 
         // Emit updated room data
         emitRoomData(rooms[roomId]);
+      });
+
+      socket.on("playField", () => {
+        console.log(`Field played`);
+        socket.emit("reply", { message: "Server replying to " + data.message });
       });
 
       socket.on("disconnect", () => {

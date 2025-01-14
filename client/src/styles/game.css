@@ -90,7 +90,8 @@
 .game-board-container .game-board .field-played {
   cursor: default;
 }
-.game-board-container .game-board .field-ai {
+.game-board-container .game-board .field-ai,
+.game-board-container .game-board .field-opp {
   pointer-events: none;
 }
 .game-board-container .game-board .field-win {
