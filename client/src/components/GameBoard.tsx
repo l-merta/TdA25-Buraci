@@ -56,6 +56,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     const initialMoveMade = useRef(false);
     const aiMoveInProgress = useRef(false);
     const [gameDataLoaded, setGameDataLoaded] = useState(false);
+    const timeoutIds = useRef<number[]>([]);
+
+    const clearTimeouts = () => {
+        timeoutIds.current.forEach(timeoutId => clearTimeout(timeoutId));
+        timeoutIds.current = [];
+    };
 
     useEffect(() => {
         if (playerCurr[0] === 1 || playerCurr[1] === 1) {
@@ -136,23 +142,25 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
                 resetGame();
             });
         }
-    });
+    }, [socket]);
 
     useEffect(() => {
         if (gameData.win) {
             console.log("Player " + gameData.win.player + " won!");
 
-            if (ai[0] == 1 && ai[1] == 1) {
-                setTimeout(() => {
+            if (ai[0] == 1 && ai[1] == 1 && !replayButton) {
+                const timeoutId = setTimeout(() => {
                     resetGame();
                 }, 2000);
+                timeoutIds.current.push(timeoutId);
             }
         } else {
             if (gameDataLoaded && ai[gameData.nextPlaying] == 1) {
                 console.log("AI is playing...");
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     onFieldClick(0, 0); // Play the AI move
                 }, 500);
+                timeoutIds.current.push(timeoutId);
             }
         }
     }, [gameData, gameDataLoaded]);
@@ -184,11 +192,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     useEffect(() => {
         if ((gameDataLoaded && !initialMoveMade.current && ai[getBeforePlaying()] === 1 && !gameData.win) || gameDataLoaded && !initialMoveMade.current && ai[0] === 1 && gameData.playing == 0 && !gameData.win) {
             initialMoveMade.current = true;
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 onFieldClick(0, 0); // Play the AI move
             }, 500);
+            timeoutIds.current.push(timeoutId);
         }
-    }, [gameDataLoaded, initialMoveMade]);
+    }, [gameDataLoaded, gameData]);
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGameData((prevGameData: GameBoardProps) => {
@@ -256,6 +265,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
           socket.emit("resetGame");
     }
     function resetGame() {
+        clearTimeouts();
         setGameDataLoaded(false);
         initialMoveMade.current = false;
         setGameData((prevData: any) =>{
