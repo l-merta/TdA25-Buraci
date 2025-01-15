@@ -22,7 +22,7 @@ const Games = () => {
     {
       id: 2,
       gameMode: "online",
-      playerNames: ["Online hráč 1", "Online hráč 2"],
+      playerNames: ["Hráč 1", "Hráč 2"],
       ai: [0, 0]
     },
     {
@@ -34,6 +34,7 @@ const Games = () => {
   ];
 
   const [gameSett, setGameSett] = useState(gameSettArr[0]);
+  const [roomCode, setRoomCode] = useState("");
 
   return (
     <>
@@ -72,15 +73,28 @@ const Games = () => {
             <p>Podívej se, jak Táda hájí svůj status šampióna proti jinému AI</p>
           </button>
         </div>
+        {gameSett.gameMode === "online" && 
+          <div className="online-actions">
+            <input 
+              type="text" 
+              placeholder='Kód místnosti' 
+              value={roomCode} 
+              onChange={(e) => setRoomCode(e.target.value)} 
+            />
+            <Link to={`/online/${roomCode}`} className="button button-red">Připojit se</Link>
+          </div>
+        }
         <div className="play-actions">
-          <Link to={gameSett.gameMode != "online" ? "/game/" : "/online/"} state={gameSett} className="button button-1 button-red">Nová hra</Link>
+          <Link to={gameSett.gameMode !== "online" ? "/game/" : "/online/"} state={gameSett} className="button button-1 button-red">Nová hra</Link>
           <Link to="/create/" className="button button-1 button-red button-border">Vytvořit hru</Link>
         </div>
-        <GameList gameSett={gameSett} />
+        {gameSett.gameMode !== "online" && 
+          <GameList gameSett={gameSett} />
+        }
       </div>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Games
+export default Games;

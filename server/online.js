@@ -25,6 +25,7 @@ module.exports = (server) => {
 
       rooms[newRoomId] = {
         gameStarted: false,
+        uuid: "",
         players: []
       };
 
@@ -115,6 +116,10 @@ module.exports = (server) => {
         emitPlayFieldProcessed(rooms[roomId], newGameData);
       });
 
+      socket.on("gameUuid", (data) => {
+        emitRoomData({ ...rooms[roomId], uuid: data.uuid });
+      });
+
       socket.on("resetGame", () => {
         emitResetGameProcessed(rooms[roomId]);
       });
@@ -175,6 +180,7 @@ module.exports = (server) => {
   function emitRoomData(room) {
     const sanitizedRoom = {
       gameStarted: room.gameStarted,
+      uuid: room.uuid,
       players: room.players.map(player => ({
         playerName: player.playerName,
         playerChar: player.playerChar,

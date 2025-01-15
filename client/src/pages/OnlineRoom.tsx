@@ -15,6 +15,7 @@ interface GameSettProps {
 }
 interface RoomProps {
   gameStarted: boolean;
+  uuid: string;
   players: Array<PlayerProps>;
 }
 interface PlayerProps {
@@ -41,6 +42,7 @@ function OnlineRoom() {
     playerNames: ["Hráč 1", "Hráč 2"],
     ai: [0, 0]
   };
+  //console.log(gameSett);
 
   useEffect(() => {
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
@@ -51,7 +53,7 @@ function OnlineRoom() {
 
     socket.on("redirect", (data) => {
       if (data.type == "room") {
-        navigate("/online/" + data.roomId);
+        navigate("/online/" + data.roomId, { state: gameSett });
       }
       else if (data.type == "error") {
         navigate("/error", { state: data });
@@ -72,7 +74,15 @@ function OnlineRoom() {
       console.log("Players updated", data);
       setPlayers(data.players);
       setPlayer(data.players.find((player: PlayerProps) => player.playerCurr));
+
+      /*
+      if (player?.playerHost) {
+        console.log("emited uuid: ", gameSett.uuid);
+        socket.emit("gameUuid", { uuid: gameSett.uuid });
+      }
+      */
     });
+
     socket.on("updateRoom", (data) => {
       console.log("Room updated", data);
       setRoom(data);
@@ -151,7 +161,7 @@ function OnlineRoom() {
           size={15} 
           replayButton={true}
           ai={[0, 0]} 
-          uuid={gameSett.uuid}
+          //uuid={"f8a218ea-593b-4cee-9b5f-b108a1ecd8b3"}
           playerNames={players.map((player) => player.playerName)} 
           playerCurr={players.map((player) => player.playerCurr ? 1 : 0)}
           socket={socketRef.current}
