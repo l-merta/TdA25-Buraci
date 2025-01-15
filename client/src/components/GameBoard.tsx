@@ -49,6 +49,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
         nextPlaying: 0,
         gameState: "unknown"
     });
+    //const [difficulty, setDifficulty] = useState('medium');
     //@ts-ignore
     const [online, setOnline] = useState(false);
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
@@ -220,11 +221,15 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
             return { ...prevGameData, name: event.target.value};
         }); // Update game name state on input change
     };
+    const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setGameData({ ...gameData, difficulty: event.target.value });
+    };
     function onSaveClick() {
         createGame(gameData);
     }
+
     const createGame = async (gameData: GameDataProps) => {
-        if (gameData.name.length > 0) {
+        if (gameData.name.length > 0 && !gameData.board.every((row: any) => row.every((cell: any) => cell == ''))) {
             if (uuid) {
                 // Update already existing game
                 try {
@@ -331,9 +336,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
             {!editMode ? 
                 (gameData.name && !onlyBoard && <h1>{gameData.name}</h1>)
             :
-                <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
+                <div className="edit">
+                    <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
+                    <select value={gameData.difficulty} onChange={handleDifficultyChange}>
+                        <option value="beginner">Beginner</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="extreme">Extreme</option>
+                    </select>
+                    {editMode && <button onClick={onSaveClick} className="button button-blue">Uložit a zapnout hru</button>}
+                </div>
             }
-            {editMode && <button onClick={onSaveClick} className="button-main">Uložit a zapnout hru</button>}
             <div className="wrapper">
               {playerNames ?
                 <div className="players">

@@ -169,6 +169,7 @@ function OnlineRoom() {
           isHost={player?.playerHost}
         />
       </div>
+      <Footer />
       </>
     )
   }

@@ -2,6 +2,14 @@
   position: relative;
   top: var(--header-h);
   padding-top: 3rem;
+  padding-bottom: 4.5rem;
+}
+.main-game h1 {
+  color: var(--font-color);
+  width: 100%;
+  margin: 0;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .game-board-container {
@@ -9,10 +17,41 @@
   max-width: 100%;
   margin: 0 auto;
 }
-.game-board-container h1 {
-  color: var(--font-color);
-  width: 100%;
-  text-align: center;
+.game-board-container .edit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.game-board-container .edit button {
+  white-space: nowrap;
+}
+.game-board-container .edit input {
+  background-color: var(--bg-color);
+  font: 600 1.3rem var(--f1);
+  height: 100%;
+  border: 1px solid var(--bg-color3);
+  padding: 0.65rem 1rem;
+}
+.game-board-container .edit input:focus {
+  outline: none;
+}
+.game-board-container .edit select {
+  background-color: var(--bg-color);
+  font: 600 1.3rem var(--f1);
+  border: 1px solid var(--bg-color3);
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  box-shadow: none !important;
+}
+.game-board-container .edit select:focus {
+  outline: none;
+}
+.game-board-container .edit select option {
+  box-shadow: none !important;
+}
+.game-board-container .edit select option:focus {
+  background-color: red !important;
 }
 .game-board-container .wrapper {
   background-color: var(--bg-color3);
