@@ -75,14 +75,13 @@ function OnlineRoom() {
     socket.on("updatePlayers", (data) => {
       console.log("Players updated", data);
       setPlayers(data.players);
-      setPlayer(data.players.find((player: PlayerProps) => player.playerCurr));
 
-      /*
-      if (player?.playerHost) {
-        console.log("emited uuid: ", gameSett.uuid);
-        socket.emit("gameUuid", { uuid: gameSett.uuid });
+      const playerCurr = data.players.find((player: PlayerProps) => player.playerCurr);
+      setPlayer(playerCurr);
+
+      if (data.players.length == 1 && playerCurr.playerChar == 'O') {
+        switchChars();
       }
-      */
     });
 
     socket.on("updateRoom", (data) => {
