@@ -110,10 +110,56 @@
     max-width: 85rem;
     padding: 0 0.5rem;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.8rem;
     
+    .filter {
+        width: 100%;
+        margin-bottom: 1.0rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        input[type="text"] {
+          background-color: var(--bg-color);
+          font: 600 1.0rem var(--f1);
+          width: 20rem;
+          height: 100%;
+          border: 1px solid var(--bg-color3);
+          padding: 0.65rem 1.0rem;
+  
+          &:focus {
+            outline: none;
+          }
+        }
+        .menus {
+            display: flex;
+            gap: 0.8rem;
+
+            select, input[type="date"] {
+                background-color: var(--bg-color);
+                font: 500 1.0rem var(--f1);
+                border: 1px solid var(--bg-color3);
+                border-radius: 0.4rem;
+                padding: 0.5rem 0.8rem;
+                box-shadow: none !important;
+    
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+    }
+    .nothing-found {
+        width: 100%;
+        opacity: 0.6;
+        font: 600 1.0rem var(--f1);
+        text-align: center;
+    }
+    .games {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+    }
     .game {
         width: 100%;
         background-color: var(--bg-color2);
@@ -308,12 +354,12 @@
     .game-modes {
         grid-template-columns: repeat(3, 1fr);
     }
-    .games-list {
+    .games-list .games {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 @media screen and (max-width: 810px) {
-  .games-list {
+  .games-list .games {
       grid-template-columns: repeat(1, 1fr);
   }
 }

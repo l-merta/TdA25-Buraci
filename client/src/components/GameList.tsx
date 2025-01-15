@@ -54,31 +54,36 @@ const GameList: React.FC<GameListProps> = ({ gameSett }) => {
         <input
           type="text"
           name="name"
-          placeholder="Filter by name"
+          placeholder="Hledat podle jména"
           value={filters.name}
           onChange={handleFilterChange}
         />
-        <select name="difficulty" value={filters.difficulty} onChange={handleFilterChange}>
-          <option value="">All difficulties</option>
-          <option value="beginner">Beginner</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-          <option value="extreme">Extreme</option>
-        </select>
-        <input
-          type="date"
-          name="lastModified"
-          placeholder="Filter by last modified"
-          value={filters.lastModified}
-          onChange={handleFilterChange}
-        />
+        <div className="menus">
+          <select name="difficulty" value={filters.difficulty} onChange={handleFilterChange}>
+            <option value="">Všechny obtížnosti</option>
+            <option value="beginner">Beginner</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="extreme">Extreme</option>
+          </select>
+          <input
+            type="date"
+            name="lastModified"
+            placeholder="Filter by last modified"
+            value={filters.lastModified}
+            onChange={handleFilterChange}
+          />
+        </div>
       </div>
       {!isLoading ? 
         <>
-        {games && games.map((game) => (
-          <GameItem game={game} setGames={setGames} key={game.uuid} gameSett={gameSett} />
-        ))} 
+        {games.length === 0 && <p className='nothing-found'>Nic jsme tu nenašli..</p>}
+        <div className='games'>
+          {games && games.map((game) => (
+            <GameItem game={game} setGames={setGames} key={game.uuid} gameSett={gameSett} />
+          ))}
+        </div>
         </>
         :
         <Loading />

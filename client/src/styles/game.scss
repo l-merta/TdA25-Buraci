@@ -50,13 +50,6 @@
             &:focus {
                 outline: none;
             }
-            option {
-                box-shadow: none !important;
-
-                &:focus {
-                    background-color: red !important;
-                }
-            }
         }
     }
     .wrapper {

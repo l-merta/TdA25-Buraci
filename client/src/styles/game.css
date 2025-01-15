@@ -47,12 +47,6 @@
 .game-board-container .edit select:focus {
   outline: none;
 }
-.game-board-container .edit select option {
-  box-shadow: none !important;
-}
-.game-board-container .edit select option:focus {
-  background-color: red !important;
-}
 .game-board-container .wrapper {
   background-color: var(--bg-color3);
   width: 100%;
