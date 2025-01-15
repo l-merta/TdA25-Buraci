@@ -92,6 +92,15 @@ function OnlineRoom() {
       socketRef.current.emit("startGame");
   }
 
+  function copyToClipboard() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      console.log('URL copied to clipboard:', url);
+    }).catch(err => {
+      console.error('Failed to copy URL:', err);
+    });
+  }
+
   if (!room?.gameStarted) {
     return (
       <>
@@ -101,26 +110,29 @@ function OnlineRoom() {
           <div className="code-cont">
             <h3>Kód místnosti</h3>
             <div className="group">
-              <button><i className="fa-solid fa-copy"></i></button>
+              <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
               <span className="code">{roomId}</span>
             </div>
           </div>
           <div className="players">
             {players && players.length > 0 && 
               <>
-                <PlayerItem player={players[0]} index={0} />
-                {!player?.playerHost &&
-                  <button onClick={switchChars}><i className="fa-solid fa-repeat"></i></button>
+                <PlayerItem player={players[0]} index={0} socket={socketRef.current} />
+                {players.length > 1 && 
+                  <>
+                  {player?.playerHost &&
+                    <button onClick={switchChars}><i className="fa-solid fa-repeat"></i></button>
+                  }
+                  <PlayerItem player={players[1]} index={1} socket={socketRef.current} />
+                  </>
                 }
-                {players.length > 1 && <PlayerItem player={players[1]} index={1} />}
               </>
             }
           </div>
-          <div className="actions">
-            {!player?.playerHost &&
+          <div className="room-actions">
+            {player?.playerHost && players.length > 1 &&
               <>
-              <button onClick={switchChars}>Switch Chars</button>
-              <button onClick={startGame}>Start Game</button>
+              <button className="button button-blue button-border" onClick={startGame}>Start Game</button>
               </>
             }
           </div>

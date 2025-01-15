@@ -32,7 +32,15 @@
       border: 1px solid var(--bg-color3);
       border-radius: 0.5rem;
       padding: 0.4rem 0.6rem;
+      transition: .12s;
       cursor: pointer;
+
+      &:hover {
+        scale: 1.05;
+      }
+      &:active {
+        scale: 0.95;
+      }
     }
     .code {
       font: 700 2.2rem var(--f1);

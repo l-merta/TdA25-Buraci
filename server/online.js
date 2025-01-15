@@ -119,6 +119,11 @@ module.exports = (server) => {
         emitResetGameProcessed(rooms[roomId]);
       });
 
+      socket.on("userRename", (data) => {
+        rooms[roomId].players.find(client => client.socket === socket).playerName = data.newName;
+        emitPlayerList(rooms[roomId]);
+      });
+
       socket.on("disconnect", () => {
         console.log(`Client disconnected from room ${roomId}`);
         const disconnectedPlayer = rooms[roomId].players.find(client => client.socket === socket);
@@ -137,6 +142,14 @@ module.exports = (server) => {
             delete rooms[roomId];
           } else {
             emitPlayerList(rooms[roomId]);
+
+            if (rooms[roomId].gameStarted) {
+              emitRedirect(rooms[roomId], {
+                type: "error",
+                error: "playerDisconnected",
+                message: "Hráč se odpojil"
+              });
+            }
           }
         }
       });

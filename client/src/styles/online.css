@@ -32,7 +32,14 @@
   border: 1px solid var(--bg-color3);
   border-radius: 0.5rem;
   padding: 0.4rem 0.6rem;
+  transition: 0.12s;
   cursor: pointer;
+}
+.main-room .code-cont button:hover {
+  scale: 1.05;
+}
+.main-room .code-cont button:active {
+  scale: 0.95;
 }
 .main-room .code-cont .code {
   font: 700 2.2rem var(--f1);
