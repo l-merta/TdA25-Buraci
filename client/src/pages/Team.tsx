@@ -6,6 +6,7 @@ import Header from './../components/Header';
 import Footer from './../components/Footer';
 
 function Team() {
+  document.title = "O týmu a aplikaci - TdA";
   //const theme = useTheme();
 
   return (

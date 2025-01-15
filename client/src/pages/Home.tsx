@@ -8,6 +8,8 @@ import Header from './../components/Header';
 import Footer from './../components/Footer';
 
 function App() {
+  document.title = "Domů - TdA";
+
   const theme = useTheme();
   const aiGameSett = {
     id: 1,

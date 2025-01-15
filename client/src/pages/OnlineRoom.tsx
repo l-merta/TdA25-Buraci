@@ -26,6 +26,8 @@ interface PlayerProps {
 }
 
 function OnlineRoom() {
+  document.title = "Online - TdA";
+
   const location = useLocation();
   const navigate = useNavigate();
   const { id: roomId } = useParams<{ id: string }>();

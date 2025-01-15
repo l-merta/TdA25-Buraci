@@ -6,6 +6,8 @@ import Header from './../components/Header';
 import Footer from './../components/Footer';
 
 const Games = () => {
+  document.title = "Hry - TdA";
+
   const gameSettArr = [
     {
       id: 0,

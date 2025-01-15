@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import GameBoard from "./../components/GameBoard";
 
 const Create = () => {
+  document.title = "Vytvořit - TdA";
+
   return (
     <>
       <Link to="/games">Games</Link>

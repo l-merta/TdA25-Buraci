@@ -1,12 +1,11 @@
-//import { useState, useEffect } from 'react'
-//import { useTheme, themeToImg } from './../components/ThemeHandler';
 import { useLocation } from "react-router-dom";
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 function ErrorPage() {
-  //const theme = useTheme();
+  document.title = "Error - TdA";
+  
   const location = useLocation();
   const { error, message } = location.state || {
     error: "404",

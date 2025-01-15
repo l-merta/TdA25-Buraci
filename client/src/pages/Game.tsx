@@ -10,6 +10,8 @@ interface GameSettProps {
 }
 
 const Game = () => {
+  document.title = "Hra - TdA";
+
   const location = useLocation();
   const gameSett: GameSettProps = location.state || {
     // Default values
