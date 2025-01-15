@@ -97,7 +97,8 @@
         .field-played {
             cursor: default;
         }
-        .field-ai {
+        .field-ai,
+        .field-opp {
             pointer-events: none;
         }
         .field-win {

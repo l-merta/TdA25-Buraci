@@ -9,12 +9,13 @@ import OnlineRoom from './pages/OnlineRoom.tsx';
 import Create from './pages/Create.tsx';
 import Tda from './pages/Tda.tsx';
 import Team from './pages/Team.tsx';
-import PageNotFound from './pages/PageNotFound.tsx';
+import PageNotFound from './pages/ErrorPage.tsx';
 
 import './styles/index.css';
 import './styles/main.css';
 import './styles/game.css';
 import './styles/game-list.css';
+import './styles/online.css'
 import './styles/tda.css';
 import './styles/team-page.css';
 import './styles/error-page.css';

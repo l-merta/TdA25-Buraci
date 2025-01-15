@@ -16,6 +16,9 @@ interface GameDataProps {
 interface GameBoardProps {
     size: number;
     ai: Array<Number>;
+    playerCurr: Array<Number>;
+    socket?: any;
+    isHost?: boolean;
     uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
@@ -23,7 +26,7 @@ interface GameBoardProps {
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const theme = useTheme();
@@ -46,11 +49,20 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
         nextPlaying: 0,
         gameState: "unknown"
     });
+    //@ts-ignore
+    const [online, setOnline] = useState(false);
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
     const [isLoading, setIsLoading] = useState(uuid ? true : false);
     const initialMoveMade = useRef(false);
     const aiMoveInProgress = useRef(false);
     const [gameDataLoaded, setGameDataLoaded] = useState(false);
+
+    useEffect(() => {
+        if (playerCurr[0] === 1 || playerCurr[1] === 1) {
+            console.log("is online game");
+            setOnline(true);
+        }
+    }, [playerCurr]);
 
     const fetchGameData = async () => {
         if (uuid) {
@@ -82,9 +94,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
     const onFieldClick = async (row: number, col: number) => {
         if ((gameData.board[row][col] && ai[getBeforePlaying()] !== 1) || gameData.win) return; // If the field is already played or the game is won, return
         if (aiMoveInProgress.current) return;
+
         aiMoveInProgress.current = true;
 
-        try {
+        if (!online) {
+          try {
             const response = await fetch(`${apiUrl}gameFieldClick`, {
                 method: "PUT",
                 headers: {
@@ -101,12 +115,28 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
             const data = await response.json();
             setFirstMoveAfterLoad(false);
             setGameData(data);
-        } catch (error: any) {
-            console.error("Error playing field:", error.message);
-        } finally {
-            aiMoveInProgress.current = false;
+          } catch (error: any) {
+              console.error("Error playing field:", error.message);
+          } finally {
+              aiMoveInProgress.current = false;
+          }
+        }
+        else {
+          socket.emit("playField", { ...gameData, row: row, col: col, ai: ai });
         }
     };
+    useEffect(() => {
+        if (socket) {
+            socket.on("playFieldProcessed", (newGameData: any) => {
+                setGameData(newGameData);
+                setFirstMoveAfterLoad(false);
+                aiMoveInProgress.current = false;
+            });
+            socket.on("resetGameProcessed", () => {
+                resetGame();
+            });
+        }
+    });
 
     useEffect(() => {
         if (gameData.win) {
@@ -219,6 +249,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
         }
     };
 
+    function onResetGameClick() {
+        if (!online)
+          resetGame();
+        else
+          socket.emit("resetGame");
+    }
     function resetGame() {
         setGameDataLoaded(false);
         initialMoveMade.current = false;
@@ -282,8 +318,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
                         <i className="fa-solid fa-crown"></i>
                     : ""}
                   </div>
-                  {replayButton ?
-                    <button className='replay' onClick={resetGame}>
+                  {replayButton && ((online && isHost) || !online) ?
+                    <button className='replay' onClick={onResetGameClick}>
                         <i className="fa-solid fa-repeat"></i>
                         <span>Hrát znovu</span>
                     </button>
@@ -305,7 +341,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, uuid, replayButton, pla
                                 ("field-" + colors[getBeforePlaying()] + " ") + 
                                 (!item ? "field-empty " : "field-played ") + 
                                 (gameData.win && isWinChar(rowIndex, colIndex).isWin ? "field-win-" + isWinChar(rowIndex, colIndex).color + " " : " ") +
-                                (ai[getBeforePlaying()] == 1 ? "field-ai " : " ")} 
+                                (ai[getBeforePlaying()] == 1 ? "field-ai " : " ") +
+                                (online && playerCurr[gameData.playing] == 1 ? "field-opp " : " ")} 
                               key={`${rowIndex}-${colIndex}`} 
                               onClick={() => { onFieldClick(rowIndex, colIndex); }}
                           >

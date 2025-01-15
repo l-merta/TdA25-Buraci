@@ -1,4 +1,5 @@
 const { Server } = require("socket.io");
+const { players, getPlaying, playField, checkWin, checkPotentialWin } = require("./gameplay");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -24,6 +25,7 @@ module.exports = (server) => {
 
       rooms[newRoomId] = {
         gameStarted: false,
+        uuid: "",
         players: []
       };
 
@@ -58,7 +60,7 @@ module.exports = (server) => {
       rooms[roomId].players.push({ socket, playerName, playerChar, playerHost });
 
       socket.emit("welcome", { 
-        message: "Welcome to the room!", 
+        message: "WebSocket connection established - love, server", 
         players: rooms[roomId].players.map(client => client.playerName) 
       });
 
@@ -75,9 +77,13 @@ module.exports = (server) => {
           client.playerChar = client.playerChar === "X" ? "O" : "X";
         });
 
+        // Ensure player with playerChar "X" is at index 0 and player with playerChar "O" is at index 1
+        rooms[roomId].players.sort((a, b) => (a.playerChar === "X" ? -1 : 1));
+
         // Emit updated player list
         emitPlayerList(rooms[roomId]);
       });
+
       socket.on("startGame", () => {
         // Set started to true
         rooms[roomId].gameStarted = true;
@@ -86,13 +92,70 @@ module.exports = (server) => {
         emitRoomData(rooms[roomId]);
       });
 
+      socket.on("playField", (data) => {
+        console.log(`Field played`);
+
+        const { row, col, board, ai } = data;
+        const newGameData = { 
+          ...data, 
+          playing: getPlaying(board),
+          win: null
+        }
+
+        newGameData.nextPlaying = newGameData.playing == players.length - 1 ? 0 : newGameData.playing + 1;
+
+        newGameData.board = playField(row, col, board, getPlaying(board));
+
+        checkPotentialWin(newGameData.board, 5, players);
+        const win = checkWin(newGameData.board, 5, players);
+        if (win)
+          newGameData.win = win[0];
+        else 
+          newGameData.win = null;
+
+        emitPlayFieldProcessed(rooms[roomId], newGameData);
+      });
+
+      socket.on("gameUuid", (data) => {
+        emitRoomData({ ...rooms[roomId], uuid: data.uuid });
+      });
+
+      socket.on("resetGame", () => {
+        emitResetGameProcessed(rooms[roomId]);
+      });
+
+      socket.on("userRename", (data) => {
+        rooms[roomId].players.find(client => client.socket === socket).playerName = data.newName;
+        emitPlayerList(rooms[roomId]);
+      });
+
       socket.on("disconnect", () => {
         console.log(`Client disconnected from room ${roomId}`);
-        rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
-        if (rooms[roomId].players.length === 0) {
-          delete rooms[roomId];
-        } else {
-          emitPlayerList(rooms[roomId]);
+        const disconnectedPlayer = rooms[roomId].players.find(client => client.socket === socket);
+        
+        if (disconnectedPlayer.playerHost) {
+          emitRedirect(rooms[roomId], {
+            type: "error",
+            error: "hostDisconnected",
+            message: "Zakladatel hry se odpojil"
+          });
+        } 
+        else {
+          rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
+
+          if (rooms[roomId].players.length === 0) {
+            delete rooms[roomId];
+          } else {
+            emitPlayerList(rooms[roomId]);
+
+            if (rooms[roomId].gameStarted) {
+              emitRedirect(rooms[roomId], {
+                type: "error",
+                error: "playerDisconnected",
+                message: "Hráč se odpojil"
+              });
+            }
+          }
         }
       });
     }
@@ -117,6 +180,7 @@ module.exports = (server) => {
   function emitRoomData(room) {
     const sanitizedRoom = {
       gameStarted: room.gameStarted,
+      uuid: room.uuid,
       players: room.players.map(player => ({
         playerName: player.playerName,
         playerChar: player.playerChar,
@@ -126,6 +190,21 @@ module.exports = (server) => {
 
     room.players.forEach(client => {
       client.socket.emit("updateRoom", sanitizedRoom);
+    });
+  }
+  function emitPlayFieldProcessed(room, gameData) {
+    room.players.forEach(client => {
+      client.socket.emit("playFieldProcessed", gameData);
+    });
+  }
+  function emitResetGameProcessed(room) {
+    room.players.forEach(client => {
+      client.socket.emit("resetGameProcessed");
+    });
+  }
+  function emitRedirect(room, redirectData) {
+    room.players.forEach(client => {
+      client.socket.emit("redirect", redirectData);
     });
   }
 };

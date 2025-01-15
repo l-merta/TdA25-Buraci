@@ -56,7 +56,7 @@ function App() {
         </div>
         <div className="s2">
           <div className="board">
-            <GameBoard size={10} playerNames={["Táda", "Táda"]} ai={[1, 1]} />
+            <GameBoard size={10} playerNames={["Táda", "Táda"]} ai={[1, 1]} playerCurr={[0, 0]} />
           </div>
         </div>
       </section>

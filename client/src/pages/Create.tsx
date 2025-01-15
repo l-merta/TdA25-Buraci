@@ -7,7 +7,7 @@ const Create = () => {
     <>
       <Link to="/games">Games</Link>
       <h1>Create page</h1>
-      <GameBoard size={15} editMode={true} ai={[0, 0]} />
+      <GameBoard size={15} editMode={true} ai={[0, 0]} playerCurr={[0, 0]} />
     </>
   )
 }

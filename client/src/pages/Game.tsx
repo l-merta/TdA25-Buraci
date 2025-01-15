@@ -26,7 +26,7 @@ const Game = () => {
       <div className="bg-grad"></div>
       <div className="main-game">
         {/* <Link to="/games">Games</Link> */}
-        <GameBoard size={15} replayButton={true} playerNames={gameSett.playerNames} ai={gameSett.ai} />
+        <GameBoard size={15} replayButton={true} playerNames={gameSett.playerNames} ai={gameSett.ai} playerCurr={[0, 0]} />
       </div>
     </>
   )
