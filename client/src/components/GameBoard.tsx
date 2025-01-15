@@ -145,6 +145,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     }, [socket]);
 
     useEffect(() => {
+        const isBoardFull = (board: any[][]) => {
+            return board.every(row => row.every(cell => cell !== ''));
+            //console.log("board full: ", board.every(row => row.every(cell => cell !== '')));
+            //return false;
+        };
+
         if (gameData.win) {
             console.log("Player " + gameData.win.player + " won!");
 
@@ -156,11 +162,21 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
             }
         } else {
             if (gameDataLoaded && ai[gameData.nextPlaying] == 1) {
-                console.log("AI is playing...");
-                const timeoutId = setTimeout(() => {
-                    onFieldClick(0, 0); // Play the AI move
-                }, 500);
-                timeoutIds.current.push(timeoutId);
+                if (isBoardFull(gameData.board)) {
+                    if (!replayButton) {
+                      const timeoutId = setTimeout(() => {
+                          resetGame();
+                      }, 2000);
+                      timeoutIds.current.push(timeoutId);
+                    }
+                } 
+                else {
+                    console.log("AI is playing...");
+                    const timeoutId = setTimeout(() => {
+                        onFieldClick(0, 0); // Play the AI move
+                    }, 500);
+                    timeoutIds.current.push(timeoutId);
+                }
             }
         }
     }, [gameData, gameDataLoaded]);
