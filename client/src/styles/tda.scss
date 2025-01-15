@@ -8,6 +8,7 @@
         width: 100%;
         max-width: 70rem;
         margin: 0 auto;
+        padding: 0 1.0rem;
         display: flex;
         flex-direction: column;
         align-items: start;
@@ -20,10 +21,20 @@
             margin: 0 auto;
             margin-top: 1.5rem;
         }
+
+        .text-tda{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 1.0rem;
+        }
+
     }
 }
 h1 {
     color: var(--font-color);
+    margin: 0;
+    margin-bottom: 1rem;
     text-align: center;
 }
 
