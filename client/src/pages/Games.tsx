@@ -84,14 +84,17 @@ const Games = () => {
               onChange={(e) => setRoomCode(e.target.value)} 
             />
             <Link to={`/online/${roomCode}`} className="button button-red">Připojit se</Link>
+            <Link to={gameSett.gameMode !== "online" ? "/game/" : "/online/"} state={gameSett} className="button button-red button-border">Vytvořit místnost</Link>
           </div>
         }
-        <div className="play-actions">
-          <Link to={gameSett.gameMode !== "online" ? "/game/" : "/online/"} state={gameSett} className="button button-1 button-red">Nová hra</Link>
-          <Link to="/create/" className="button button-1 button-red button-border">Vytvořit hru</Link>
-        </div>
         {gameSett.gameMode !== "online" && 
+          <>
+          <div className="play-actions">
+            <Link to={gameSett.gameMode !== "online" ? "/game/" : "/online/"} state={gameSett} className="button button-1 button-red">Nová hra</Link>
+            <Link to="/create/" className="button button-1 button-red button-border">Vytvořit hru</Link>
+          </div>
           <GameList gameSett={gameSett} />
+          </>
         }
       </div>
       <Footer />

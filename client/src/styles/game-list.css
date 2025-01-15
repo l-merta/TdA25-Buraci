@@ -47,6 +47,7 @@
   width: 30rem;
   height: 100%;
   border: 1px solid var(--bg-color3);
+  padding: 0.65rem 1rem;
 }
 .main-games .online-actions input:focus {
   outline: none;
