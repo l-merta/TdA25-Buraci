@@ -72,9 +72,28 @@ app.post("/api/v1/games", async (req, res) => {
 });
 
 app.get("/api/v1/games", async (req, res) => {
+  const { name, difficulty, lastModified } = req.query;
+  let query = `SELECT * FROM games WHERE 1=1`;
+  const params = [];
+
+  if (name) {
+    query += ` AND name LIKE ?`;
+    params.push(`%${name}%`);
+  }
+
+  if (difficulty) {
+    query += ` AND difficulty = ?`;
+    params.push(difficulty);
+  }
+
+  if (lastModified) {
+    query += ` AND updatedAt >= ?`;
+    params.push(new Date(lastModified).toISOString());
+  }
+
   try {
     const db = await getDb();
-    const rows = await db.all(`SELECT * FROM games`);
+    const rows = await db.all(query, params);
     rows.forEach(row => {
       row.board = JSON.parse(row.board); // Convert board back to JSON
     });
