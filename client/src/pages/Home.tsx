@@ -55,7 +55,6 @@ function App() {
           </div>
           <div className="actions">
             <Link to="/game" state={aiGameSett} className='button button-red'>Vyzkoušej své schopnosti!</Link>
-            <Link to="/games" className='button button-red button-border'>Seznam her</Link>
           </div>
         </div>
         <div className="s2">
@@ -65,13 +64,6 @@ function App() {
         </div>
       </section>
       <Footer />
-      {/* <section>
-        <h2>O Think Different Academy</h2>
-      </section>
-      <section>
-        <h2>Co aplikace umí</h2>
-      </section>
-      <Footer /> */}
     </>
   )
 }
