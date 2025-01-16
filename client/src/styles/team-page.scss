@@ -35,11 +35,23 @@
         }
 
     }
-
     .sec-team-cards{
-        
-        margin-top: 5rem;
+        width: 100%;
+        max-width: 70rem;
+        margin: 0 auto;
+        margin-top: 2.0rem;
+        padding: 0 1.0rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
 
+        .group {
+            width: 100%;
+            margin-top: 2.0rem;
+            display: flex;
+            justify-content: center;
+            gap: 3.5rem;
+        }
         .card {
             width: 12rem;
             height: 12rem;
@@ -47,19 +59,13 @@
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            padding: 0 2.25rem; 
-            perspective: 156.25rem; 
-            margin: 0 3.125rem; 
-            border-radius: 0.3125rem; 
         }
-        
         .cover-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 0.3125rem; /* 5px to rem */
+            border-radius: 0.5rem; /* 5px to rem */
         }
-        
         .wrapper {
             transition: all 0.5s;
             position: absolute;
@@ -67,7 +73,6 @@
             z-index: -1;
             border-radius: 0.3125rem; /* 5px to rem */
         }
-        
         .card:hover .wrapper {
             transform: perspective(56.25rem) translateY(-5%) rotateX(25deg) translateZ(0); /* 900px to rem */
             box-shadow: 0.125rem 2.1875rem 2rem -0.5rem rgba(0, 0, 0, 0.75); /* Converted px to rem */
@@ -75,7 +80,6 @@
             -moz-box-shadow: 0.125rem 2.1875rem 2rem -0.5rem rgba(0, 0, 0, 0.75);
             border-radius: 0.3125rem; /* 5px to rem */
         }
-        
         .wrapper::before,
         .wrapper::after {
             content: "";
@@ -87,7 +91,6 @@
             left: 0;
             border-radius: 0.3125rem; /* 5px to rem */
         }
-        
         .wrapper::before {
             top: 0;
             height: 100%;
@@ -99,7 +102,6 @@
             );
             border-radius: 0.3125rem; /* 5px to rem */
         }
-        
         .wrapper::after {
             bottom: 0;
             opacity: 1;
@@ -111,25 +113,23 @@
             );
             border-radius: 0.3125rem; /* 5px to rem */
         }
-        
         .card:hover .wrapper::before,
         .wrapper::after {
             opacity: 1;
         }
-        
         .card:hover .wrapper::after {
             height: 7.5vh; /* 120px to vh */
         }
-        
         .title {
             width: 100%;
+            margin: 0 auto;
+            margin-bottom: 0.5rem;
+            text-align: center;
             transition: transform 0.5s;
         }
-        
         .card:hover .title {
             transform: translate3d(0%, -3.125rem, 6.25rem); /* 50px, 100px to rem */
         }
-        
         .character {
             width: 100%;
             opacity: 0;
@@ -137,26 +137,43 @@
             position: absolute;
             z-index: -1;
         }
-        
         .card:hover .character {
             opacity: 1;
             transform: translate3d(0%, -1.875rem, 6.25rem); /* 30px, 100px to rem */
         }
-
-        a
-        {
-            text-decoration: none;
+        a {
             color: var(--c3);
-            font-size: 1.1rem;
-            font-weight: bold;
+            font: 700 1.5rem var(--f1);
             text-shadow: 2px 2px black;
-        }
-  
-        .group
-        {
-            display: flex;
-            justify-content: center;
+            text-wrap: nowrap;
+            text-decoration: none;
         }
     }
+    .sec-tech {
+        background-color: var(--c3);
+        width: 100%;
+        max-width: 70rem;
+        margin: 0 auto;
+        margin-top: 2.0rem;
+        padding: 1.0rem 1.5rem;
+        border: 1px solid var(--c13);
+        border-radius: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
 
+        .tech {
+            width: 100%;
+            margin-top: 1.0rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+
+            img {
+                height: 5.5rem;
+            }
+        }
+    }
 }

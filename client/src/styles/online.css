@@ -27,6 +27,7 @@
   font: 600 1.2rem var(--f1);
 }
 .main-room .code-cont button {
+  color: var(--font-color);
   background-color: var(--bg-color);
   font: 500 1.2rem var(--f1);
   border: 1px solid var(--bg-color3);
@@ -79,9 +80,11 @@
   gap: 0.8rem;
 }
 .main-room .players .player .name button {
+  color: var(--font-color);
   margin-right: -0.5rem;
 }
 .main-room .players .player .name input {
+  color: var(--font-color);
   font: 600 1.3rem var(--f1);
   height: 100%;
   width: 10rem;
@@ -96,6 +99,7 @@
   border-color: var(--c6);
 }
 .main-room .players button {
+  color: var(--font-color);
   background-color: var(--bg-color);
   font: 500 1.2rem var(--f1);
   border: 1px solid var(--bg-color3);

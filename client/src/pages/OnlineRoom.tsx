@@ -143,7 +143,7 @@ function OnlineRoom() {
           <div className="room-actions">
             {player?.playerHost && players.length > 1 &&
               <>
-              <button className="button button-blue button-border" onClick={startGame}>Start Game</button>
+              <button className="button button-blue button-border" onClick={startGame}>Začít hru</button>
               </>
             }
           </div>

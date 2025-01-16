@@ -262,6 +262,8 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
 const playFieldAi = (board, aiPlayerIndex) => {
   const opp = aiPlayerIndex === 0 ? 1 : 0;
 
+  console.log("AI playing");
+
   const findRandomMove = (board) => {
     const emptyCells = [];
     for (let row = 0; row < board.length; row++) {
@@ -277,7 +279,7 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a potential win move
   const ai_pot_move = checkPotentialWin(board, 5, players, players[aiPlayerIndex]);
   if (ai_pot_move) {
-    //console.log("AI playing winning move");
+    console.log("AI playing winning move");
     const coords = [];
     ai_pot_move.forEach((move) => {
       coords.push(move.coordinates);
@@ -291,7 +293,7 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a potential win move
   const opp_pot_move = checkPotentialWin(board, 5, players, players[opp]);
   if (opp_pot_move) {
-    //console.log("AI defending opps winning move");
+    console.log("AI defending opps winning move");
     const coords = [];
     opp_pot_move.forEach((move) => {
       coords.push(move.coordinates);
@@ -306,7 +308,7 @@ const playFieldAi = (board, aiPlayerIndex) => {
   // Make a potential win -2 move
   const opp_pot_move2 = checkPotentialWin(board, 4, players, players[opp]);
   if (opp_pot_move2) {
-    //console.log("AI defending opps almost winning move");
+    console.log("AI defending opps almost winning move");
     const coords = [];
     opp_pot_move2.forEach((move) => {
       coords.push(move.coordinates);
@@ -314,6 +316,22 @@ const playFieldAi = (board, aiPlayerIndex) => {
     if (coords.length > 0) {
       const coord = coords[Math.floor(Math.random() * coords.length)];
       return playField(coord.row, coord.col, board, aiPlayerIndex);
+    }
+  }
+
+  for (let i = 4; i >= 3; i--) {
+    console.log("AI checking for " + i + " in row");
+    // Make a potential win move
+    const ai_pot_move = checkPotentialWin(board, i, players, players[aiPlayerIndex]);
+    if (ai_pot_move) {
+      const coords = [];
+      ai_pot_move.forEach((move) => {
+        coords.push(move.coordinates);
+      });
+      if (coords.length > 0) {
+        const coord = coords[Math.floor(Math.random() * coords.length)];
+        return playField(coord.row, coord.col, board, aiPlayerIndex);
+      }
     }
   }
 

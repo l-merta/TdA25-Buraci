@@ -27,6 +27,7 @@
   white-space: nowrap;
 }
 .game-board-container .edit input {
+  color: var(--font-color);
   background-color: var(--bg-color);
   font: 600 1.3rem var(--f1);
   height: 100%;
@@ -37,6 +38,7 @@
   outline: none;
 }
 .game-board-container .edit select {
+  color: var(--font-color);
   background-color: var(--bg-color);
   font: 600 1.3rem var(--f1);
   border: 1px solid var(--bg-color3);
