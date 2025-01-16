@@ -50,7 +50,7 @@ const GameList: React.FC<GameListProps> = ({ gameSett }) => {
 
   return (
     <div className="games-list">
-      <div className="filter">
+      <div className="filter anim anim-slide-from-down">
         <input
           type="text"
           name="name"
@@ -80,8 +80,8 @@ const GameList: React.FC<GameListProps> = ({ gameSett }) => {
         <>
         {games.length === 0 && <p className='nothing-found'>Nic jsme tu nenašli..</p>}
         <div className='games'>
-          {games && games.map((game) => (
-            <GameItem game={game} setGames={setGames} key={game.uuid} gameSett={gameSett} />
+          {games && games.map((game, index) => (
+            <GameItem game={game} setGames={setGames} key={game.uuid} index={index} gameSett={gameSett} />
           ))}
         </div>
         </>

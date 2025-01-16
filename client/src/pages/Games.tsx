@@ -46,37 +46,37 @@ const Games = () => {
         <h1>Uložené hry piškvorek</h1>
         <h2>Vyber si způsob hry</h2>
         <div className="game-modes">
-          <button className={"mode " + (gameSett.id === 0 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[0])}>
+          <button className={"anim anim-scale-up mode " + (gameSett.id === 0 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[0])}>
             <h3>
               <i className="fa-regular fa-computer-classic"></i>
               <span>Lokální hra</span>
             </h3>
             <p>Zahraj si hru piškvorek na jednom počítači</p>
           </button>
-          <button className={"mode " + (gameSett.id === 1 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[1])}>
+          <button className={"anim anim-scale-up mode " + (gameSett.id === 1 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[1])}>
             <h3>
               <i className="fa-regular fa-microchip-ai"></i>
               <span>Proti AI</span>
             </h3>
             <p>Zkus porazit našeho AI šampióna Tádu</p>
           </button>
-          <button className={"mode " + (gameSett.id === 2 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[2])}>
-            <h3>
-              <i className="fa-regular fa-globe"></i>
-              <span>Online</span>
-            </h3>
-            <p>Zasoupeř si se svými kamarády nebo rodinou</p>
-          </button>
-          <button className={"mode " + (gameSett.id === 3 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[3])}>
+          <button className={"anim anim-scale-up mode " + (gameSett.id === 3 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[3])}>
             <h3>
               <i className="fa-regular fa-glasses"></i>
               <span>Divák</span>
             </h3>
             <p>Podívej se, jak Táda hájí svůj status šampióna proti jinému AI</p>
           </button>
+          <button className={"anim anim-scale-up mode " + (gameSett.id === 2 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[2])}>
+            <h3>
+              <i className="fa-regular fa-globe"></i>
+              <span>Online</span>
+            </h3>
+            <p>Zasoupeř si se svými kamarády nebo rodinou</p>
+          </button>
         </div>
         {gameSett.gameMode === "online" && 
-          <div className="online-actions">
+          <div className="online-actions anim anim-slide-from-down">
             <input 
               type="text" 
               placeholder='Kód místnosti' 
@@ -89,7 +89,7 @@ const Games = () => {
         }
         {gameSett.gameMode !== "online" && 
           <>
-          <div className="play-actions">
+          <div className="play-actions anim anim-slide-from-down">
             <Link to={gameSett.gameMode !== "online" ? "/game/" : "/online/"} state={gameSett} className="button button-1 button-red">Nová hra</Link>
             <Link to="/create/" className="button button-1 button-red button-border">Vytvořit hru</Link>
           </div>

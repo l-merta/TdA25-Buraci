@@ -7,11 +7,12 @@ import GameBoard from './GameBoard';
 
 interface GameProps {
   game: any;
+  index: number;
   setGames: any;
   gameSett: any;
 }
 
-const GameItem:React.FC<GameProps> = ({ game, setGames, gameSett }) => {
+const GameItem:React.FC<GameProps> = ({ game, index, setGames, gameSett }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const theme = useTheme();
 
@@ -73,7 +74,7 @@ const GameItem:React.FC<GameProps> = ({ game, setGames, gameSett }) => {
   }, [popupVisible]);
 
   return (
-    <div className="game">
+    <div className={"game anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
       <div className="text">
         <div className="group">
           <div className="img-cont">

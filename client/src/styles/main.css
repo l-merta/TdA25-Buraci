@@ -349,6 +349,14 @@ input[type=text] {
   transition: 0.12s;
 }
 
+.anim.anim-slide-from-down {
+  opacity: 0;
+  animation: slide-from-down 0.3s ease-in-out forwards;
+}
+.anim.anim-scale-up {
+  animation: scale-up 0.3s ease-in-out;
+}
+
 @keyframes scale-up {
   from {
     scale: 0;
@@ -374,6 +382,16 @@ input[type=text] {
   }
   100% {
     scale: 1;
+  }
+}
+@keyframes slide-from-down {
+  0% {
+    opacity: 0;
+    transform: translateY(5rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 @media screen and (max-width: 1150px) {
