@@ -124,6 +124,7 @@ header .burger-menu .burger-nav a {
 main {
   width: 100%;
   height: calc(100vh - var(--header-h) - var(--main-b-gap));
+  min-height: 50rem;
   margin-top: var(--header-h);
   position: relative;
   display: flex;

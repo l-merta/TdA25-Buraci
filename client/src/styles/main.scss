@@ -124,9 +124,9 @@ header {
     }
 }
 main {
-    //background-color: red;
     width: 100%;
     height: calc(100vh - var(--header-h) - var(--main-b-gap));
+    min-height: 50rem;
     margin-top: var(--header-h);
     position: relative;
     display: flex;

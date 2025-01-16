@@ -345,6 +345,19 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+@media screen and (max-width: 870px) {
+  .online-actions {
+    flex-direction: column;
+  }
+  .online-actions input {
+    background-color: red;
+    width: 100% !important;
+    max-width: 100%;
+  }
+  .online-actions a {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 810px) {
   .games-list .games {
     grid-template-columns: repeat(1, 1fr);
@@ -355,11 +368,29 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+@media screen and (max-width: 680px) {
+  .games-list .filter {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .games-list .filter input[type=text] {
+    width: 100%;
+  }
+  .games-list .filter .menus {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 500px) {
   .game-modes {
     grid-template-columns: repeat(1, 1fr);
   }
   .play-actions button, .play-actions a {
     width: 100%;
+  }
+}
+@media screen and (max-width: 450px) {
+  .main-room .players {
+    flex-direction: column;
   }
 }/*# sourceMappingURL=game-list.css.map */
