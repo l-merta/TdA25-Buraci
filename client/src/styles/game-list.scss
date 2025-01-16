@@ -42,11 +42,13 @@
       gap: 1.0rem;
 
       input {
+        color: var(--font-color);
         background-color: var(--bg-color);
         font: 600 1.3rem var(--f1);
         width: 30rem;
         height: 100%;
         border: 1px solid var(--bg-color3);
+        padding: 0.65rem 1.0rem;
 
         &:focus {
           outline: none;
@@ -109,10 +111,58 @@
     max-width: 85rem;
     padding: 0 0.5rem;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.8rem;
     
+    .filter {
+        width: 100%;
+        margin-bottom: 1.0rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        input[type="text"] {
+          color: var(--font-color);
+          background-color: var(--bg-color);
+          font: 600 1.0rem var(--f1);
+          width: 20rem;
+          height: 100%;
+          border: 1px solid var(--bg-color3);
+          padding: 0.65rem 1.0rem;
+  
+          &:focus {
+            outline: none;
+          }
+        }
+        .menus {
+            display: flex;
+            gap: 0.8rem;
+
+            select, input[type="date"] {
+                color: var(--font-color);
+                background-color: var(--bg-color);
+                font: 500 1.0rem var(--f1);
+                border: 1px solid var(--bg-color3);
+                border-radius: 0.4rem;
+                padding: 0.5rem 0.8rem;
+                box-shadow: none !important;
+    
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+    }
+    .nothing-found {
+        width: 100%;
+        opacity: 0.6;
+        font: 600 1.0rem var(--f1);
+        text-align: center;
+    }
+    .games {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+    }
     .game {
         width: 100%;
         background-color: var(--bg-color2);
@@ -307,18 +357,46 @@
     .game-modes {
         grid-template-columns: repeat(3, 1fr);
     }
-    .games-list {
+    .games-list .games {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+@media screen and (max-width: 870px) {
+    .online-actions {
+        flex-direction: column;
+
+        input {
+            background-color: red;
+            width: 100% !important;
+            max-width: 100%;
+        }
+        a {
+            width: 100%;
+        }
+    }
+}
 @media screen and (max-width: 810px) {
-  .games-list {
-      grid-template-columns: repeat(1, 1fr);
-  }
+    .games-list .games {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
 @media screen and (max-width: 750px) {
     .game-modes {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media screen and (max-width: 680px) {
+    .games-list .filter {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        input[type="text"] {
+            width: 100%;
+        }
+        .menus {
+            width: 100%;
+        }
     }
 }
 @media screen and (max-width: 500px) {
@@ -331,6 +409,10 @@
         }
     }
 }
-@media screen and (max-width: 360px) {
-  
+@media screen and (max-width: 450px) {
+    .main-room {
+        .players {
+            flex-direction: column;
+        }
+    }
 }

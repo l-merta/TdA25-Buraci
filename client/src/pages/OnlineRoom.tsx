@@ -26,6 +26,8 @@ interface PlayerProps {
 }
 
 function OnlineRoom() {
+  document.title = "Online - TdA";
+
   const location = useLocation();
   const navigate = useNavigate();
   const { id: roomId } = useParams<{ id: string }>();
@@ -73,14 +75,13 @@ function OnlineRoom() {
     socket.on("updatePlayers", (data) => {
       console.log("Players updated", data);
       setPlayers(data.players);
-      setPlayer(data.players.find((player: PlayerProps) => player.playerCurr));
 
-      /*
-      if (player?.playerHost) {
-        console.log("emited uuid: ", gameSett.uuid);
-        socket.emit("gameUuid", { uuid: gameSett.uuid });
+      const playerCurr = data.players.find((player: PlayerProps) => player.playerCurr);
+      setPlayer(playerCurr);
+
+      if (data.players.length == 1 && playerCurr.playerChar == 'O') {
+        switchChars();
       }
-      */
     });
 
     socket.on("updateRoom", (data) => {
@@ -142,7 +143,7 @@ function OnlineRoom() {
           <div className="room-actions">
             {player?.playerHost && players.length > 1 &&
               <>
-              <button className="button button-blue button-border" onClick={startGame}>Start Game</button>
+              <button className="button button-blue button-border" onClick={startGame}>Začít hru</button>
               </>
             }
           </div>
@@ -168,6 +169,7 @@ function OnlineRoom() {
           isHost={player?.playerHost}
         />
       </div>
+      <Footer />
       </>
     )
   }

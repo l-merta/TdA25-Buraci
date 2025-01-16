@@ -262,6 +262,8 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
 const playFieldAi = (board, aiPlayerIndex) => {
   const opp = aiPlayerIndex === 0 ? 1 : 0;
 
+  console.log("AI playing");
+
   const findRandomMove = (board) => {
     const emptyCells = [];
     for (let row = 0; row < board.length; row++) {
@@ -272,6 +274,39 @@ const playFieldAi = (board, aiPlayerIndex) => {
       }
     }
     return emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  };
+
+  const findAdjacentMove = (board, playerIndex) => {
+    const directions = [
+      { row: -1, col: -1 }, { row: -1, col: 0 }, { row: -1, col: 1 },
+      { row: 0, col: -1 }, { row: 0, col: 1 },
+      { row: 1, col: -1 }, { row: 1, col: 0 }, { row: 1, col: 1 }
+    ];
+
+    const playerCells = [];
+    for (let row = 0; row < board.length; row++) {
+      for (let col = 0; col < board[row].length; col++) {
+        if (board[row][col] === players[playerIndex]) {
+          playerCells.push({ row, col });
+        }
+      }
+    }
+
+    const availableMoves = [];
+    playerCells.forEach(cell => {
+      directions.forEach(direction => {
+        const newRow = cell.row + direction.row;
+        const newCol = cell.col + direction.col;
+        if (newRow >= 0 && newRow < board.length && newCol >= 0 && newCol < board[0].length && board[newRow][newCol] === '') {
+          availableMoves.push({ row: newRow, col: newCol });
+        }
+      });
+    });
+
+    if (availableMoves.length > 0) {
+      return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    }
+    return null;
   };
 
   // Make a potential win move
@@ -297,7 +332,6 @@ const playFieldAi = (board, aiPlayerIndex) => {
       coords.push(move.coordinates);
     });
     if (coords.length > 0) {
-      //console.log("coords: ", coords);
       const coord = coords[Math.floor(Math.random() * coords.length)];
       return playField(coord.row, coord.col, board, aiPlayerIndex);
     }
@@ -317,14 +351,32 @@ const playFieldAi = (board, aiPlayerIndex) => {
     }
   }
 
+  for (let i = 4; i >= 3; i--) {
+    // Make a potential win move
+    const ai_pot_move = checkPotentialWin(board, i, players, players[aiPlayerIndex]);
+    if (ai_pot_move) {
+      const coords = [];
+      ai_pot_move.forEach((move) => {
+        coords.push(move.coordinates);
+      });
+      if (coords.length > 0) {
+        const coord = coords[Math.floor(Math.random() * coords.length)];
+        return playField(coord.row, coord.col, board, aiPlayerIndex);
+      }
+    }
+  }
+
+  // Make an adjacent move
+  const adj_move = findAdjacentMove(board, aiPlayerIndex);
+  if (adj_move) {
+    return playField(adj_move.row, adj_move.col, board, aiPlayerIndex);
+  }
+
   // Make a random move
   const rand_move = findRandomMove(board);
   if (rand_move) {
-    //console.log("AI playing random");
     return playField(rand_move.row, rand_move.col, board, aiPlayerIndex);
   }
-
-  return board; // No move possible
 };
 
 module.exports = { players, getPlaying, playField, determineGameState, validateBoard, checkWin, checkPotentialWin, playFieldAi };

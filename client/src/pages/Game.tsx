@@ -1,7 +1,8 @@
 import { useLocation } from "react-router-dom";
 
-import Header from "./../components/Header";
 import GameBoard from "./../components/GameBoard";
+import Header from "./../components/Header";
+import Footer from "./../components/Footer";
 
 interface GameSettProps {
   gameMode: string;
@@ -10,6 +11,8 @@ interface GameSettProps {
 }
 
 const Game = () => {
+  document.title = "Hra - TdA";
+
   const location = useLocation();
   const gameSett: GameSettProps = location.state || {
     // Default values
@@ -28,6 +31,7 @@ const Game = () => {
         {/* <Link to="/games">Games</Link> */}
         <GameBoard size={15} replayButton={true} playerNames={gameSett.playerNames} ai={gameSett.ai} playerCurr={[0, 0]} />
       </div>
+      <Footer />
     </>
   )
 }

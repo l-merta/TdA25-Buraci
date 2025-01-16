@@ -49,6 +49,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
         nextPlaying: 0,
         gameState: "unknown"
     });
+    //const [difficulty, setDifficulty] = useState('medium');
     //@ts-ignore
     const [online, setOnline] = useState(false);
     const [firstMoveAfterLoad, setFirstMoveAfterLoad] = useState(false);
@@ -56,6 +57,12 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     const initialMoveMade = useRef(false);
     const aiMoveInProgress = useRef(false);
     const [gameDataLoaded, setGameDataLoaded] = useState(false);
+    const timeoutIds = useRef<number[]>([]);
+
+    const clearTimeouts = () => {
+        timeoutIds.current.forEach(timeoutId => clearTimeout(timeoutId));
+        timeoutIds.current = [];
+    };
 
     useEffect(() => {
         if (playerCurr[0] === 1 || playerCurr[1] === 1) {
@@ -136,23 +143,41 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
                 resetGame();
             });
         }
-    });
+    }, [socket]);
 
     useEffect(() => {
+        const isBoardFull = (board: any[][]) => {
+            return board.every(row => row.every(cell => cell !== ''));
+            //console.log("board full: ", board.every(row => row.every(cell => cell !== '')));
+            //return false;
+        };
+
         if (gameData.win) {
             console.log("Player " + gameData.win.player + " won!");
 
-            if (ai[0] == 1 && ai[1] == 1) {
-                setTimeout(() => {
+            if (ai[0] == 1 && ai[1] == 1 && !replayButton) {
+                const timeoutId = setTimeout(() => {
                     resetGame();
                 }, 2000);
+                timeoutIds.current.push(timeoutId);
             }
         } else {
             if (gameDataLoaded && ai[gameData.nextPlaying] == 1) {
-                console.log("AI is playing...");
-                setTimeout(() => {
-                    onFieldClick(0, 0); // Play the AI move
-                }, 500);
+                if (isBoardFull(gameData.board)) {
+                    if (!replayButton) {
+                      const timeoutId = setTimeout(() => {
+                          resetGame();
+                      }, 2000);
+                      timeoutIds.current.push(timeoutId);
+                    }
+                } 
+                else {
+                    console.log("AI is playing...");
+                    const timeoutId = setTimeout(() => {
+                        onFieldClick(0, 0); // Play the AI move
+                    }, 500);
+                    timeoutIds.current.push(timeoutId);
+                }
             }
         }
     }, [gameData, gameDataLoaded]);
@@ -184,22 +209,27 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     useEffect(() => {
         if ((gameDataLoaded && !initialMoveMade.current && ai[getBeforePlaying()] === 1 && !gameData.win) || gameDataLoaded && !initialMoveMade.current && ai[0] === 1 && gameData.playing == 0 && !gameData.win) {
             initialMoveMade.current = true;
-            setTimeout(() => {
+            const timeoutId = setTimeout(() => {
                 onFieldClick(0, 0); // Play the AI move
             }, 500);
+            timeoutIds.current.push(timeoutId);
         }
-    }, [gameDataLoaded, initialMoveMade]);
+    }, [gameDataLoaded, gameData]);
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setGameData((prevGameData: GameBoardProps) => {
             return { ...prevGameData, name: event.target.value};
         }); // Update game name state on input change
     };
+    const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setGameData({ ...gameData, difficulty: event.target.value });
+    };
     function onSaveClick() {
         createGame(gameData);
     }
+
     const createGame = async (gameData: GameDataProps) => {
-        if (gameData.name.length > 0) {
+        if (gameData.name.length > 0 && !gameData.board.every((row: any) => row.every((cell: any) => cell == ''))) {
             if (uuid) {
                 // Update already existing game
                 try {
@@ -256,6 +286,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
           socket.emit("resetGame");
     }
     function resetGame() {
+        clearTimeouts();
         setGameDataLoaded(false);
         initialMoveMade.current = false;
         setGameData((prevData: any) =>{
@@ -301,13 +332,22 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     }
     else {
       return (
-        <div className="game-board-container">
+        <div className="game-board-container anim anim-scale-up">
             {!editMode ? 
                 (gameData.name && !onlyBoard && <h1>{gameData.name}</h1>)
             :
-                <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
+                <div className="edit">
+                    <input type="text" placeholder="Název hry" defaultValue={gameData.name} onChange={handleNameChange} />
+                    <select value={gameData.difficulty} onChange={handleDifficultyChange}>
+                        <option value="beginner">Beginner</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="extreme">Extreme</option>
+                    </select>
+                    {editMode && <button onClick={onSaveClick} className="button button-blue">Uložit a zapnout hru</button>}
+                </div>
             }
-            {editMode && <button onClick={onSaveClick} className="button-main">Uložit a zapnout hru</button>}
             <div className="wrapper">
               {playerNames ?
                 <div className="players">

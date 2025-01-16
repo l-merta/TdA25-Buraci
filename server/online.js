@@ -139,11 +139,15 @@ module.exports = (server) => {
             error: "hostDisconnected",
             message: "Zakladatel hry se odpojil"
           });
+
+          if (rooms[roomId].players.length === 1) {
+            delete rooms[roomId];
+          }
         } 
         else {
           rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
 
-          if (rooms[roomId].players.length === 0) {
+          if (rooms[roomId].players.length === 1) {
             delete rooms[roomId];
           } else {
             emitPlayerList(rooms[roomId]);
