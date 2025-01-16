@@ -87,9 +87,11 @@ app.get("/api/v1/games", async (req, res) => {
   }
 
   if (lastModified) {
-    query += ` AND updatedAt <= ?`;
+    query += ` AND updatedAt >= ?`;
     params.push(new Date(lastModified).toISOString());
   }
+
+  query += ` ORDER BY updatedAt DESC`;
 
   try {
     const db = await getDb();
