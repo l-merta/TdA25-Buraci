@@ -2,4 +2,34 @@
   min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
   margin-top: var(--header-h);
   padding-top: 3rem;
+}
+.main-tda .sec-tda {
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.main-tda .sec-tda h3 {
+  margin-bottom: 0.8rem;
+}
+.main-tda .sec-tda img {
+  height: 12rem;
+  margin: 0 auto;
+  margin-top: 1.5rem;
+}
+.main-tda .sec-tda .text-tda {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1rem;
+}
+
+h1 {
+  color: var(--font-color);
+  margin: 0;
+  margin-bottom: 1rem;
+  text-align: center;
 }/*# sourceMappingURL=tda.css.map */

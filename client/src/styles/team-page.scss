@@ -1,5 +1,162 @@
-.main-team {
+.main-tda {
     min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
     margin-top: var(--header-h);
     padding-top: 3rem;
+
+    .sec-team
+    {
+        width: 100%;
+        max-width: 70rem;
+        margin: 0 auto;
+        padding: 0 1.0rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+        h3 {
+          margin-bottom: 0.8rem;
+        }
+        img {
+            height: 12rem;
+            margin: 0 auto;
+            margin-top: 1.5rem;
+        }
+
+        .text-team{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 1.0rem;
+        }
+
+        .bold-text-team
+        {
+            font-weight: bold;
+        }
+
+    }
+
+    .sec-team-cards{
+        
+        margin-top: 5rem;
+
+        .card {
+            width: 12rem;
+            height: 12rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 2.25rem; 
+            perspective: 156.25rem; 
+            margin: 0 3.125rem; 
+            border-radius: 0.3125rem; 
+        }
+        
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.3125rem; /* 5px to rem */
+        }
+        
+        .wrapper {
+            transition: all 0.5s;
+            position: absolute;
+            width: 100%;
+            z-index: -1;
+            border-radius: 0.3125rem; /* 5px to rem */
+        }
+        
+        .card:hover .wrapper {
+            transform: perspective(56.25rem) translateY(-5%) rotateX(25deg) translateZ(0); /* 900px to rem */
+            box-shadow: 0.125rem 2.1875rem 2rem -0.5rem rgba(0, 0, 0, 0.75); /* Converted px to rem */
+            -webkit-box-shadow: 0.125rem 2.1875rem 2rem -0.5rem rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 0.125rem 2.1875rem 2rem -0.5rem rgba(0, 0, 0, 0.75);
+            border-radius: 0.3125rem; /* 5px to rem */
+        }
+        
+        .wrapper::before,
+        .wrapper::after {
+            content: "";
+            opacity: 0;
+            width: 100%;
+            height: 5vh; /* 80px to vh */
+            transition: all 0.5s;
+            position: absolute;
+            left: 0;
+            border-radius: 0.3125rem; /* 5px to rem */
+        }
+        
+        .wrapper::before {
+            top: 0;
+            height: 100%;
+            background-image: linear-gradient(
+            to top,
+            transparent 46%,
+            rgba(12, 13, 19, 0.5) 68%,
+            rgba(12, 13, 19) 97%
+            );
+            border-radius: 0.3125rem; /* 5px to rem */
+        }
+        
+        .wrapper::after {
+            bottom: 0;
+            opacity: 1;
+            background-image: linear-gradient(
+            to bottom,
+            transparent 46%,
+            rgba(12, 13, 19, 0.5) 68%,
+            rgba(12, 13, 19) 97%
+            );
+            border-radius: 0.3125rem; /* 5px to rem */
+        }
+        
+        .card:hover .wrapper::before,
+        .wrapper::after {
+            opacity: 1;
+        }
+        
+        .card:hover .wrapper::after {
+            height: 7.5vh; /* 120px to vh */
+        }
+        
+        .title {
+            width: 100%;
+            transition: transform 0.5s;
+        }
+        
+        .card:hover .title {
+            transform: translate3d(0%, -3.125rem, 6.25rem); /* 50px, 100px to rem */
+        }
+        
+        .character {
+            width: 100%;
+            opacity: 0;
+            transition: all 0.5s;
+            position: absolute;
+            z-index: -1;
+        }
+        
+        .card:hover .character {
+            opacity: 1;
+            transform: translate3d(0%, -1.875rem, 6.25rem); /* 30px, 100px to rem */
+        }
+
+        a
+        {
+            text-decoration: none;
+            color: var(--c3);
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-shadow: 2px 2px black;
+        }
+  
+        .group
+        {
+            display: flex;
+            justify-content: center;
+        }
+    }
+
 }

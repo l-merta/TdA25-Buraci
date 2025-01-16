@@ -2,4 +2,39 @@
     min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
     margin-top: var(--header-h);
     padding-top: 3rem;
+
+    .sec-tda
+    {
+        width: 100%;
+        max-width: 70rem;
+        margin: 0 auto;
+        padding: 0 1.0rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+        h3 {
+          margin-bottom: 0.8rem;
+        }
+        img {
+            height: 12rem;
+            margin: 0 auto;
+            margin-top: 1.5rem;
+        }
+
+        .text-tda{
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            gap: 1.0rem;
+        }
+
+    }
 }
+h1 {
+    color: var(--font-color);
+    margin: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
