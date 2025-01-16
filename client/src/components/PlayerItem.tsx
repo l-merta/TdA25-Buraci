@@ -38,7 +38,7 @@ const PlayerItem:React.FC<PlayerProps> = ({ player, index, socket }) => {
   };
 
   return (
-    <div className={"player " + (player.playerCurr ? "player-curr" : "")}>
+    <div className={"anim anim-scale-up player " + (player.playerCurr ? "player-curr" : "")}>
       <div className="char">
         <img src={getCharImage(player.playerChar, index)} alt="" />
       </div>

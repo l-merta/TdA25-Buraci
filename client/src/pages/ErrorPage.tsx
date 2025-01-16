@@ -16,7 +16,7 @@ function ErrorPage() {
     <>
       <Header />
       <div className="bg-grad"></div>
-      <div className="main-error">
+      <div className="main-error anim anim-slide-from-down">
         <h1>Nastala chybička..</h1>
         <h2>
           <span className="message">{message}</span>

@@ -444,4 +444,16 @@ input[type=text] {
   footer .social {
     align-items: start;
   }
+}
+@media screen and (max-width: 340px) {
+  :root {
+    --footer-h: 12rem;
+  }
+  footer {
+    flex-direction: column;
+    align-items: start;
+  }
+  footer img {
+    width: 100%;
+  }
 }/*# sourceMappingURL=main.css.map */

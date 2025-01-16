@@ -332,7 +332,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     }
     else {
       return (
-        <div className="game-board-container">
+        <div className="game-board-container anim anim-scale-up">
             {!editMode ? 
                 (gameData.name && !onlyBoard && <h1>{gameData.name}</h1>)
             :

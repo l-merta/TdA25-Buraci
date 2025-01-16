@@ -27,23 +27,25 @@ function App() {
         <img src={theme && theme == "theme-light" ? 
           "/images/logos/Think-different-Academy_LOGO_cerny.png" :
           "/images/logos/Think-different-Academy_LOGO_bily.png"} 
-        alt="" />
+          alt="TdA logo" 
+          className="anim anim-slide-from-down"
+        />
         <h1>
           <span className='main'>Think different</span>
           <span className='sec'>Academy</span>
         </h1>
-        <p>
+        <p className="anim anim-slide-from-down">
           Nezisková organizace zaměřená na <b className='b-blue'>rozvoj</b> myšlení <b className='b-blue'>studentů i široké veřejnosti</b>.
           Vyvíjíme <b className='b-blue'>piškvorkovou platformu</b>, která má digitalizovat piškvorky
           a poskytnout uživatelům <b className='b-blue'>atraktivní herní zážitek</b>.
         </p>
         <nav>
-          <Link to="/game" className='button button-1 button-red'>Nová hra</Link>
-          <Link to="/games" className='button button-1 button-red button-border'>Seznam her</Link>
+          <Link to="/game" className='button button-1 button-red anim anim-slide-from-down'>Nová hra</Link>
+          <Link to="/games" className='button button-1 button-red button-border anim anim-slide-from-down'>Seznam her</Link>
           {/* <Link to="/create" className='button button-blue'>Vytvořit hru</Link> */}
         </nav>
       </main>
-      <section className='sec-ai'>
+      <section className='sec-ai anim anim-slide-from-down'>
         <div className="s1">
           <h2>Zkus porazit Tádu!</h2>
           <h3>Dokážeš vyhrát piškvorky <br /> proti našemu chytrému AI?</h3>
