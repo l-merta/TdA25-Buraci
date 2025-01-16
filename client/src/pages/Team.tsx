@@ -33,6 +33,41 @@ function Team() {
 
           </div>
         </section>
+
+        <section className='sec-team-cards'>
+        <h1>Vývojáři</h1>
+        <div className='group'>
+        <a href="https://github.com/NorakSok">
+        <div className="card">
+            <div className="wrapper">
+                <img src="images/team-picks/eric-clasic.jpg" className="cover-image" />
+            </div>
+            <span className="title">Eric Norak Sok</span>
+            <img src="images/team-picks/eric-3D.png" className="character" />
+        </div>
+    </a>
+
+    <a href="https://github.com/l-merta">
+        <div className="card">
+            <div className="wrapper">
+                <img src="images/team-picks/sketa-clasic.webp" className="cover-image" />
+            </div>
+            <span className="title">Lukáš Merta</span>
+            <img src="images/team-picks/lukes-3D.png" className="character" />
+        </div>
+    </a>
+
+    <a href="https://github.com/degescigoma">
+        <div className="card">
+            <div className="wrapper">
+                <img src="images/team-picks/bobek-clasik.jpg" className="cover-image" />
+            </div>
+            <span className="title">Robert Němeček</span>
+            <img src="images/team-picks/bobek-3D.png" className="character" />
+        </div>
+    </a>
+    </div>
+        </section>
       </div>
       <Footer />
     </>
