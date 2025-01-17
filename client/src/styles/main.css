@@ -60,14 +60,21 @@ header .actions-2 {
 header .actions-2 .theme-switch {
   opacity: 0.9;
   color: var(--c3);
-  font-size: 1.6rem;
   background-color: transparent;
+  font-size: 1.6rem;
+  aspect-ratio: 1/1;
   width: -moz-fit-content;
   width: fit-content;
   height: -moz-fit-content;
   height: fit-content;
   border: none;
+  border-radius: 2rem;
+  padding: 0.5rem 0.8rem;
+  transition: 0.12s;
   cursor: pointer;
+}
+header .actions-2 .theme-switch:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 header .burger-menu {
   display: none;

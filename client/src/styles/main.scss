@@ -63,12 +63,19 @@ header {
         .theme-switch {
             opacity: 0.9;
             color: var(--c3);
-            font-size: 1.6rem;
             background-color: transparent;
+            font-size: 1.6rem;
+            aspect-ratio: 1/1;
             width: fit-content;
             height: fit-content;
             border: none;
+            border-radius: 2.0rem;
+            padding: 0.5rem 0.8rem;
+            transition: .12s;
             cursor: pointer;
+        }
+        .theme-switch:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     }
     .burger-menu {
