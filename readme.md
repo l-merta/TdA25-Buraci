@@ -36,6 +36,9 @@ Tento projekt je výtvorem tříčlenného týmu, který se zaměřil na vytvoř
    ```bash
    docker-compose up --build -d
    ```
+2. Aplikace bude dostupná na:
+- Frontend: https://localhost:5100
+- Backend: https://localhost:5200
    
 ### Produkční prostředí  
 1. Vytvořte Docker iamge:  
