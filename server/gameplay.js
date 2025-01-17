@@ -161,28 +161,6 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
         const gapCol = col + gapIndex * colDir;
         return { player, coordinates: { row: gapRow, col: gapCol } };
       }
-
-      /*
-      // Check the cell before the sequence
-      const beforeRow = row - rowDir;
-      const beforeCol = col - colDir;
-      if (beforeRow >= 0 && beforeRow < numRows && beforeCol >= 0 && beforeCol < numCols && board[beforeRow][beforeCol] === '') {
-        potentialCoordinates.push({ row: beforeRow, col: beforeCol });
-      }
-
-      // Check the cell after the sequence
-      let afterRow = row + (winLength - 1) * rowDir + rowDir;
-      let afterCol = col + (winLength - 1) * colDir + colDir;
-      if (rowDir == 1)
-        afterRow--;
-      if (colDir == 1)
-        afterCol--;
-      if (afterRow >= 0 && afterRow < numRows && afterCol >= 0 && afterCol < numCols && board[afterRow][afterCol] === '') {
-        potentialCoordinates.push({ row: afterRow, col: afterCol });
-      }
-
-      return { player, coordinates: potentialCoordinates };
-      */
     }
 
     return null;
@@ -261,8 +239,6 @@ const checkPotentialWin = (board, winLength, players, forPlayer = null, emptySpo
 
 const playFieldAi = (board, aiPlayerIndex) => {
   const opp = aiPlayerIndex === 0 ? 1 : 0;
-
-  console.log("AI playing");
 
   const findRandomMove = (board) => {
     const emptyCells = [];
