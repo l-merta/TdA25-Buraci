@@ -5,6 +5,7 @@
   --c4: #FFFFFF;
   --c5: #E31837;
   --c6: #0070BB;
+  --c6-2: rgba(0, 112, 187, 0.8);
   --c7: #395A9A;
   --c8: #724479;
   --c9: #AB2E58;
@@ -92,7 +93,8 @@ p {
 ::-webkit-scrollbar-thumb {
   background: var(--c6); /* Color of the scrollbar thumb */
   border-radius: 0.2rem; /* Rounded corners for the thumb */
+  transition: .12s;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--c4); /* Color of the scrollbar thumb on hover */
+  background: var(--c6-2);
 }
