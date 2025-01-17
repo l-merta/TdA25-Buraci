@@ -17,7 +17,7 @@ function Team() {
         <h1>Tým Buráci</h1>
         <section className='sec-team'>
           <h2>Seznamte se s Buráky</h2>
-          <h3>Jak se vyvíjeli piškvorky</h3>
+          <h3>Jak se vyvíjely piškvorky</h3>
           <div className='text-team'>
             <p>
               Naše aplikace pro piškvorky umožňuje hrát hru několika způsoby. V lokálním režimu si můžete zahrát proti kamarádovi na jednom počítači - stačí si sednout k monitoru a užít si klasickou hru. Pokud chcete hrát na dálku, nabízíme multiplayer režim, který využívá <b>Socket.io</b> pro online komunikaci mezi hráči. To znamená, že můžete hrát proti přátelům, ať už jsou kdekoli na světě. Pokud nemáte proti komu hrát, můžete využít <b>naši umělou inteligenci Tádu</b>, který je navržen tak, aby skvěle bránil i útočil, což znamená, že vždy budete mít silného a zábavného soupeře.

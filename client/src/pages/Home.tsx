@@ -63,6 +63,36 @@ function App() {
           </div>
         </div>
       </section>
+      <section className="sec-texts">
+        <h2>Objevte více</h2>
+        <h3>Vše, co potřebujete pro dokonalý zážitek z piškvorek</h3>
+        <div className="group">
+          <Link to="/online/" className="text">
+            <h3>
+              <i className="fa-regular fa-globe"></i>
+              <span>Hrajte proti přátelům</span>
+              <i className="link-icon fa-solid fa-arrow-up-right-from-square"></i>
+            </h3>
+            <p>Naše aplikace nabízí nejen klasické piškvorky, ale také výzvu s přáteli. Soutěžte v multiplayeru, kde o vítězi rozhodnou vaše dovednosti!</p>
+          </Link>
+          <Link to="/games/" className="text">
+            <h3>
+              <i className="fa-light fa-game-board"></i>
+              <span>Desítky her na dosah</span>
+              <i className="link-icon fa-solid fa-arrow-up-right-from-square"></i>
+            </h3>
+            <p>Projděte si rozsáhlou knihovnu uložených her od ostatních hráčů. Každá hra je unikátní, plná strategických tahů a překvapení. Najděte inspiraci a zlepšujte svou hru!</p>
+          </Link>
+          <Link to="/create/" className="text">
+            <h3>
+              <i className="fa-regular fa-user-pen"></i>
+              <span>Staňte se tvůrcem</span>
+              <i className="link-icon fa-solid fa-arrow-up-right-from-square"></i>
+            </h3>
+            <p>Vytvořte svou vlastní hru a nechte ostatní hráče, aby přijali vaši výzvu! Vytvořte unikátní herní plány a sledujte, jak vaše hra dobývá komunitu.</p>
+          </Link>
+        </div>
+      </section>
       <Footer />
     </>
   )

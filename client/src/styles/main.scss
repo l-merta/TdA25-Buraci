@@ -132,9 +132,11 @@ header {
 }
 main {
     width: 100%;
-    height: calc(100vh - var(--header-h) - var(--main-b-gap));
-    min-height: 50rem;
+    //height: calc(100vh - var(--header-h) - var(--main-b-gap));
+    //min-height: 50rem;
+    min-height: calc(100vh - var(--header-h) - var(--main-b-gap));
     margin-top: var(--header-h);
+    padding: 1.0rem 0 2.0rem 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -176,7 +178,7 @@ main {
 }
 .sec-ai {
     width: 100%;
-    max-width: 70rem;
+    max-width: 85rem;
     margin: 0 auto;
     padding: 0 0.5rem;
     padding-bottom: 3.0rem;
@@ -221,6 +223,76 @@ main {
         }
     }
 }
+.sec-texts {
+    width: 100%;
+    max-width: 85rem;
+    margin: 0 auto;
+    margin-top: 4.0rem;
+    padding: 0 0.5rem;
+    padding-bottom: 3.0rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+
+    .group {
+        width: 100%;
+        margin-top: 1.0rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: center;
+        gap: 1.0rem;
+    }
+    .text {
+        flex: 1;
+        height: 1;
+        background-color: var(--bg-color2);
+        border: 1px solid var(--bg-color3);
+        border-radius: 0.5rem;
+        padding: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        transition: .15s;
+        cursor: pointer;
+
+        h3 {
+            color: var(--c6);
+            font: 700 2.0rem var(--f1);
+            margin: 0;
+            margin-bottom: 0.5rem;
+            text-wrap: nowrap;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        p {
+            opacity: 0.8;
+            color: var(--font-color);
+            font: 500 1.2rem var(--f1);
+            margin: 0;
+            text-align: start;
+        }
+        .link-icon {
+            opacity: 0.3;
+            color: var(--font-color);
+            font-size: 1.3rem;
+            margin-left: 0.2rem;
+        }
+    }
+    .text:hover {
+        border: 3px solid var(--c6);
+        scale: 1.05;
+
+        h3 span {
+            text-decoration: underline;
+        }
+    }
+    .text:active {
+        scale: 1.0;
+    }
+}
 footer {
     color: var(--font-contr);
     background-color: var(--bg-contr);
@@ -244,6 +316,13 @@ footer {
         .team {
             opacity: 0.6;
             font: 500 1.1rem var(--f1);
+        }
+        .buraci-link {
+            color: inherit;
+            text-decoration: none;
+        }
+        .buraci-link:hover {
+            text-decoration: underline;
         }
     }
     .social {
@@ -396,6 +475,13 @@ input[type=text] {
     }
 }
 
+@media screen and (max-width: 1250px) {
+    .sec-texts {
+        .group {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
 @media screen and (max-width: 1150px) {
   .sec-ai {
       flex-direction: column;
@@ -426,6 +512,13 @@ input[type=text] {
         }
         .burger-menu {
             display: flex;
+        }
+    }
+}
+@media screen and (max-width: 850px) {
+    .sec-texts {
+        .group {
+            grid-template-columns: repeat(1, 1fr);
         }
     }
 }
