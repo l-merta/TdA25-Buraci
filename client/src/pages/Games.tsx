@@ -40,7 +40,7 @@ const Games = () => {
 
   return (
     <>
-      <Header />
+      <Header active='games'/>
       <div className="bg-grad"></div>
       <div className="main-games">
         <h1>Uložené hry piškvorek</h1>

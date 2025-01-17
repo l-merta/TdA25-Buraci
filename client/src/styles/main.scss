@@ -45,7 +45,8 @@ header {
             transition: .12s;
         }
     }
-    a:hover {
+    a:hover,
+    .header-active {
         .line {
             width: 80%;
         }

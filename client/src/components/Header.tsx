@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+interface HeaderProps {
+    active?: string;
+}
+
+const Header:React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -35,15 +39,15 @@ const Header = () => {
     <header>
       <Link to="/"><img src="/images/logos/Think-different-Academy_LOGO_oficialni-bile.png" alt="" /></Link>
       <div className="actions">
-        <Link to="/games" className='button button-empty'>
+        <Link to="/games" className={'button button-empty ' + (active === 'games' ? 'header-active ' : ' ')}>
           <span>Seznam her</span>
           <div className="line"></div>
         </Link>
-        <Link to="/think-different-academy" className='button button-empty'>
+        <Link to="/think-different-academy" className={'button button-empty ' + (active === 'tda' ? 'header-active ' : ' ')}>
           <span>O TdA</span>
           <div className="line"></div>
         </Link>
-        <Link to="/about-team" className='button button-empty'>
+        <Link to="/about-team" className={'button button-empty ' + (active === 'team' ? 'header-active ' : ' ')}>
           <span>O týmu a aplikaci</span>
           <div className="line"></div>
         </Link>

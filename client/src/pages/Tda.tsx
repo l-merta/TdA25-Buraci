@@ -12,7 +12,7 @@ function Tda() {
 
   return (
     <>
-      <Header />
+      <Header active='tda'/>
       <div className="bg-grad"></div>
       <div className="main-tda anim anim-slide-from-down">
         <h1>Kdo jsme</h1>

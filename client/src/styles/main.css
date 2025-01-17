@@ -44,7 +44,8 @@ header a .line {
   bottom: -0.1rem;
   transition: 0.12s;
 }
-header a:hover .line {
+header a:hover .line,
+header .header-active .line {
   width: 80%;
 }
 header .actions {

@@ -11,7 +11,7 @@ function Team() {
 
   return (
     <>
-      <Header />
+      <Header active='team'/>
       <div className="bg-grad"></div>
       <div className="main-tda anim anim-slide-from-down">
         <h1>Tým Buráci</h1>
