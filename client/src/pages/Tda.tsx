@@ -14,7 +14,7 @@ function Tda() {
     <>
       <Header />
       <div className="bg-grad"></div>
-      <div className="main-tda">
+      <div className="main-tda anim anim-slide-from-down">
         <h1>Kdo jsme</h1>
         <section className='sec-tda'>
           <h2>O nás</h2>

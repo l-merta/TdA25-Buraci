@@ -13,7 +13,7 @@ function Team() {
     <>
       <Header />
       <div className="bg-grad"></div>
-      <div className="main-tda">
+      <div className="main-tda anim anim-slide-from-down">
         <h1>Tým Buráci</h1>
         <section className='sec-team'>
           <h2>Seznamte se s Buráky</h2>
