@@ -10,9 +10,9 @@ Tento projekt je výtvorem tříčlenného týmu, který se zaměřil na vytvoř
 ---
 
 ## 👥 Tým  
-- **Lukáš Merta** – kapitán týmu, fullstack developer  
-- **Robert Němeček** – frontend developer  
-- **Norak Eric Sok** – designér  
+- **Lukáš Merta** – kapitán týmu, fullstack developer, designér  
+- **Robert Němeček** – frontend developer, tester  
+- **Norak Eric Sok** – tester  
 
 ---
 
