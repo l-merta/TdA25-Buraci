@@ -27,4 +27,4 @@ EXPOSE 5200
 
 # Nastavení pracovního adresáře na server a spuštění Express serveru
 WORKDIR /app/server
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
