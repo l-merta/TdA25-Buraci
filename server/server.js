@@ -40,6 +40,7 @@ app.post("/api/v1/users", async (req, res) => {
     username,
     email,
     password, // Note: In a real application, ensure to hash the password before storing it
+    elo: 400,
     wins: 0,
     draws: 0,
     losses: 0,
@@ -48,13 +49,14 @@ app.post("/api/v1/users", async (req, res) => {
   try {
     const db = await getDb();
     await db.run(
-      `INSERT INTO users (uuid, createdAt, username, email, password, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO users (uuid, createdAt, username, email, password, elo, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         user.uuid,
         user.createdAt,
         user.username,
         user.email,
         user.password,
+        user.elo,
         user.wins,
         user.draws,
         user.losses,
