@@ -8,7 +8,6 @@ const Create = () => {
   document.title = "Vytvořit - TdA";
 
   const { uuid } = useParams<{ uuid: string }>();
-  console.log(uuid);
 
   return (
     <>

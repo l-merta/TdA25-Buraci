@@ -48,14 +48,13 @@ app.post("/api/v1/users", async (req, res) => {
   try {
     const db = await getDb();
     await db.run(
-      `INSERT INTO users (uuid, createdAt, username, email, password, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO users (uuid, createdAt, username, email, password, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         user.uuid,
         user.createdAt,
         user.username,
         user.email,
         user.password,
-        user.elo,
         user.wins,
         user.draws,
         user.losses,
