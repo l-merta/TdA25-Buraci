@@ -26,7 +26,128 @@ const server = http.createServer(app);
 // Import and use WebSocket server
 require("./online")(server);
 
-// API Endpoints
+// API Endpoints for Users
+app.post("/api/v1/users", async (req, res) => {
+  const { username, email, password } = req.body;
+
+  if (!username || !email || !password) {
+    return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
+  }
+
+  const user = {
+    uuid: uuidv4(),
+    createdAt: new Date().toISOString(),
+    username,
+    email,
+    password, // Note: In a real application, ensure to hash the password before storing it
+    wins: 0,
+    draws: 0,
+    losses: 0,
+  };
+
+  try {
+    const db = await getDb();
+    await db.run(
+      `INSERT INTO users (uuid, createdAt, username, email, password, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        user.uuid,
+        user.createdAt,
+        user.username,
+        user.email,
+        user.password,
+        user.elo,
+        user.wins,
+        user.draws,
+        user.losses,
+      ]
+    );
+    res.status(201).json(user);
+  } catch (error) {
+    console.error("Error inserting user into database:", error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.get("/api/v1/users", async (req, res) => {
+  try {
+    const db = await getDb();
+    const rows = await db.all(`SELECT * FROM users`);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.get("/api/v1/users/:uuid", async (req, res) => {
+  const { uuid } = req.params;
+
+  try {
+    const db = await getDb();
+    const row = await db.get(`SELECT * FROM users WHERE uuid = ?`, [uuid]);
+    if (!row) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    res.json(row);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.put("/api/v1/users/:uuid", async (req, res) => {
+  const { uuid } = req.params;
+  const { username, email, password, elo } = req.body;
+
+  if (!username || !email || !password || elo === undefined) {
+    return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
+  }
+
+  const updatedUser = {
+    username,
+    email,
+    password, // Note: In a real application, ensure to hash the password before storing it
+    elo,
+    updatedAt: new Date().toISOString(),
+  };
+
+  try {
+    const db = await getDb();
+    const result = await db.run(
+      `UPDATE users SET username = ?, email = ?, password = ?, elo = ?, updatedAt = ? WHERE uuid = ?`,
+      [updatedUser.username, updatedUser.email, updatedUser.password, updatedUser.elo, updatedUser.updatedAt, uuid]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+
+    const updatedRow = await db.get(`SELECT * FROM users WHERE uuid = ?`, [uuid]);
+    if (!updatedRow) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    res.status(200).json(updatedRow);
+  } catch (error) {
+    res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+app.delete("/api/v1/users/:uuid", async (req, res) => {
+  const { uuid } = req.params;
+
+  try {
+    const db = await getDb();
+    const result = await db.run(`DELETE FROM users WHERE uuid = ?`, [uuid]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+// API Endpoints for Games
 app.post("/api/v1/games", async (req, res) => {
   const { name, difficulty, board } = req.body;
 
