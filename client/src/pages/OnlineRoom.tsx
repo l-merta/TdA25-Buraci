@@ -55,7 +55,7 @@ function OnlineRoom() {
 
     socket.on("redirect", (data) => {
       if (data.type == "room") {
-        navigate("/online/" + data.roomId, { state: gameSett });
+        navigate("/freeplay/" + data.roomId, { state: gameSett });
       }
       else if (data.type == "error") {
         navigate("/error", { state: data });
