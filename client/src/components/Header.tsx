@@ -57,6 +57,7 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
           <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
         </button>
         <Link to="/game" className='button button-red'>Nová hra</Link>
+        <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
       </div>
       <div className="burger-menu">
         <button className="theme-switch" onClick={switchColorTheme}>

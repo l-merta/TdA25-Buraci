@@ -1,0 +1,50 @@
+.main-login {
+  position: relative;
+  top: var(--header-h);
+  padding: 0 1rem;
+  padding-top: 3rem;
+  padding-bottom: 4.5rem;
+}
+.main-login form {
+  background-color: var(--bg-color);
+  width: 30rem;
+  max-width: 100%;
+  border: 1px solid var(--bg-color3);
+  border-radius: 0.5rem;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+}
+.main-login form input {
+  color: var(--font-color);
+  background-color: var(--bg-color);
+  background-color: transparent;
+  font: 500 1rem var(--f1);
+  width: 100%;
+  border: 1px solid var(--bg-contr);
+  border-radius: 0.3rem;
+  padding: 0.6rem 0.6rem;
+  transition: 0.12s;
+}
+.main-login form input:focus {
+  outline: none;
+  border: 1px solid var(--c6);
+}
+.main-login form p {
+  opacity: 0.8;
+  color: var(--font-color);
+  font: 500 1.3rem var(--f1);
+}
+.main-login form p a {
+  color: inherit;
+  transition: 0.12s;
+}
+.main-login form p a:hover {
+  opacity: 0.8;
+}
+.main-login form button {
+  margin-top: 1rem;
+}/*# sourceMappingURL=login.css.map */
