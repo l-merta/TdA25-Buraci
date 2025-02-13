@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Header from './../components/Header';
 
 const SignUp = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const user = { username, email, password, passwordAgain };
+    if (password !== passwordAgain) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    const user = { username, email, password };
 
     try {
       const response = await fetch(apiUrl + 'users', {
@@ -28,15 +35,38 @@ const SignUp = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User created:', data);
-        // Handle success (e.g., show a success message, redirect, etc.)
+
+        // Automatically log in the user
+        const loginResponse = await fetch(apiUrl + 'login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nameOrEmail: email, password }),
+        });
+
+        if (loginResponse.ok) {
+          const loginData = await loginResponse.json();
+          localStorage.setItem('token', loginData.token);
+          localStorage.setItem('user', JSON.stringify(loginData.user));
+          navigate('/'); // Redirect to home page or any other page
+        } else {
+          setError('Error logging in after registration');
+        }
       } else {
         const errorData = await response.json();
+        if (errorData.message.includes('username')) {
+          setError('Username is already taken');
+        } else if (errorData.message.includes('email')) {
+          setError('Email is already taken');
+        } else {
+          setError('Error creating user');
+        }
         console.error('Error creating user:', errorData);
-        // Handle error (e.g., show an error message)
       }
     } catch (error) {
       console.error('Error creating user:', error);
-      // Handle error (e.g., show an error message)
+      setError('Error creating user');
     }
   };
 
@@ -75,6 +105,7 @@ const SignUp = () => {
             onChange={(e) => setPasswordAgain(e.target.value)}
             required
           />
+          {error && <p className="error">{error}</p>}
           <p className='redirect'>Už máš účet? <Link to='/login'>Přihlaš se</Link></p>
           <button className='button button-blue' type="submit">Pokračovat</button>
         </form>

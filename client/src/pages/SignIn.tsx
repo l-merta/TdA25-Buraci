@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Header from './../components/Header';
 
 const SignIn = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
 
   const [nameOrEmail, setNameOrEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ const SignIn = () => {
     const user = { nameOrEmail, password };
 
     try {
-      const response = await fetch(apiUrl + 'users', {
+      const response = await fetch(apiUrl + 'login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,17 +26,18 @@ const SignIn = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        console.log('User created:', data);
-        // Handle success (e.g., show a success message, redirect, etc.)
+        const loginData = await response.json();
+        localStorage.setItem('token', loginData.token);
+        localStorage.setItem('user', JSON.stringify(loginData.user));
+        navigate('/'); // Redirect to home page or any other page
       } else {
         const errorData = await response.json();
-        console.error('Error creating user:', errorData);
-        // Handle error (e.g., show an error message)
+        setError('Invalid username/email or password');
+        console.error('Error logging in:', errorData);
       }
     } catch (error) {
-      console.error('Error creating user:', error);
-      // Handle error (e.g., show an error message)
+      console.error('Error logging in:', error);
+      setError('Error logging in');
     }
   };
 
@@ -59,6 +62,7 @@ const SignIn = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {error && <p className="error">{error}</p>}
           <p className='redirect'>Jestě nemáš účet? <Link to='/registration'>Zaregistruj se</Link></p>
           <button className='button button-blue' type="submit">Pokračovat</button>
         </form>

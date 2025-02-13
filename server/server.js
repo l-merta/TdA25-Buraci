@@ -5,6 +5,8 @@ const { players, getPlaying, playField, determineGameState, validateBoard, check
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const http = require("http");
+const bcrypt = require('bcryptjs'); // Add bcrypt for password hashing
+const jwt = require('jsonwebtoken'); // Add jwt for token generation
 
 const app = express();
 const PORT = process.env.PORT || 5200;
@@ -34,12 +36,14 @@ app.post("/api/v1/users", async (req, res) => {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
   const user = {
     uuid: uuidv4(),
     createdAt: new Date().toISOString(),
     username,
     email,
-    password, // Note: In a real application, ensure to hash the password before storing it
+    password: hashedPassword, // Store the hashed password
     elo: 400,
     wins: 0,
     draws: 0,
@@ -104,10 +108,12 @@ app.put("/api/v1/users/:uuid", async (req, res) => {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
   const updatedUser = {
     username,
     email,
-    password, // Note: In a real application, ensure to hash the password before storing it
+    password: hashedPassword, // Store the hashed password
     elo,
     updatedAt: new Date().toISOString(),
   };
@@ -145,6 +151,35 @@ app.delete("/api/v1/users/:uuid", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+// API Endpoint for Login
+app.post("/api/v1/login", async (req, res) => {
+  const { nameOrEmail, password } = req.body;
+
+  if (!nameOrEmail || !password) {
+    return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
+  }
+
+  try {
+    const db = await getDb();
+    const user = await db.get(`SELECT * FROM users WHERE username = ? OR email = ?`, [nameOrEmail, nameOrEmail]);
+
+    if (!user) {
+      return res.status(401).json({ code: 401, message: "Unauthorized: Invalid username/email or password" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ code: 401, message: "Unauthorized: Invalid username/email or password" });
+    }
+
+    const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ token, user });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
 
