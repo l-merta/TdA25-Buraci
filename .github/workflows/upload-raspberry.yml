@@ -49,6 +49,7 @@ jobs:
         echo DB_USER=$DB_USER >> ./server/.env
         echo DB_PASSWORD=$DB_PASSWORD >> ./server/.env
         echo DB_NAME=$DB_NAME >> ./server/.env
+        echo JWT_SECRET=$JWT_SECRET >> ./server/.env
 
     - name: Set up Docker Buildx
       run: |
