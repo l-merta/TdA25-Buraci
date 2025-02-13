@@ -67,7 +67,7 @@ function App() {
         <h2>Objevte více</h2>
         <h3>Vše, co potřebujete pro dokonalý zážitek z piškvorek</h3>
         <div className="group">
-          <Link to="/online/" className="text">
+          <Link to="/freeplay/" className="text">
             <h3>
               <i className="fa-regular fa-globe"></i>
               <span>Hrajte proti přátelům</span>

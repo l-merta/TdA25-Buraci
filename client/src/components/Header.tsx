@@ -2,12 +2,17 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 interface HeaderProps {
-    active?: string;
+  active?: string;
+}
+interface UserProps {
+  username: string;
+  email: string;
 }
 
 const Header:React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<UserProps | any>(JSON.parse(localStorage.getItem('user') || '{}'));
 
   useEffect(() => {
     document.body.className = theme;
@@ -27,6 +32,18 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
 
     return () => {
       localStorage.setItem = originalSetItem; // Restore original method on cleanup
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(JSON.parse(localStorage.getItem('user') || '{}'));
+    };
+
+    document.addEventListener('itemInserted', handleStorageChange);
+
+    return () => {
+      document.removeEventListener('itemInserted', handleStorageChange);
     };
   }, []);
 
@@ -57,6 +74,11 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
           <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
         </button>
         <Link to="/game" className='button button-red'>Nová hra</Link>
+        {user ? (
+          <span className='button button-red button-border'>{user.username}</span>
+        ) : (
+          <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
+        )}
       </div>
       <div className="burger-menu">
         <button className="theme-switch" onClick={switchColorTheme}>
@@ -71,9 +93,11 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
             <Link to="/think-different-academy" className='button button-empty'>O TdA</Link>
             <Link to="/about-team" className='button button-empty'>O týmu a aplikaci</Link>
             <Link to="/game" className='button button-red'>Nová hra</Link>
-            {/* <button className="theme-switch" onClick={switchColorTheme}>
-              <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
-            </button> */}
+            {user ? (
+              <span className='button button-red button-border'>{user.username}</span>
+            ) : (
+              <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
+            )}
           </nav>
         )}
       </div>

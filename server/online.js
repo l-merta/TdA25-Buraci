@@ -13,14 +13,14 @@ module.exports = (server) => {
 
   io.on("connection", (socket) => {
     let { roomId } = socket.handshake.query;
-    if (roomId === "undefined") roomId = null;
+    if (roomId === "undefined" || roomId === 'null') roomId = null;
 
     console.log(`Client connected to room ${roomId}`);
 
     if (!roomId) {
       let newRoomId;
       do {
-        newRoomId = Math.floor(10000 + Math.random() * 90000).toString(); // Generate a 5-digit room code using only numbers
+        newRoomId = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 5-digit room code using only numbers
       } while (rooms[newRoomId]);
 
       rooms[newRoomId] = {
