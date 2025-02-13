@@ -33,7 +33,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/game/:uuid" element={<Game />} />
         <Route path="/games" element={<GameList />} />
         <Route path="/freeplay" element={<OnlineRoom />} />
-        <Route path="/freeplay/:id" element={<OnlineRoom />} />
+        {/* <Route path="/freeplay/:id" element={<OnlineRoom />} /> */}
         <Route path="/create" element={<Create />} />
         <Route path="/create/:uuid" element={<Create />} />
         <Route path="/create-user" element={<CreateUser />} />

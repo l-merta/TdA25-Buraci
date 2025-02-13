@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 import GameBoard from "./../components/GameBoard";
@@ -30,7 +30,8 @@ function OnlineRoom() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { id: roomId } = useParams<{ id: string }>();
+  const queryParams = new URLSearchParams(location.search);
+  const roomId = queryParams.get('game');
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const [player, setPlayer] = useState<PlayerProps | null>();
   const [room, setRoom] = useState<RoomProps | null>(null);
@@ -47,6 +48,7 @@ function OnlineRoom() {
   //console.log(gameSett);
 
   useEffect(() => {
+    console.log(roomId);
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
     const socket = io(wsUrl, {
       query: { roomId }
@@ -55,7 +57,8 @@ function OnlineRoom() {
 
     socket.on("redirect", (data) => {
       if (data.type == "room") {
-        navigate("/freeplay/" + data.roomId, { state: gameSett });
+        console.log(data.roomId);
+        navigate("/freeplay?game=" + data.roomId, { state: gameSett });
       }
       else if (data.type == "error") {
         navigate("/error", { state: data });
