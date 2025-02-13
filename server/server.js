@@ -66,7 +66,8 @@ app.post("/api/v1/users", async (req, res) => {
         user.losses,
       ]
     );
-    res.status(201).json(user);
+    const { password, ...userWithoutPassword } = user;
+    res.status(201).json(userWithoutPassword);
   } catch (error) {
     console.error("Error inserting user into database:", error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
@@ -176,7 +177,8 @@ app.post("/api/v1/login", async (req, res) => {
     }
 
     const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ token, user });
+    const { password: userPassword, ...userWithoutPassword } = user;
+    res.status(200).json({ token, user: userWithoutPassword });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });

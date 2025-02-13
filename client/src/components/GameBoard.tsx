@@ -153,8 +153,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
         };
 
         if (gameData.win) {
-            console.log("Player " + gameData.win.player + " won!");
-
+            //console.log("Player " + gameData.win.player + " won!");
             if (ai[0] == 1 && ai[1] == 1 && !replayButton) {
                 const timeoutId = setTimeout(() => {
                     resetGame();
@@ -172,7 +171,6 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
                     }
                 } 
                 else {
-                    console.log("AI is playing...");
                     const timeoutId = setTimeout(() => {
                         onFieldClick(0, 0); // Play the AI move
                     }, 500);

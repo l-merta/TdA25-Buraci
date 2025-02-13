@@ -29,6 +29,7 @@ const SignIn = () => {
         const loginData = await response.json();
         localStorage.setItem('token', loginData.token);
         localStorage.setItem('user', JSON.stringify(loginData.user));
+        console.log(loginData.user);
         navigate('/'); // Redirect to home page or any other page
       } else {
         const errorData = await response.json();
