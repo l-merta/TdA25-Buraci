@@ -30,6 +30,12 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
           <span>Seznam her</span>
           <div className="line"></div>
         </Link>
+        {user && user.role == 'admin' && (
+          <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
+          <span>Admin Panel</span>
+          <div className="line"></div>
+        </Link>
+        )}
         <Link to="/think-different-academy" className={'button button-empty ' + (active === 'tda' ? 'header-active ' : ' ')}>
           <span>O TdA</span>
           <div className="line"></div>
@@ -38,12 +44,6 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
           <span>O týmu a aplikaci</span>
           <div className="line"></div>
         </Link>
-        {user && user.role == 'admin' && (
-          <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
-          <span>Admin Dashboard</span>
-          <div className="line"></div>
-        </Link>
-        )}
       </div>
       <div className="actions-2">
         <button className="theme-switch" onClick={switchColorTheme}>

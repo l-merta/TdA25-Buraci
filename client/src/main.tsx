@@ -23,6 +23,7 @@ import './styles/login.css';
 import './styles/online.css'
 import './styles/tda.css';
 import './styles/admin.css';
+import './styles/user.css';
 import './styles/team-page.css';
 import './styles/error-page.css';
 

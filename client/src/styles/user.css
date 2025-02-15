@@ -1,0 +1,35 @@
+.user-list {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.user-list .user {
+  color: var(--font-color);
+  background-color: var(--bg-color);
+  width: 100%;
+  border: 1px solid var(--bg-color3);
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0.8rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.12s;
+}
+.user-list .user .user-name,
+.user-list .user .user-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.user-list .user .user-data {
+  align-items: end;
+}
+.user-list .user .username {
+  font: 600 1.2rem var(--f1);
+}
+.user-list .user .role {
+  font: 500 1.1rem var(--f1);
+}/*# sourceMappingURL=user.css.map */
