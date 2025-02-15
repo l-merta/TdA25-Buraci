@@ -1,51 +1,21 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useUser } from "./User";
 
 interface HeaderProps {
   active?: string;
 }
-interface UserProps {
-  username: string;
-  email: string;
-}
 
-const Header:React.FC<HeaderProps> = ({ active }) => {
+const Header: React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
+  const { user } = useUser();
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<UserProps | any>(JSON.parse(localStorage.getItem('user') || '{}'));
 
   useEffect(() => {
     document.body.className = theme;
     localStorage.setItem('theme', theme);
   }, [theme]);
-
-  useEffect(() => {
-    const originalSetItem: any = localStorage.setItem;
-
-    localStorage.setItem = function(key, value) {
-      const event: any = new Event('itemInserted');
-      event.value = value; // Optional..
-      event.key = key; // Optional..
-      document.dispatchEvent(event);
-      originalSetItem.apply(this, arguments);
-    };
-
-    return () => {
-      localStorage.setItem = originalSetItem; // Restore original method on cleanup
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setUser(JSON.parse(localStorage.getItem('user') || '{}'));
-    };
-
-    document.addEventListener('itemInserted', handleStorageChange);
-
-    return () => {
-      document.removeEventListener('itemInserted', handleStorageChange);
-    };
-  }, []);
 
   function switchColorTheme() {
     const newTheme = theme === 'theme-light' ? 'theme-dark' : 'theme-light';
@@ -68,6 +38,12 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
           <span>O týmu a aplikaci</span>
           <div className="line"></div>
         </Link>
+        {user && user.role == 'admin' && (
+          <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
+          <span>Admin Dashboard</span>
+          <div className="line"></div>
+        </Link>
+        )}
       </div>
       <div className="actions-2">
         <button className="theme-switch" onClick={switchColorTheme}>

@@ -12,6 +12,7 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Tda from './pages/Tda.tsx';
 import Team from './pages/Team.tsx';
+import AdminDashboard from './pages/AdminDashboard.tsx';
 import PageNotFound from './pages/ErrorPage.tsx';
 
 import './styles/index.css';
@@ -21,6 +22,7 @@ import './styles/game-list.css';
 import './styles/login.css';
 import './styles/online.css'
 import './styles/tda.css';
+import './styles/admin.css';
 import './styles/team-page.css';
 import './styles/error-page.css';
 
@@ -41,6 +43,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/registration" element={<SignUp />} />
         <Route path="/think-different-academy" element={<Tda />} />
         <Route path="/about-team" element={<Team />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </Router>
