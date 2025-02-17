@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useUser } from "./User";
 
 interface HeaderProps {
   active?: string;
 }
-interface UserProps {
-  username: string;
-  email: string;
-}
 
-const Header:React.FC<HeaderProps> = ({ active }) => {
+const Header: React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
+  const { user, logout } = useUser();
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<UserProps | any>(JSON.parse(localStorage.getItem('user') || '{}'));
 
   useEffect(() => {
     document.body.className = theme;
@@ -35,18 +33,6 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
     };
   }, []);
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setUser(JSON.parse(localStorage.getItem('user') || '{}'));
-    };
-
-    document.addEventListener('itemInserted', handleStorageChange);
-
-    return () => {
-      document.removeEventListener('itemInserted', handleStorageChange);
-    };
-  }, []);
-
   function switchColorTheme() {
     const newTheme = theme === 'theme-light' ? 'theme-dark' : 'theme-light';
     setTheme(newTheme);
@@ -60,6 +46,12 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
           <span>Seznam her</span>
           <div className="line"></div>
         </Link>
+        {user && user.role == 'admin' && (
+          <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
+            <span>Admin Panel</span>
+            <div className="line"></div>
+          </Link>
+        )}
         <Link to="/think-different-academy" className={'button button-empty ' + (active === 'tda' ? 'header-active ' : ' ')}>
           <span>O TdA</span>
           <div className="line"></div>
@@ -75,17 +67,17 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
         </button>
         <Link to="/game" className='button button-red'>Nová hra</Link>
         {user ? (
-          <span className='button button-red button-border'>{user.username}</span>
+          <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
         ) : (
           <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
         )}
       </div>
       <div className="burger-menu">
         <button className="theme-switch" onClick={switchColorTheme}>
-            <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
+          <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
         </button>
         <button className="burger-button" onClick={() => setMenuOpen(!menuOpen)}>
-            <i className="fa-solid fa-bars"></i>
+          <i className="fa-solid fa-bars"></i>
         </button>
         {menuOpen && (
           <nav className="burger-nav">
@@ -102,7 +94,7 @@ const Header:React.FC<HeaderProps> = ({ active }) => {
         )}
       </div>
     </header>
-  )
+  );
 }
 
 export default Header;

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from './../components/User';
 
 import Header from './../components/Header';
 
 const SignUp = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+  const { login } = useUser();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -47,8 +49,7 @@ const SignUp = () => {
 
         if (loginResponse.ok) {
           const loginData = await loginResponse.json();
-          localStorage.setItem('token', loginData.token);
-          localStorage.setItem('user', JSON.stringify(loginData.user));
+          login(loginData.token, loginData.user);
           navigate('/'); // Redirect to home page or any other page
         } else {
           setError('Error logging in after registration');
