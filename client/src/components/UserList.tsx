@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import Loading from './Loading';
 import UserItem from './UserItem';
@@ -20,23 +21,26 @@ const UserList: React.FC = () => {
   const [filters, setFilters] = useState({ name: '', difficulty: '', lastModified: '' });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const query = new URLSearchParams(filters).toString();
-        const response = await fetch(`${apiUrl}users?${query}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoading(true);
+      const query = new URLSearchParams(filters).toString();
+      axios.get(`${apiUrl}users?${query}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
         }
-        const result = await response.json();
+      })
+      .then(response => {
         setIsLoading(false);
-        setUsers(result);
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    };
-
-    fetchData();
+        setUsers(response.data);
+      })
+      .catch(error => {
+        console.error('Token validation failed:', error);
+        localStorage.removeItem('token');
+        setIsLoading(false);
+        setUsers([]);
+      });
+    }
   }, [filters]);
 
   /*

@@ -74,7 +74,6 @@ app.post("/api/v1/users", async (req, res) => {
   }
 });
 app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
-  console.log(req.user.uuid);
   try {
     const db = await getDb();
     const user = await db.get(`SELECT uuid, username, email, role, elo, wins, draws, losses FROM users WHERE uuid = ?`, [req.user.uuid]);

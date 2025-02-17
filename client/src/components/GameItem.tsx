@@ -33,7 +33,6 @@ const GameItem:React.FC<GameProps> = ({ game, index, setGames, gameSett }) => {
 
       // Remove the deleted game from the state
       setGames((games: any) => games.filter((game: any) => game.uuid !== uuid));
-      console.log(`Game with UUID ${uuid} deleted successfully.`);
     } catch (error: any) {
       console.log(error.message); // Handle error
     }
@@ -48,7 +47,6 @@ const GameItem:React.FC<GameProps> = ({ game, index, setGames, gameSett }) => {
     // Simulate an API call to delete the game
     setTimeout(() => {
       // After the API call, you can remove the game from the list or handle it accordingly
-      console.log(`Game with UUID ${uuid} deleted`);
       setLoadingDelete(null); // Reset the loading state
     }, 2000);
   };

@@ -9,7 +9,6 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
   const { user } = useUser();
-  console.log(user);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -17,6 +16,22 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
     document.body.className = theme;
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const originalSetItem: any = localStorage.setItem;
+
+    localStorage.setItem = function(key, value) {
+      const event: any = new Event('itemInserted');
+      event.value = value; // Optional..
+      event.key = key; // Optional..
+      document.dispatchEvent(event);
+      originalSetItem.apply(this, arguments);
+    };
+
+    return () => {
+      localStorage.setItem = originalSetItem; // Restore original method on cleanup
+    };
+  }, []);
 
   function switchColorTheme() {
     const newTheme = theme === 'theme-light' ? 'theme-dark' : 'theme-light';
