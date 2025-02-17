@@ -14,7 +14,10 @@ interface User {
 
 interface UserContextType {
   user: User | null;
+  userLoading: boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  login: (token: string, user: User) => void;
+  logout: () => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -35,6 +38,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [user, setUser] = useState<User | null>(null);
+  const [userLoading, setUserLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -51,12 +55,27 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         console.error('Token validation failed:', error);
         localStorage.removeItem('token');
         setUser(null);
+      })
+      .finally(() => {
+        setUserLoading(false);
       });
+    } else {
+      setUserLoading(false);
     }
   }, []);
 
+  const login = (token: string, user: User) => {
+    localStorage.setItem('token', token);
+    setUser(user);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, userLoading, login, logout }}>
       {children}
     </UserContext.Provider>
   );

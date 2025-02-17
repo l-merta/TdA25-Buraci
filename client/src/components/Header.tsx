@@ -8,7 +8,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
-  const { user } = useUser();
+  const { user, logout } = useUser();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -67,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         </button>
         <Link to="/game" className='button button-red'>Nová hra</Link>
         {user ? (
-          <span className='button button-red button-border'>{user.username}</span>
+          <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
         ) : (
           <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
         )}

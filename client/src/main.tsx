@@ -9,7 +9,7 @@ import Game from './pages/Game.tsx';
 import GameList from './pages/Games.tsx';
 import OnlineRoom from './pages/OnlineRoom.tsx';
 import Create from './pages/Create.tsx';
-import CreateUser from './pages/CreateUser.tsx';
+//import CreateUser from './pages/CreateUser.tsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Tda from './pages/Tda.tsx';
@@ -42,7 +42,7 @@ createRoot(document.getElementById('root')!).render(
           {/* <Route path="/freeplay/:id" element={<OnlineRoom />} /> */}
           <Route path="/create" element={<Create />} />
           <Route path="/create/:uuid" element={<Create />} />
-          <Route path="/create-user" element={<CreateUser />} />
+          {/* <Route path="/create-user" element={<CreateUser />} /> */}
           <Route path="/login" element={<SignIn />} />
           <Route path="/registration" element={<SignUp />} />
           <Route path="/think-different-academy" element={<Tda />} />
