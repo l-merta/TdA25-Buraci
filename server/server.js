@@ -186,7 +186,7 @@ app.post("/api/v1/login", async (req, res) => {
       return res.status(401).json({ code: 401, message: "Unauthorized: Invalid username/email or password" });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await argon2.verify(user.password, password);
     if (!isPasswordValid) {
       return res.status(401).json({ code: 401, message: "Unauthorized: Invalid username/email or password" });
     }
