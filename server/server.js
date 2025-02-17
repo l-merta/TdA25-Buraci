@@ -11,6 +11,13 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 5200;
 
+console.log("Environment Variables:");
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+console.log("DB_NAME:", process.env.DB_NAME);
+
 // Middleware
 app.use(cors());
 app.use(express.json()); // Parses JSON bodies
