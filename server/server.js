@@ -5,8 +5,8 @@ const { players, getPlaying, playField, determineGameState, validateBoard, check
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const http = require("http");
-const bcrypt = require('bcryptjs'); // Add bcrypt for password hashing
-const jwt = require('jsonwebtoken'); // Add jwt for token generation
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 5200;
@@ -73,8 +73,22 @@ app.post("/api/v1/users", async (req, res) => {
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
+app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
+  console.log(req.user.uuid);
+  try {
+    const db = await getDb();
+    const user = await db.get(`SELECT uuid, username, email, role, elo, wins, draws, losses FROM users WHERE uuid = ?`, [req.user.uuid]);
+    if (!user) {
+      return res.status(404).json({ code: 404, message: "User not found" });
+    }
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
 
-app.get("/api/v1/users", async (req, res) => {
+app.get("/api/v1/users", authenticateToken, async (req, res) => {
   try {
     const db = await getDb();
     const rows = await db.all(`SELECT * FROM users`);
@@ -85,7 +99,7 @@ app.get("/api/v1/users", async (req, res) => {
   }
 });
 
-app.get("/api/v1/users/:uuid", async (req, res) => {
+app.get("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   const { uuid } = req.params;
 
   try {
@@ -101,7 +115,7 @@ app.get("/api/v1/users/:uuid", async (req, res) => {
   }
 });
 
-app.put("/api/v1/users/:uuid", async (req, res) => {
+app.put("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   const { uuid } = req.params;
   const { username, email, password, elo } = req.body;
 
@@ -139,7 +153,7 @@ app.put("/api/v1/users/:uuid", async (req, res) => {
   }
 });
 
-app.delete("/api/v1/users/:uuid", async (req, res) => {
+app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   const { uuid } = req.params;
 
   try {
@@ -385,6 +399,18 @@ app.put("/api/v1/gameFieldClick", async (req, res) => {
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
+
+// Middleware to validate JWT token
+function authenticateToken(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ code: 401, message: "Unauthorized: No token provided" });
+
+  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ code: 403, message: "Forbidden: Invalid token" });
+    req.user = user;
+    next();
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -9,6 +9,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ active }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'theme-light');
   const { user } = useUser();
+  console.log(user);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -32,9 +33,9 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         </Link>
         {user && user.role == 'admin' && (
           <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
-          <span>Admin Panel</span>
-          <div className="line"></div>
-        </Link>
+            <span>Admin Panel</span>
+            <div className="line"></div>
+          </Link>
         )}
         <Link to="/think-different-academy" className={'button button-empty ' + (active === 'tda' ? 'header-active ' : ' ')}>
           <span>O TdA</span>
@@ -58,10 +59,10 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
       </div>
       <div className="burger-menu">
         <button className="theme-switch" onClick={switchColorTheme}>
-            <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
+          <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
         </button>
         <button className="burger-button" onClick={() => setMenuOpen(!menuOpen)}>
-            <i className="fa-solid fa-bars"></i>
+          <i className="fa-solid fa-bars"></i>
         </button>
         {menuOpen && (
           <nav className="burger-nav">
@@ -78,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         )}
       </div>
     </header>
-  )
+  );
 }
 
 export default Header;
