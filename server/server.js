@@ -5,18 +5,11 @@ const { players, getPlaying, playField, determineGameState, validateBoard, check
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
 const http = require("http");
-const bcrypt = require('bcryptjs');
+const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 5200;
-
-console.log("Environment Variables:");
-console.log("JWT_SECRET:", process.env.JWT_SECRET);
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_NAME:", process.env.DB_NAME);
 
 // Middleware
 app.use(cors());
@@ -43,7 +36,9 @@ app.post("/api/v1/users", async (req, res) => {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+  console.log("Received data:", { username, email, password });
+  const hashedPassword = await argon2.hash(password, 10); // Hash the password
+  console.log("Hashed password:", hashedPassword);
 
   const user = {
     uuid: uuidv4(),
