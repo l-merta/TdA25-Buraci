@@ -134,6 +134,7 @@ app.put("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
     updatedAt: new Date().toISOString(),
   };
 
+
   try {
     const db = await getDb();
     const result = await db.run(
@@ -167,6 +168,40 @@ app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal server error" });
+  }
+});
+
+app.post("/api/v1/users/:uuid/ban", authenticateToken, async (req, res) => {
+  const { uuid } = req.params; // Získání UUID uživatele z URL
+
+  // Ověření, zda je přihlášený uživatel admin
+  if (req.user.username !== "admin") {
+    return res.status(403).json({ code: 403, message: "Forbidden: Only admin can perform this action" });
+  }
+
+  try {
+    const db = await getDb();
+
+    // Najdi uživatele podle UUID
+    const user = await db.get("SELECT id FROM users WHERE uuid = ?", [uuid]);
+
+    // Pokud uživatel neexistuje, vrátíme chybu 404
+    if (!user) {
+      return res.status(404).json({ code: 404, message: "User not found" });
+    }
+
+    const userId = user.id; // Získání ID uživatele
+
+    // Vložení záznamu do tabulky blacklist
+    await db.run(
+      "INSERT INTO blacklist (userId) VALUES (?)",[userId]
+    );
+
+    // Odešleme odpověď s úspěšným statusem
+    res.status(201).json({ code: 201, message: "User has been banned successfully" });
+  } catch (error) {
+    console.error("Error banning user:", error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
 
