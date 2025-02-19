@@ -75,6 +75,7 @@ app.post("/api/v1/users", async (req, res) => {
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
+
 app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
   try {
     const db = await getDb();
@@ -100,12 +101,28 @@ app.get("/api/v1/users", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
+app.get("/api/v1/users/uuid/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
     const db = await getDb();
     const row = await db.get(`SELECT * FROM users WHERE uuid = ?`, [uuid]);
+    if (!row) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    res.json(row);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.get("/api/v1/users/username/:username", async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const db = await getDb();
+    const row = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
     if (!row) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
