@@ -12,6 +12,7 @@ import Create from './pages/Create.tsx';
 //import CreateUser from './pages/CreateUser.tsx';
 import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
+import UserPage from './pages/UserPage.tsx';
 import Tda from './pages/Tda.tsx';
 import Team from './pages/Team.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
@@ -23,6 +24,7 @@ import './styles/game.css';
 import './styles/game-list.css';
 import './styles/login.css';
 import './styles/online.css'
+import './styles/user-page.css';
 import './styles/tda.css';
 import './styles/admin.css';
 import './styles/user.css';
@@ -45,6 +47,7 @@ createRoot(document.getElementById('root')!).render(
           {/* <Route path="/create-user" element={<CreateUser />} /> */}
           <Route path="/login" element={<SignIn />} />
           <Route path="/registration" element={<SignUp />} />
+          <Route path="/users/:username" element={<UserPage />} />
           <Route path="/think-different-academy" element={<Tda />} />
           <Route path="/about-team" element={<Team />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />

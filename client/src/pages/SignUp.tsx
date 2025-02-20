@@ -19,7 +19,13 @@ const SignUp = () => {
     e.preventDefault();
 
     if (password !== passwordAgain) {
-      setError('Passwords do not match');
+      setError('Hesla se neshodují');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Heslo musí obsahovat alespoň 8 znaků, malá i velká písmena, číslice a speciální znak');
       return;
     }
 
@@ -52,22 +58,22 @@ const SignUp = () => {
           login(loginData.token, loginData.user);
           navigate('/'); // Redirect to home page or any other page
         } else {
-          setError('Error logging in after registration');
+          setError('Chyba při přihlašování po registraci');
         }
       } else {
         const errorData = await response.json();
-        if (errorData.message.includes('username')) {
-          setError('Username is already taken');
-        } else if (errorData.message.includes('email')) {
-          setError('Email is already taken');
+        if (errorData.message.toLowerCase().includes('username')) {
+          setError('Uživatelské jméno je již obsazeno');
+        } else if (errorData.message.toLowerCase().includes('email')) {
+          setError('Email je již použitý');
         } else {
-          setError('Error creating user');
+          setError('Chyba při vytváření uživatele');
         }
         console.error('Error creating user:', errorData);
       }
     } catch (error) {
       console.error('Error creating user:', error);
-      setError('Error creating user');
+      setError('Chyba při vytváření uživatele');
     }
   };
 

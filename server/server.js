@@ -36,24 +36,32 @@ app.post("/api/v1/users", async (req, res) => {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
-  console.log("Received data:", { username, email, password });
-  const hashedPassword = await argon2.hash(password, 10); // Hash the password
-  console.log("Hashed password:", hashedPassword);
-
-  const user = {
-    uuid: uuidv4(),
-    createdAt: new Date().toISOString(),
-    username,
-    email,
-    password: hashedPassword, // Store the hashed password
-    elo: 400,
-    wins: 0,
-    draws: 0,
-    losses: 0,
-  };
-
   try {
     const db = await getDb();
+    const existingUsername = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    if (existingUsername) {
+      return res.status(409).json({ code: 409, message: "Conflict: Username already exists" });
+    }
+
+    const existingEmail = await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
+    if (existingEmail) {
+      return res.status(409).json({ code: 409, message: "Conflict: Email already exists" });
+    }
+
+    const hashedPassword = await argon2.hash(password, 10); // Hash the password
+
+    const user = {
+      uuid: uuidv4(),
+      createdAt: new Date().toISOString(),
+      username,
+      email,
+      password: hashedPassword, // Store the hashed password
+      elo: 400,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+    };
+
     await db.run(
       `INSERT INTO users (uuid, createdAt, username, email, password, elo, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -68,7 +76,7 @@ app.post("/api/v1/users", async (req, res) => {
         user.losses,
       ]
     );
-    const { password, ...userWithoutPassword } = user;
+    const { password: hashedPwd, ...userWithoutPassword } = user;
     res.status(201).json(userWithoutPassword);
   } catch (error) {
     console.error("Error inserting user into database:", error);
@@ -77,6 +85,7 @@ app.post("/api/v1/users", async (req, res) => {
 });
 
 app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
+  console.log(req.user);
   try {
     const db = await getDb();
     const user = await db.get(`SELECT uuid, username, email, role, elo, wins, draws, losses FROM users WHERE uuid = ?`, [req.user.uuid]);
@@ -90,7 +99,7 @@ app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/api/v1/users", authenticateToken, async (req, res) => {
+app.get("/api/v1/users", async (req, res) => {
   try {
     const db = await getDb();
     const rows = await db.all(`SELECT * FROM users`);
@@ -101,7 +110,7 @@ app.get("/api/v1/users", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
+app.get("/api/v1/users/uuid/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
@@ -117,7 +126,23 @@ app.get("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   }
 });
 
-app.put("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
+app.get("/api/v1/users/username/:username", async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const db = await getDb();
+    const row = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    if (!row) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    res.json(row);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.put("/api/v1/users/:uuid", async (req, res) => {
   const { uuid } = req.params;
   const { username, email, password, elo } = req.body;
 
@@ -156,7 +181,7 @@ app.put("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   }
 });
 
-app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
+app.delete("/api/v1/users/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
@@ -172,7 +197,7 @@ app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   }
 });
 
-app.post("/api/v1/users/:uuid/ban", authenticateTokenAdmin, async (req, res) => {
+app.post("/api/v1/users/:uuid/ban", async (req, res) => {
   const { uuid } = req.params; // Získání UUID uživatele z URL
 
   // Ověření, zda je přihlášený uživatel admin
