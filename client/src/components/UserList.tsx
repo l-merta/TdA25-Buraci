@@ -52,32 +52,6 @@ const UserList: React.FC = () => {
 
   return (
     <div className="user-list">
-      {/* <div className="filter anim anim-slide-from-down">
-        <input
-          type="text"
-          name="name"
-          placeholder="Hledat podle jména"
-          value={filters.name}
-          onChange={handleFilterChange}
-        />
-        <div className="menus">
-          <select name="difficulty" value={filters.difficulty} onChange={handleFilterChange}>
-            <option value="">Všechny obtížnosti</option>
-            <option value="beginner">Beginner</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-            <option value="extreme">Extreme</option>
-          </select>
-          <input
-            type="date"
-            name="lastModified"
-            placeholder="Filter by last modified"
-            value={filters.lastModified}
-            onChange={handleFilterChange}
-          />
-        </div>
-      </div> */}
       {!isLoading ? 
         <>
         {users.length === 0 && <p className='nothing-found'>Nic jsme tu nenašli..</p>}
