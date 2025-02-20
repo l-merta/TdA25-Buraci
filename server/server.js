@@ -76,7 +76,7 @@ app.post("/api/v1/users", async (req, res) => {
   }
 });
 
-app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
+app.get("/api/v1/getUserByToken", async (req, res) => {
   try {
     const db = await getDb();
     const user = await db.get(`SELECT uuid, username, email, role, elo, wins, draws, losses FROM users WHERE uuid = ?`, [req.user.uuid]);
@@ -90,7 +90,7 @@ app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/api/v1/users", authenticateToken, async (req, res) => {
+app.get("/api/v1/users", async (req, res) => {
   try {
     const db = await getDb();
     const rows = await db.all(`SELECT * FROM users`);
@@ -133,7 +133,7 @@ app.get("/api/v1/users/username/:username", async (req, res) => {
   }
 });
 
-app.put("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
+app.put("/api/v1/users/:uuid", async (req, res) => {
   const { uuid } = req.params;
   const { username, email, password, elo } = req.body;
 
@@ -172,7 +172,7 @@ app.put("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   }
 });
 
-app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
+app.delete("/api/v1/users/:uuid", async (req, res) => {
   const { uuid } = req.params;
 
   try {
@@ -188,7 +188,7 @@ app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   }
 });
 
-app.post("/api/v1/users/:uuid/ban", authenticateTokenAdmin, async (req, res) => {
+app.post("/api/v1/users/:uuid/ban", async (req, res) => {
   const { uuid } = req.params; // Získání UUID uživatele z URL
 
   // Ověření, zda je přihlášený uživatel admin
