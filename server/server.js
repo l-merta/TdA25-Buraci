@@ -75,6 +75,7 @@ app.post("/api/v1/users", async (req, res) => {
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
+
 app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
   try {
     const db = await getDb();
@@ -171,13 +172,16 @@ app.delete("/api/v1/users/:uuid", authenticateToken, async (req, res) => {
   }
 });
 
-app.post("/api/v1/users/:uuid/ban", authenticateToken, async (req, res) => {
+app.post("/api/v1/users/:uuid/ban", authenticateTokenAdmin, async (req, res) => {
   const { uuid } = req.params; // Získání UUID uživatele z URL
 
   // Ověření, zda je přihlášený uživatel admin
-  if (req.user.username !== "admin") {
+  /*
+  console.log(req.user);
+  if (req.user.role !== "admin") {
     return res.status(403).json({ code: 403, message: "Forbidden: Only admin can perform this action" });
   }
+  */
 
   try {
     const db = await getDb();
@@ -194,7 +198,7 @@ app.post("/api/v1/users/:uuid/ban", authenticateToken, async (req, res) => {
 
     // Vložení záznamu do tabulky blacklist
     await db.run(
-      "INSERT INTO blacklist (userId) VALUES (?)",[userId]
+      "INSERT INTO blacklist (userId) VALUES (?)", [userId]
     );
 
     // Odešleme odpověď s úspěšným statusem
@@ -445,6 +449,28 @@ function authenticateToken(req, res, next) {
     if (err) return res.status(403).json({ code: 403, message: "Forbidden: Invalid token" });
     req.user = user;
     next();
+  });
+}
+
+function authenticateTokenAdmin(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ code: 401, message: "Unauthorized: No token provided" });
+
+  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, async (err, user) => {
+    if (err) return res.status(403).json({ code: 403, message: "Forbidden: Invalid token" });
+
+    try {
+      const db = await getDb();
+      const adminUser = await db.get(`SELECT role FROM users WHERE uuid = ?`, [user.uuid]);
+      if (adminUser.role !== 'admin') {
+        return res.status(403).json({ code: 403, message: "Forbidden: Only admin can perform this action" });
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      console.error("Error verifying admin role:", error);
+      res.status(500).json({ code: 500, message: "Internal Server Error" });
+    }
   });
 }
 
