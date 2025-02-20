@@ -36,24 +36,32 @@ app.post("/api/v1/users", async (req, res) => {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
-  console.log("Received data:", { username, email, password });
-  const hashedPassword = await argon2.hash(password, 10); // Hash the password
-  console.log("Hashed password:", hashedPassword);
-
-  const user = {
-    uuid: uuidv4(),
-    createdAt: new Date().toISOString(),
-    username,
-    email,
-    password: hashedPassword, // Store the hashed password
-    elo: 400,
-    wins: 0,
-    draws: 0,
-    losses: 0,
-  };
-
   try {
     const db = await getDb();
+    const existingUsername = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    if (existingUsername) {
+      return res.status(409).json({ code: 409, message: "Conflict: Username already exists" });
+    }
+
+    const existingEmail = await db.get(`SELECT * FROM users WHERE email = ?`, [email]);
+    if (existingEmail) {
+      return res.status(409).json({ code: 409, message: "Conflict: Email already exists" });
+    }
+
+    const hashedPassword = await argon2.hash(password, 10); // Hash the password
+
+    const user = {
+      uuid: uuidv4(),
+      createdAt: new Date().toISOString(),
+      username,
+      email,
+      password: hashedPassword, // Store the hashed password
+      elo: 400,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+    };
+
     await db.run(
       `INSERT INTO users (uuid, createdAt, username, email, password, elo, wins, draws, losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [

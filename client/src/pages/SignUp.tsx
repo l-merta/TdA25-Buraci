@@ -56,9 +56,9 @@ const SignUp = () => {
         }
       } else {
         const errorData = await response.json();
-        if (errorData.message.includes('username')) {
+        if (errorData.message.toLowerCase().includes('username')) {
           setError('Username is already taken');
-        } else if (errorData.message.includes('email')) {
+        } else if (errorData.message.toLowerCase().includes('email')) {
           setError('Email is already taken');
         } else {
           setError('Error creating user');
