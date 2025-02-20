@@ -37,6 +37,7 @@
   opacity: 0.8;
   color: var(--font-color);
   font: 500 1.3rem var(--f1);
+  text-align: center;
 }
 .main-login form p a {
   color: inherit;

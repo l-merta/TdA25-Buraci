@@ -76,7 +76,7 @@ app.post("/api/v1/users", async (req, res) => {
         user.losses,
       ]
     );
-    const { password, ...userWithoutPassword } = user;
+    const { password: hashedPwd, ...userWithoutPassword } = user;
     res.status(201).json(userWithoutPassword);
   } catch (error) {
     console.error("Error inserting user into database:", error);
@@ -84,7 +84,8 @@ app.post("/api/v1/users", async (req, res) => {
   }
 });
 
-app.get("/api/v1/getUserByToken", async (req, res) => {
+app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
+  console.log(req.user);
   try {
     const db = await getDb();
     const user = await db.get(`SELECT uuid, username, email, role, elo, wins, draws, losses FROM users WHERE uuid = ?`, [req.user.uuid]);
