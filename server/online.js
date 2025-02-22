@@ -3,10 +3,10 @@ const { players, getPlaying, playField, checkWin, checkPotentialWin } = require(
 const { getDb } = require("./db");
 const jwt = require('jsonwebtoken');
 
-async function getUserElo(userUuid) {
+async function getUserData(userUuid) {
   const db = await getDb();
-  const user = await db.get(`SELECT elo FROM users WHERE uuid = ?`, [userUuid]);
-  return user ? user.elo : 0;
+  const user = await db.get(`SELECT * FROM users WHERE uuid = ?`, [userUuid]);
+  return user ? user : null;
 }
 
 module.exports = (server) => {
@@ -26,7 +26,7 @@ module.exports = (server) => {
 
     console.log(`Client connected to room ${roomId}, type: ${multiplayerType}`);
 
-    if (multiplayerType === "online") {
+    if (!roomId && multiplayerType === "online") {
       let userUuid;
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -48,15 +48,17 @@ module.exports = (server) => {
         return;
       }
 
-      const userElo = await getUserElo(userUuid);
-      const queueEntry = { socket, userUuid, userElo };
+      const { username, elo } = await getUserData(userUuid);
+      const queueEntry = { socket, username, userUuid, elo };
 
       // Add user to the queue and sort by ELO
       queue.push(queueEntry);
       queue.sort((a, b) => a.userElo - b.userElo);
-      console.log(queue);
+      //console.log(queue);
 
-      socket.emit("queue", { message: "You are in a queue" });
+      socket.emit("queue", { message: "You are in a queue, " + username });
+
+      //onGameEvents(roomId, socket);
 
       socket.on("disconnect", () => {
         console.log(`Client disconnected from queue`);
@@ -65,19 +67,19 @@ module.exports = (server) => {
         if (index !== -1) {
           queue.splice(index, 1);
         }
-        console.log(queue);
       });
 
-      return;
+      //return;
     }
 
-    if (!roomId) {
+    if (!roomId && multiplayerType === "freeplay") {
       let newRoomId;
       do {
         newRoomId = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 5-digit room code using only numbers
       } while (rooms[newRoomId]);
 
       rooms[newRoomId] = {
+        type: "freeplay",
         gameStarted: false,
         uuid: "",
         players: []
@@ -87,14 +89,19 @@ module.exports = (server) => {
         type: "room",
         roomId: newRoomId
       });
-    } else {
+    } else if (roomId) {
+      //console.log("In online system", multiplayerType, roomId);
+      //console.log("Rooms", rooms);
+
       if (!rooms[roomId]) {
-        console.log("room does not exist");
-        socket.emit("redirect", { 
-          type: "error",
-          error: "roomNotFound",
-          message: "Místnost s tímto kódem neexistuje",
-        });
+        if (multiplayerType !== "online") {
+          console.log("room does not exist");
+          socket.emit("redirect", { 
+            type: "error",
+            error: "roomNotFound",
+            message: "Místnost s tímto kódem neexistuje",
+          });
+        }
         return;
       }
 
@@ -108,116 +115,137 @@ module.exports = (server) => {
         return;
       }
 
-      const playerName = `Hráč ${rooms[roomId].players.length + 1}`;
-      const playerChar = rooms[roomId].players.length === 0 ? "X" : "O";
-      const playerHost = rooms[roomId].players.length === 0;
-      rooms[roomId].players.push({ socket, playerName, playerChar, playerHost });
-
-      socket.emit("welcome", { 
-        message: "WebSocket connection established - love, server", 
-        players: rooms[roomId].players.map(client => client.playerName) 
-      });
-
-      emitPlayerList(rooms[roomId]);
-
-      socket.on("message", (data) => {
-        console.log(`Received message from room ${roomId}: ${data.message}`);
-        socket.emit("reply", { message: "Server replying to " + data.message });
-      });
-
-      socket.on("switchChar", () => {
-        // Switch player char
-        rooms[roomId].players.forEach(client => {
-          client.playerChar = client.playerChar === "X" ? "O" : "X";
-        });
-
-        // Ensure player with playerChar "X" is at index 0 and player with playerChar "O" is at index 1
-        rooms[roomId].players.sort((a, b) => (a.playerChar === "X" ? -1 : 1));
-
-        // Emit updated player list
-        emitPlayerList(rooms[roomId]);
-      });
-
-      socket.on("startGame", () => {
-        // Set started to true
-        rooms[roomId].gameStarted = true;
-
-        // Emit updated room data
-        emitRoomData(rooms[roomId]);
-      });
-
-      socket.on("playField", (data) => {
-        console.log(`Field played`);
-
-        const { row, col, board, ai } = data;
-        const newGameData = { 
-          ...data, 
-          playing: getPlaying(board),
-          win: null
-        }
-
-        newGameData.nextPlaying = newGameData.playing == players.length - 1 ? 0 : newGameData.playing + 1;
-
-        newGameData.board = playField(row, col, board, getPlaying(board));
-
-        checkPotentialWin(newGameData.board, 5, players);
-        const win = checkWin(newGameData.board, 5, players);
-        if (win)
-          newGameData.win = win[0];
-        else 
-          newGameData.win = null;
-
-        emitPlayFieldProcessed(rooms[roomId], newGameData);
-      });
-
-      socket.on("gameUuid", (data) => {
-        emitRoomData({ ...rooms[roomId], uuid: data.uuid });
-      });
-
-      socket.on("resetGame", () => {
-        emitResetGameProcessed(rooms[roomId]);
-      });
-
-      socket.on("userRename", (data) => {
-        rooms[roomId].players.find(client => client.socket === socket).playerName = data.newName;
-        emitPlayerList(rooms[roomId]);
-      });
+      if (multiplayerType) {
+        console.log("Creating new player into a room");
+        const playerName = `Hráč ${rooms[roomId].players.length + 1}`;
+        const playerChar = rooms[roomId].players.length === 0 ? "X" : "O";
+        const playerHost = rooms[roomId].players.length === 0;
+        rooms[roomId].players.push({ socket, playerName, playerChar, playerHost });
+      }
+      
+      onGameEvents(roomId, socket);
 
       socket.on("disconnect", () => {
-        console.log(`Client disconnected from room ${roomId}`);
-        const disconnectedPlayer = rooms[roomId].players.find(client => client.socket === socket);
-        
-        if (disconnectedPlayer.playerHost) {
-          emitRedirect(rooms[roomId], {
-            type: "error",
-            error: "hostDisconnected",
-            message: "Zakladatel hry se odpojil"
-          });
-
-          if (rooms[roomId].players.length === 0) {
-            delete rooms[roomId];
-          }
-        } 
-        else {
-          rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
-
-          if (rooms[roomId].players.length === 0) {
-            delete rooms[roomId];
-          } else {
-            emitPlayerList(rooms[roomId]);
-
-            if (rooms[roomId].gameStarted) {
-              emitRedirect(rooms[roomId], {
-                type: "error",
-                error: "playerDisconnected",
-                message: "Hráč se odpojil"
-              });
-            }
-          }
-        }
+        onDisconnect(roomId, socket);
       });
     }
   });
+
+  function onGameEvents(roomId, socket) {
+    console.log("onGameEvents", roomId);
+
+    socket.emit("welcome", { 
+      message: "WebSocket connection established - love, server", 
+      players: rooms[roomId].players.map(client => client.playerName) 
+    });
+
+    emitPlayerList(rooms[roomId]);
+
+    socket.on("message", (data) => {
+      console.log(`Received message from room ${roomId}: ${data.message}`);
+      socket.emit("reply", { message: "Server replying to " + data.message });
+    });
+
+    socket.on("switchChar", () => {
+      // Switch player char
+      rooms[roomId].players.forEach(client => {
+        client.playerChar = client.playerChar === "X" ? "O" : "X";
+      });
+
+      // Ensure player with playerChar "X" is at index 0 and player with playerChar "O" is at index 1
+      rooms[roomId].players.sort((a, b) => (a.playerChar === "X" ? -1 : 1));
+
+      // Emit updated player list
+      emitPlayerList(rooms[roomId]);
+    });
+
+    socket.on("startGame", () => {
+      // Set started to true
+      rooms[roomId].gameStarted = true;
+
+      // Emit updated room data
+      emitRoomData(rooms[roomId]);
+    });
+
+    socket.on("playField", (data) => {
+      console.log(`Field played`);
+
+      const { row, col, board, ai } = data;
+      const newGameData = { 
+        ...data, 
+        playing: getPlaying(board),
+        win: null
+      }
+
+      newGameData.nextPlaying = newGameData.playing == players.length - 1 ? 0 : newGameData.playing + 1;
+
+      newGameData.board = playField(row, col, board, getPlaying(board));
+
+      checkPotentialWin(newGameData.board, 5, players);
+      const win = checkWin(newGameData.board, 5, players);
+      if (win)
+        newGameData.win = win[0];
+      else 
+        newGameData.win = null;
+
+      emitPlayFieldProcessed(rooms[roomId], newGameData);
+    });
+
+    socket.on("gameUuid", (data) => {
+      emitRoomData({ ...rooms[roomId], uuid: data.uuid });
+    });
+
+    socket.on("resetGame", () => {
+      emitResetGameProcessed(rooms[roomId]);
+    });
+
+    socket.on("userRename", (data) => {
+      console.log("username rename");
+      rooms[roomId].players.find(client => client.socket === socket).playerName = data.newName;
+      emitPlayerList(rooms[roomId]);
+    });
+  }
+  function onDisconnect(roomId, socket) {
+    console.log(`Client disconnected from room ${roomId}`);
+    const disconnectedPlayer = rooms[roomId].players.find(client => client.socket === socket);
+    
+    if (disconnectedPlayer.playerHost) {
+      emitRedirect(rooms[roomId], {
+        type: "error",
+        error: "hostDisconnected",
+        message: "Zakladatel hry se odpojil"
+      });
+
+      if (rooms[roomId].players.length === 0) {
+        delete rooms[roomId];
+      }
+    } 
+    else {
+      rooms[roomId].players = rooms[roomId].players.filter(client => client.socket !== socket);
+
+      if (rooms[roomId].players.length === 0) {
+        delete rooms[roomId];
+      } else {
+        emitPlayerList(rooms[roomId]);
+
+        if (rooms[roomId].gameStarted) {
+          emitRedirect(rooms[roomId], {
+            type: "error",
+            error: "playerDisconnected",
+            message: "Hráč se odpojil"
+          });
+        }
+      }
+    }
+
+    // Remove player from the queue if they are in it
+    const index = queue.findIndex(entry => entry.socket === socket);
+    if (index !== -1) {
+      queue.splice(index, 1);
+    }
+
+    console.log("Disconnection process done");
+  }
 
   function emitPlayerList(room) {
     const players = room.players.map(player => ({
@@ -237,6 +265,7 @@ module.exports = (server) => {
   }
   function emitRoomData(room) {
     const sanitizedRoom = {
+      type: room.type,
       gameStarted: room.gameStarted,
       uuid: room.uuid,
       players: room.players.map(player => ({
@@ -265,4 +294,45 @@ module.exports = (server) => {
       client.socket.emit("redirect", redirectData);
     });
   }
+
+  function pairPlayers() {
+    while (queue.length >= 2) {
+      const player1 = queue.shift();
+      const player2 = queue.shift();
+
+      let newRoomId;
+      do {
+        newRoomId = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 5-digit room code using only numbers
+      } while (rooms[newRoomId]);
+
+      rooms[newRoomId] = {
+        type: "online",
+        gameStarted: false,
+        uuid: "",
+        players: [
+          //{ socket: player1.socket, playerName: player1.username, playerChar: "X", playerHost: true },
+          //{ socket: player2.socket, playerName: player2.username, playerChar: "O", playerHost: false }
+        ]
+      };
+
+      console.log("emitting redirect to players");
+      player1.socket.emit("redirect", { 
+        type: "onlineRoom",
+        roomId: newRoomId
+      });
+      player2.socket.emit("redirect", { 
+        type: "onlineRoom",
+        roomId: newRoomId
+      });
+
+      // Remove players from the queue
+      queue.splice(queue.indexOf(player1), 1);
+      queue.splice(queue.indexOf(player2), 1);
+
+      // Emit updated player list
+      emitPlayerList(rooms[newRoomId]);
+    }
+  }
+
+  setInterval(pairPlayers, 5000); // Check the queue every 5 seconds
 };

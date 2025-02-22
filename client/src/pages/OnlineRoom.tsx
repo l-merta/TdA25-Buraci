@@ -15,6 +15,8 @@ interface GameSettProps {
   ai: Array<Number>;
 }
 interface RoomProps {
+  type: string;
+  roomId: string;
   gameStarted: boolean;
   uuid: string;
   players: Array<PlayerProps>;
@@ -32,15 +34,17 @@ function OnlineRoom() {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const roomId = queryParams.get('game');
   const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : "online";
-  
   const { user, userLoading } = useUser();
+
+  const roomIdFromState = location.state?.roomId || queryParams.get('game');
+  //@ts-ignore
+  const [roomId, setRoomId] = useState(roomIdFromState);
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const [player, setPlayer] = useState<PlayerProps | null>();
   const [room, setRoom] = useState<RoomProps | null>(null);
   const [gameCode, setGameCode] = useState<string>('');
-  const [queueMessage, setQueueMessage] = useState<string>('');
+  const [queueMessage, setQueueMessage] = useState<string | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const gameSett: GameSettProps = location.state || {
     gameMode: "online",
@@ -49,41 +53,45 @@ function OnlineRoom() {
     ai: [0, 0]
   };
 
+  if (location.state) {
+    console.log(location.state);
+  }
+
   useEffect(() => {
     if (userLoading) return;
 
-    if (!user && location.pathname === "/freeplay/new") {
+    if (!user && (location.pathname === "/freeplay/new" || location.pathname === "/online")) {
       navigate("/login");
       return;
     }
 
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-    let socket;
-
-    if (multiplayerType == "freeplay") {
-      if (location.pathname === "/freeplay/new") {
-        socket = io(wsUrl, {
-          query: { roomId: null, multiplayerType: "freeplay" }
-        });
-      } else if (roomId) {
-        socket = io(wsUrl, {
-          query: { roomId, multiplayerType: "freeplay" }
-        });
-      }
-    }
-    else if (multiplayerType == "online") {
-      const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
-      socket = io(wsUrl, {
-        query: { roomId: null, multiplayerType: "online", token }
-      });
-    }
+    let socket = socketConnect(roomIdFromState, wsUrl);
 
     if (socket) {
       socketRef.current = socket;
+      console.log("Socket connection established, type " + multiplayerType);
+
+      /*
+      console.log("roomId", roomId);
+      if (roomId) {
+        setQueueMessage(null);
+      }
+      */
 
       socket.on("redirect", (data) => {
+        console.log("Redirecting to", data);
         if (data.type == "room") {
-          navigate("/freeplay?game=" + data.roomId, { state: gameSett });
+          navigate("/freeplay?game=" + data.roomId, { state: { ...gameSett, roomId: data.roomId } });
+        }
+        else if (data.type == "onlineRoom") {
+          if (socketRef.current) {
+            socketRef.current.disconnect();
+          }
+          socket = socketConnect(data.roomId, wsUrl);
+          socketRef.current = socket;
+          console.log("Reconnected to new online room:", data.roomId);
+          navigate("/online", { state: { ...gameSett, roomId: data.roomId } });
         }
         else if (data.type == "error") {
           navigate("/error", { state: data });
@@ -92,7 +100,8 @@ function OnlineRoom() {
 
       socket.on("welcome", (data) => {
         console.log(data.message);
-        socket.emit("message", { message: "Hello, server!" });
+        setQueueMessage(null);
+        socket?.emit("message", { message: "Hello, server!" });
       });
 
       socket.on("reply", (data) => {
@@ -122,10 +131,42 @@ function OnlineRoom() {
       });
 
       return () => {
-        socket.disconnect();
+        socket?.disconnect();
       };
     }
-  }, [roomId, navigate, location.pathname, user, userLoading]);
+  }, [roomIdFromState, navigate, location.pathname, user, userLoading]);
+
+  function socketConnect(roomId: string | null, wsUrl: string): Socket | null {
+    let socket: Socket | null = null;
+    console.log(roomId);
+
+    if (multiplayerType == "freeplay") {
+      if (location.pathname === "/freeplay/new") {
+        console.log("Attempting socket connection, type freeplay");
+        socket = io(wsUrl, {
+          query: { roomId: null, multiplayerType: "freeplay" }
+        });
+      } else if (roomId) {
+        console.log("Attempting socket connection, type freeplay");
+        socket = io(wsUrl, {
+          query: { roomId, multiplayerType: "freeplay" }
+        });
+      }
+    }
+    else if (multiplayerType == "online") {
+      const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+      console.log("Attempting socket connection, type online");
+      socket = io(wsUrl, {
+        query: { roomId, multiplayerType: "online", token }
+      });
+    }
+
+    if (socket) {
+      console.log("Socket connection established");
+    }
+
+    return socket;
+  }
 
   function switchChars() {
     if (socketRef.current)
@@ -160,7 +201,7 @@ function OnlineRoom() {
     );
   }
 
-  if (!roomId && location.pathname !== "/freeplay/new") {
+  if (!roomId && multiplayerType !== "online" && location.pathname !== "/freeplay/new") {
     return (
       <>
         <Header />
