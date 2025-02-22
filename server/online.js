@@ -201,10 +201,14 @@ module.exports = (server) => {
 
     socket.on("userRename", (data) => {
       console.log("username rename");
-      rooms[roomId].players.find(client => client.socket === socket).playerName = data.newName;
-      emitPlayerList(rooms[roomId]);
+      const player = rooms[roomId].players.find(client => client.socket === socket);
+      if (player) {
+        player.playerName = data.newName;
+        emitPlayerList(rooms[roomId]);
+      }
     });
   }
+
   function onDisconnect(roomId, socket) {
     console.log(`Client disconnected from room ${roomId}`);
     const disconnectedPlayer = rooms[roomId].players.find(client => client.socket === socket);

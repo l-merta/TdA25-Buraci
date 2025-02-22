@@ -38,6 +38,7 @@ function OnlineRoom() {
   const { user, userLoading } = useUser();
 
   const roomIdFromState = location.state?.roomId || queryParams.get('game');
+  //console.log("roomId", roomIdFromState);
   //@ts-ignore
   const [roomId, setRoomId] = useState(roomIdFromState);
   const [players, setPlayers] = useState<PlayerProps[]>([]);
@@ -72,12 +73,7 @@ function OnlineRoom() {
       socketRef.current = socket;
       console.log("Socket connection established, type " + multiplayerType);
 
-      /*
-      console.log("roomId", roomId);
-      if (roomId) {
-        setQueueMessage(null);
-      }
-      */
+      socket.emit("joinRoom", { roomId: roomIdFromState, username: user?.username });
 
       socket.on("redirect", (data) => {
         console.log("Redirecting to", data);
@@ -201,7 +197,8 @@ function OnlineRoom() {
     );
   }
 
-  if (!roomId && multiplayerType !== "online" && location.pathname !== "/freeplay/new") {
+  if (!roomIdFromState && multiplayerType !== "online" && location.pathname !== "/freeplay/new") {
+    console.log(roomId);
     return (
       <>
         <Header />
@@ -236,7 +233,7 @@ function OnlineRoom() {
             <h3>Room Code</h3>
             <div className="group">
               <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
-              <span className="code">{roomId}</span>
+              <span className="code">{roomIdFromState}</span>
             </div>
           </div>
           <div className="players">
