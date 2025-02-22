@@ -76,6 +76,11 @@ const Games = () => {
           </button>
         </div>
         {gameSett.gameMode === "online" && 
+          <>
+          <div className="online-actions anim anim-slide-from-down">
+            <Link to={`/online`} className="button button-red">Najít hru</Link>
+            <Link to={gameSett.gameMode !== "online" ? "/game/" : "/freeplay/new"} state={gameSett} className="button button-red button-border">Vytvořit vlastní hru</Link>
+          </div>
           <div className="online-actions anim anim-slide-from-down">
             <input 
               type="text" 
@@ -83,9 +88,9 @@ const Games = () => {
               value={roomCode} 
               onChange={(e) => setRoomCode(e.target.value)} 
             />
-            <Link to={`/freeplay?game=${roomCode}`} className="button button-red">Připojit se</Link>
-            <Link to={gameSett.gameMode !== "online" ? "/game/" : "/freeplay/"} state={gameSett} className="button button-red button-border">Vytvořit místnost</Link>
+            <Link to={`/freeplay?game=${roomCode}`} className="button button-red">Připojit se kódem</Link>
           </div>
+          </>
         }
         {gameSett.gameMode !== "online" && 
           <>

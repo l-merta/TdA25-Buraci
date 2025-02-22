@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useUser } from './../components/User';
 
 interface PlayerProps {
   player: any;
@@ -12,15 +13,26 @@ function getCharImage(char: any, index: number) {
   return imageUrl;
 }
 
-const PlayerItem:React.FC<PlayerProps> = ({ player, index, socket }) => {
-  const [nameEditing, setNameEditing] = useState(false);
+const PlayerItem: React.FC<PlayerProps> = ({ player, index, socket }) => {
+  const { user, userLoading } = useUser();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [nameEditing, setNameEditing] = useState(false);
+  const [nameEmitted, setNameEmitted] = useState(false);
 
   useEffect(() => {
     if (nameEditing && inputRef.current) {
       inputRef.current.focus();
     }
   }, [nameEditing]);
+
+  useEffect(() => {
+    if (!userLoading && user && player.playerCurr && !nameEmitted) {
+      console.log("Emitting logged in name");
+      socket.emit("userRename", { newName: user.username });
+      setNameEmitted(true);
+    }
+  }, [userLoading, user, player, nameEmitted, socket]);
 
   const emitNewName = () => {
     if (inputRef.current) {
@@ -46,7 +58,7 @@ const PlayerItem:React.FC<PlayerProps> = ({ player, index, socket }) => {
         {!nameEditing || !player.playerCurr ? 
           <>
             {player.playerName}
-            {player.playerCurr && 
+            {player.playerCurr && !user && 
               <button onClick={() => setNameEditing(true)}><i className="fa-solid fa-pen-to-square"></i></button>
             }
           </> :
@@ -63,7 +75,7 @@ const PlayerItem:React.FC<PlayerProps> = ({ player, index, socket }) => {
         }
       </div>
     </div>
-  )
+  );
 }
 
-export default PlayerItem
+export default PlayerItem;

@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
-
-import { useUser } from "./../components/User";
+import { useUser } from "../components/User";
 
 import GameBoard from "./../components/GameBoard";
 import PlayerItem from "./../components/PlayerItem";
@@ -16,6 +15,8 @@ interface GameSettProps {
   ai: Array<Number>;
 }
 interface RoomProps {
+  type: string;
+  roomId: string;
   gameStarted: boolean;
   uuid: string;
   players: Array<PlayerProps>;
@@ -30,80 +31,138 @@ interface PlayerProps {
 function OnlineRoom() {
   document.title = "Online - TdA";
 
-  const { user, userLoading } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const roomId = queryParams.get('game');
-  
+  const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : "online";
+  const { user, userLoading } = useUser();
+
+  const roomIdFromState = location.state?.roomId || queryParams.get('game');
+  //console.log("roomId", roomIdFromState);
+  //@ts-ignore
+  const [roomId, setRoomId] = useState(roomIdFromState);
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const [player, setPlayer] = useState<PlayerProps | null>();
   const [room, setRoom] = useState<RoomProps | null>(null);
-  //const [gameStarted, setGameStarted] = useState(false);
+  const [gameCode, setGameCode] = useState<string>('');
+  const [queueMessage, setQueueMessage] = useState<string | null>(null);
   const socketRef = useRef<Socket | null>(null);
-  //@ts-ignore
   const gameSett: GameSettProps = location.state || {
-    // Default values
     gameMode: "online",
     uuid: "",
     playerNames: ["Hráč 1", "Hráč 2"],
     ai: [0, 0]
   };
-  //console.log(gameSett);
+
+  if (location.state) {
+    console.log(location.state);
+  }
 
   useEffect(() => {
-    if (!userLoading && !user && roomId) {
+    if (userLoading) return;
+
+    if (!user && (location.pathname === "/freeplay/new" || location.pathname === "/online")) {
       navigate("/login");
+      return;
     }
-  }, [user, userLoading, roomId, navigate]);
 
-  useEffect(() => {
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
-    const socket = io(wsUrl, {
-      query: { roomId }
-    });
-    socketRef.current = socket;
+    let socket = socketConnect(roomIdFromState, wsUrl);
 
-    socket.on("redirect", (data) => {
-      if (data.type == "room") {
-        navigate("/freeplay?game=" + data.roomId, { state: gameSett });
+    if (socket) {
+      socketRef.current = socket;
+      console.log("Socket connection established, type " + multiplayerType);
+
+      socket.emit("joinRoom", { roomId: roomIdFromState, username: user?.username });
+
+      socket.on("redirect", (data) => {
+        console.log("Redirecting to", data);
+        if (data.type == "room") {
+          navigate("/freeplay?game=" + data.roomId, { state: { ...gameSett, roomId: data.roomId } });
+        }
+        else if (data.type == "onlineRoom") {
+          if (socketRef.current) {
+            socketRef.current.disconnect();
+          }
+          socket = socketConnect(data.roomId, wsUrl);
+          socketRef.current = socket;
+          console.log("Reconnected to new online room:", data.roomId);
+          navigate("/online", { state: { ...gameSett, roomId: data.roomId } });
+        }
+        else if (data.type == "error") {
+          navigate("/error", { state: data });
+        }
+      });
+
+      socket.on("welcome", (data) => {
+        console.log(data.message);
+        setQueueMessage(null);
+        socket?.emit("message", { message: "Hello, server!" });
+      });
+
+      socket.on("reply", (data) => {
+        console.log(data.message);
+      });
+
+      socket.on("updatePlayers", (data) => {
+        console.log("Players updated", data);
+        setPlayers(data.players);
+
+        const playerCurr = data.players.find((player: PlayerProps) => player.playerCurr);
+        setPlayer(playerCurr);
+
+        if (data.players.length == 1 && playerCurr.playerChar == 'O') {
+          switchChars();
+        }
+      });
+
+      socket.on("updateRoom", (data) => {
+        console.log("Room updated", data);
+        setRoom(data);
+      });
+
+      socket.on("queue", (data) => {
+        console.log(data.message);
+        setQueueMessage(data.message);
+      });
+
+      return () => {
+        socket?.disconnect();
+      };
+    }
+  }, [roomIdFromState, navigate, location.pathname, user, userLoading]);
+
+  function socketConnect(roomId: string | null, wsUrl: string): Socket | null {
+    let socket: Socket | null = null;
+    console.log(roomId);
+
+    if (multiplayerType == "freeplay") {
+      if (location.pathname === "/freeplay/new") {
+        console.log("Attempting socket connection, type freeplay");
+        socket = io(wsUrl, {
+          query: { roomId: null, multiplayerType: "freeplay" }
+        });
+      } else if (roomId) {
+        console.log("Attempting socket connection, type freeplay");
+        socket = io(wsUrl, {
+          query: { roomId, multiplayerType: "freeplay" }
+        });
       }
-      else if (data.type == "error") {
-        navigate("/error", { state: data });
-      }
-    });
+    }
+    else if (multiplayerType == "online") {
+      const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
+      console.log("Attempting socket connection, type online");
+      socket = io(wsUrl, {
+        query: { roomId, multiplayerType: "online", token }
+      });
+    }
 
-    socket.on("welcome", (data) => {
-      console.log(data.message);
-      //setPlayers(data.players);
-      socket.emit("message", { message: "Hello, server!" });
-    });
+    if (socket) {
+      console.log("Socket connection established");
+    }
 
-    socket.on("reply", (data) => {
-      console.log(data.message);
-    });
-
-    socket.on("updatePlayers", (data) => {
-      console.log("Players updated", data);
-      setPlayers(data.players);
-
-      const playerCurr = data.players.find((player: PlayerProps) => player.playerCurr);
-      setPlayer(playerCurr);
-
-      if (data.players.length == 1 && playerCurr.playerChar == 'O') {
-        switchChars();
-      }
-    });
-
-    socket.on("updateRoom", (data) => {
-      console.log("Room updated", data);
-      setRoom(data);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [roomId, navigate]);
+    return socket;
+  }
 
   function switchChars() {
     if (socketRef.current)
@@ -123,6 +182,47 @@ function OnlineRoom() {
     });
   }
 
+  if (queueMessage) {
+    return (
+      <>
+        <Header />
+        <div className="bg-grad"></div>
+        <div className="main-room">
+          <div className="queue-message">
+            <h1>{queueMessage}</h1>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (!roomIdFromState && multiplayerType !== "online" && location.pathname !== "/freeplay/new") {
+    console.log(roomId);
+    return (
+      <>
+        <Header />
+        <div className="bg-grad"></div>
+        <div className="main-room">
+          <div className="code-cont">
+            <h1>Připoj se do existující hry, nebo si vytvoř vlastní</h1>
+            <div>
+              <input
+                type="text"
+                value={gameCode}
+                onChange={(e) => setGameCode(e.target.value)}
+                placeholder="Kód hry"
+              />
+              <Link to={`/freeplay?game=${gameCode}`} className="button button-red">Připojit se kódem</Link>
+              <Link to='/freeplay/new' className="button button-red button-border">Vytvořit vlastní hru</Link>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   if (!room?.gameStarted) {
     return (
       <>
@@ -130,10 +230,10 @@ function OnlineRoom() {
         <div className="bg-grad"></div>
         <div className="main-room">
           <div className="code-cont">
-            <h3>Kód místnosti</h3>
+            <h3>Room Code</h3>
             <div className="group">
               <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
-              <span className="code">{roomId}</span>
+              <span className="code">{roomIdFromState}</span>
             </div>
           </div>
           <div className="players">
@@ -154,7 +254,7 @@ function OnlineRoom() {
           <div className="room-actions">
             {player?.playerHost && players.length > 1 &&
               <>
-              <button className="button button-blue button-border" onClick={startGame}>Začít hru</button>
+              <button className="button button-blue button-border" onClick={startGame}>Start Game</button>
               </>
             }
           </div>
@@ -173,7 +273,6 @@ function OnlineRoom() {
           size={15} 
           replayButton={true}
           ai={[0, 0]} 
-          //uuid={"f8a218ea-593b-4cee-9b5f-b108a1ecd8b3"}
           playerNames={players.map((player) => player.playerName)} 
           playerCurr={players.map((player) => player.playerCurr ? 1 : 0)}
           socket={socketRef.current}
