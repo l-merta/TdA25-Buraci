@@ -1,5 +1,13 @@
 const { Server } = require("socket.io");
 const { players, getPlaying, playField, checkWin, checkPotentialWin } = require("./gameplay");
+const { getDb } = require("./db");
+const jwt = require('jsonwebtoken');
+
+async function getUserElo(userUuid) {
+  const db = await getDb();
+  const user = await db.get(`SELECT elo FROM users WHERE uuid = ?`, [userUuid]);
+  return user ? user.elo : 0;
+}
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -10,12 +18,47 @@ module.exports = (server) => {
   });
 
   const rooms = {};
+  const queue = [];
 
-  io.on("connection", (socket) => {
-    let { roomId } = socket.handshake.query;
+  io.on("connection", async (socket) => {
+    let { roomId, multiplayerType, token } = socket.handshake.query;
     if (roomId === "undefined" || roomId === 'null') roomId = null;
 
-    console.log(`Client connected to room ${roomId}`);
+    console.log(`Client connected to room ${roomId}, type: ${multiplayerType}`);
+
+    if (multiplayerType === "online") {
+      let userUuid;
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userUuid = decoded.uuid;
+      } catch (err) {
+        console.error("Invalid token");
+        socket.disconnect();
+        return;
+      }
+
+      const userElo = await getUserElo(userUuid);
+      const queueEntry = { socket, userUuid, userElo };
+
+      // Add user to the queue and sort by ELO
+      queue.push(queueEntry);
+      queue.sort((a, b) => a.userElo - b.userElo);
+      console.log(queue);
+
+      socket.emit("queue", { message: "You are in a queue" });
+
+      socket.on("disconnect", () => {
+        console.log(`Client disconnected from queue`);
+        // Remove user from the queue
+        const index = queue.findIndex(entry => entry.socket === socket);
+        if (index !== -1) {
+          queue.splice(index, 1);
+        }
+        console.log(queue);
+      });
+
+      return;
+    }
 
     if (!roomId) {
       let newRoomId;

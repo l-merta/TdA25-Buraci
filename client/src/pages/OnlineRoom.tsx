@@ -33,12 +33,14 @@ function OnlineRoom() {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const roomId = queryParams.get('game');
+  const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : "online";
   
   const { user, userLoading } = useUser();
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const [player, setPlayer] = useState<PlayerProps | null>();
   const [room, setRoom] = useState<RoomProps | null>(null);
   const [gameCode, setGameCode] = useState<string>('');
+  const [queueMessage, setQueueMessage] = useState<string>('');
   const socketRef = useRef<Socket | null>(null);
   const gameSett: GameSettProps = location.state || {
     gameMode: "online",
@@ -58,13 +60,21 @@ function OnlineRoom() {
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
     let socket;
 
-    if (location.pathname === "/freeplay/new") {
+    if (multiplayerType == "freeplay") {
+      if (location.pathname === "/freeplay/new") {
+        socket = io(wsUrl, {
+          query: { roomId: null, multiplayerType: "freeplay" }
+        });
+      } else if (roomId) {
+        socket = io(wsUrl, {
+          query: { roomId, multiplayerType: "freeplay" }
+        });
+      }
+    }
+    else if (multiplayerType == "online") {
+      const token = localStorage.getItem('token'); // Assuming the token is stored in localStorage
       socket = io(wsUrl, {
-        query: { roomId: null }
-      });
-    } else if (roomId) {
-      socket = io(wsUrl, {
-        query: { roomId }
+        query: { roomId: null, multiplayerType: "online", token }
       });
     }
 
@@ -106,6 +116,11 @@ function OnlineRoom() {
         setRoom(data);
       });
 
+      socket.on("queue", (data) => {
+        console.log(data.message);
+        setQueueMessage(data.message);
+      });
+
       return () => {
         socket.disconnect();
       };
@@ -128,6 +143,21 @@ function OnlineRoom() {
     }).catch(err => {
       console.error('Failed to copy URL:', err);
     });
+  }
+
+  if (queueMessage) {
+    return (
+      <>
+        <Header />
+        <div className="bg-grad"></div>
+        <div className="main-room">
+          <div className="queue-message">
+            <h1>{queueMessage}</h1>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
   }
 
   if (!roomId && location.pathname !== "/freeplay/new") {

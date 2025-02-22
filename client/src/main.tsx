@@ -41,6 +41,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/games" element={<GameList />} />
           <Route path="/freeplay" element={<OnlineRoom />} />
           <Route path="/freeplay/new" element={<OnlineRoom />} />
+          <Route path="/online" element={<OnlineRoom />} />
           <Route path="/create" element={<Create />} />
           <Route path="/create/:uuid" element={<Create />} />
           <Route path="/login" element={<SignIn />} />
