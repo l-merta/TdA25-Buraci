@@ -37,6 +37,17 @@ module.exports = (server) => {
         return;
       }
 
+      // Check if the user is already in the queue
+      const isUserInQueue = queue.some(entry => entry.userUuid === userUuid);
+      if (isUserInQueue) {
+        socket.emit("redirect", { 
+          type: "error",
+          error: "userAlreadyInQueue",
+          message: "Tento účet je již ve frontě",
+        });
+        return;
+      }
+
       const userElo = await getUserElo(userUuid);
       const queueEntry = { socket, userUuid, userElo };
 
