@@ -137,15 +137,16 @@ function OnlineRoom() {
         <div className="bg-grad"></div>
         <div className="main-room">
           <div className="code-cont">
-            <h3>Enter Game Code</h3>
-            <div className="group">
+            <h1>Připoj se do existující hry, nebo si vytvoř vlastní</h1>
+            <div>
               <input
                 type="text"
                 value={gameCode}
                 onChange={(e) => setGameCode(e.target.value)}
-                placeholder="Enter game code"
+                placeholder="Kód hry"
               />
-              <Link to={`/freeplay?game=${gameCode}`} className="button button-red">Join Room</Link>
+              <Link to={`/freeplay?game=${gameCode}`} className="button button-red">Připojit se kódem</Link>
+              <Link to='/freeplay/new' className="button button-red button-border">Vytvořit vlastní hru</Link>
             </div>
           </div>
         </div>

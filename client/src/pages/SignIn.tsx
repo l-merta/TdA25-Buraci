@@ -45,7 +45,7 @@ const SignIn = () => {
 
   return (
     <>
-      <Header active='team'/>
+      <Header/>
       <div className="bg-grad"></div>
       <div className="main-login anim anim-slide-from-down">
         <form onSubmit={handleSubmit}>
