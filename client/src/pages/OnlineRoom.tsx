@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
+import { useUser } from "../components/User";
 
 import GameBoard from "./../components/GameBoard";
 import PlayerItem from "./../components/PlayerItem";
@@ -33,6 +34,7 @@ function OnlineRoom() {
   const queryParams = new URLSearchParams(location.search);
   const roomId = queryParams.get('game');
   
+  const { user, userLoading } = useUser();
   const [players, setPlayers] = useState<PlayerProps[]>([]);
   const [player, setPlayer] = useState<PlayerProps | null>();
   const [room, setRoom] = useState<RoomProps | null>(null);
@@ -46,6 +48,13 @@ function OnlineRoom() {
   };
 
   useEffect(() => {
+    if (userLoading) return;
+
+    if (!user && location.pathname === "/freeplay/new") {
+      navigate("/login");
+      return;
+    }
+
     const wsUrl = import.meta.env.VITE_WS_URL || `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
     let socket;
 
@@ -101,13 +110,7 @@ function OnlineRoom() {
         socket.disconnect();
       };
     }
-  }, [roomId, navigate, location.pathname]);
-
-  /*
-  const handleJoinRoom = () => {
-    navigate(`/freeplay?game=${gameCode}`);
-  };
-  */
+  }, [roomId, navigate, location.pathname, user, userLoading]);
 
   function switchChars() {
     if (socketRef.current)
@@ -134,15 +137,15 @@ function OnlineRoom() {
         <div className="bg-grad"></div>
         <div className="main-room">
           <div className="code-cont">
-            <h1>Připojte se k existující hře</h1>
+            <h3>Enter Game Code</h3>
             <div className="group">
               <input
                 type="text"
                 value={gameCode}
                 onChange={(e) => setGameCode(e.target.value)}
-                placeholder="Kód hry"
+                placeholder="Enter game code"
               />
-              <Link to={`/freeplay?game=${gameCode}`} className="button button-red">Připojit se</Link>
+              <Link to={`/freeplay?game=${gameCode}`} className="button button-red">Join Room</Link>
             </div>
           </div>
         </div>
@@ -158,7 +161,7 @@ function OnlineRoom() {
         <div className="bg-grad"></div>
         <div className="main-room">
           <div className="code-cont">
-            <h3>Kód místnosti</h3>
+            <h3>Room Code</h3>
             <div className="group">
               <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
               <span className="code">{roomId}</span>
@@ -182,7 +185,7 @@ function OnlineRoom() {
           <div className="room-actions">
             {player?.playerHost && players.length > 1 &&
               <>
-              <button className="button button-blue button-border" onClick={startGame}>Začít hru</button>
+              <button className="button button-blue button-border" onClick={startGame}>Start Game</button>
               </>
             }
           </div>
