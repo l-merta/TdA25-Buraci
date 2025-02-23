@@ -26,6 +26,13 @@
   align-items: center;
   gap: 1rem;
 }
+.user-list .user .user-info .index {
+  opacity: 0.6;
+  font: 600 1.2rem var(--f1);
+  min-width: 1.5rem;
+  text-align: center;
+  margin-right: -0.3rem;
+}
 .user-list .user .user-info .profile-pic {
   background-color: var(--bg-color3);
   aspect-ratio: 1/1;

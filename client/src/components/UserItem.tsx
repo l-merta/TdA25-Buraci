@@ -13,6 +13,7 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
   return (
     <Link to={'/users/' + user.username} className={"user anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
       <div className="user-info">
+        <span className="index">{index + 1}.</span>
         <div className="profile-pic">
           {/* <img src="https://unsplash.it/1920/1080" alt="" /> */}
           <div className="username-letter">{user.username[0].toUpperCase()}</div>
