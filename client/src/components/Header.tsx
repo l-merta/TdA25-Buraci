@@ -46,6 +46,10 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
           <span>Seznam her</span>
           <div className="line"></div>
         </Link>
+        <Link to="/leaderboard" className={'button button-empty ' + (active === 'leaderboard' ? 'header-active ' : ' ')}>
+          <span>Žebříček</span>
+          <div className="line"></div>
+        </Link>
         {user && user.role == 'admin' && (
           <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
             <span>Admin Panel</span>

@@ -22,7 +22,7 @@ function AdminDashboard() {
       <div className="bg-grad"></div>
       <div className="main-admin anim anim-slide-from-down">
         <h1>Admin Panel</h1>
-        <UserList />
+        <UserList admin={true} />
       </div>
       <Footer />
     </>
