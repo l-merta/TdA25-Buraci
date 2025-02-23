@@ -13,10 +13,12 @@
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   padding: 0.8rem 0.8rem;
+  text-decoration: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: 0.12s;
+  cursor: pointer;
 }
 .user-list .user .user-info {
   display: flex;
@@ -69,7 +71,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  gap: 0rem;
 }
 .user-list .user .user-data .item .value {
   color: var(--font-color);
@@ -81,7 +83,6 @@
   font: 500 1rem var(--f1);
   border-radius: 0.2rem;
   padding: 0.05rem 0.2rem;
-  position: absolute;
   bottom: -0.6rem;
 }
 .user-list .user .user-data .item.item-wins {
@@ -95,4 +96,7 @@
 .user-list .user .user-data .item.item-draws {
   color: var(--c-acc-draws);
   border-color: var(--c-acc-draws);
+}
+.user-list .user:hover {
+  scale: 0.97;
 }/*# sourceMappingURL=user.css.map */

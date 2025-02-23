@@ -69,11 +69,11 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         <button className="theme-switch" onClick={switchColorTheme}>
           <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
         </button>
-        <Link to="/game" className='button button-red'>Nová hra</Link>
+        {/* <Link to="/game" className='button button-red'>Nová hra</Link> */}
         {user ? (
           <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
         ) : (
-          <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
+          <Link to="/login" className='button button-red'>Přihlásit se</Link>
         )}
       </div>
       <div className="burger-menu">

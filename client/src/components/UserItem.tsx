@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 //import axios from 'axios';
 
 interface UserProps {
@@ -10,7 +11,7 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
   //const apiUrl = import.meta.env.VITE_API_URL;
 
   return (
-    <div className={"user anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
+    <Link to={'/users/' + user.username} className={"user anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
       <div className="user-info">
         <div className="profile-pic">
           {/* <img src="https://unsplash.it/1920/1080" alt="" /> */}
@@ -35,7 +36,7 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
           <span className='label'>Remízy</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
