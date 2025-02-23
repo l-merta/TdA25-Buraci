@@ -86,11 +86,12 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         {menuOpen && (
           <nav className="burger-nav">
             <Link to="/games" className='button button-empty'>Seznam her</Link>
+            <Link to="/leaderboard" className='button button-empty'>Žebříček</Link>
             <Link to="/think-different-academy" className='button button-empty'>O TdA</Link>
             <Link to="/about-team" className='button button-empty'>O týmu a aplikaci</Link>
             <Link to="/game" className='button button-red'>Nová hra</Link>
             {user ? (
-              <span className='button button-red button-border'>{user.username}</span>
+              <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
             ) : (
               <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
             )}
