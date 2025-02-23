@@ -11,13 +11,29 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
 
   return (
     <div className={"user anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
-      <div className="user-name">
-        <span className="username">{user.username}</span>
-        <span className="email">{user.email}</span>
+      <div className="user-info">
+        <div className="profile-pic">
+          {/* <img src="https://unsplash.it/1920/1080" alt="" /> */}
+          <div className="username-letter">{user.username[0].toUpperCase()}</div>
+        </div>
+        <div className="s1">
+          <span className="username">{user.username}</span>
+          <div className="elo">{user.elo}</div>
+        </div>
       </div>
       <div className="user-data">
-        <span className="role">{user.role}</span>
-        <span className="created-at">{user.createdAt}</span>
+        <div className="item item-wins">
+          <span className="value">{user.wins}</span>
+          <span className='label'>Výhry</span>
+        </div>
+        <div className="item item-losses">
+          <span className="value">{user.wins}</span>
+          <span className='label'>Prohry</span>
+        </div>
+        <div className="item item-draws">
+          <span className="value">{user.wins}</span>
+          <span className='label'>Remízy</span>
+        </div>
       </div>
     </div>
   );

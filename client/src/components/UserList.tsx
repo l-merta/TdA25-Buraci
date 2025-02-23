@@ -13,7 +13,7 @@ interface UserProps {
   createdAt: string;
   username: string;
   email: string;
-  rol: string;
+  role: string;
 }
 
 const UserList: React.FC<UserListProps> = ({ admin = false }) => {

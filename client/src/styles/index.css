@@ -24,6 +24,10 @@
   --c-hard: rgba(255, 72, 0, 0.3);
   --c-extreme: rgb(199, 199, 199);
 
+  --c-acc-wins: rgb(39, 189, 39);
+  --c-acc-losses: rgb(207, 38, 38);
+  --c-acc-draws: rgb(133, 133, 133);
+
   --f1: "Dosis";
   --f2: "Poppins";
   --f3: "Rubik";
