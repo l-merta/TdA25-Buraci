@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from './../components/User';
 
 import Header from './../components/Header';
+import Effect from './../components/Effect';
 
 const SignUp = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -79,7 +80,8 @@ const SignUp = () => {
 
   return (
     <>
-      <Header/>
+      <Header />
+      <Effect />
       <div className="bg-grad"></div>
       <div className="main-login anim anim-slide-from-down">
         <form onSubmit={handleSubmit}>
@@ -113,8 +115,8 @@ const SignUp = () => {
             required
           />
           {error && <p className="error">{error}</p>}
-          <p className='redirect'>Už máš účet? <Link to='/login'>Přihlaš se</Link></p>
           <button className='button button-blue' type="submit">Pokračovat</button>
+          <p className='redirect'>Už máš účet? <Link to='/login'>Přihlaš se</Link></p>
         </form>
       </div>
     </>

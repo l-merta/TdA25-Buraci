@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from './../components/User';
 
 import Header from './../components/Header';
+import Effect from './../components/Effect';
 
 const SignIn = () => {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -34,7 +35,7 @@ const SignIn = () => {
         navigate('/'); // Redirect to home page or any other page
       } else {
         const errorData = await response.json();
-        setError('Invalid username/email or password');
+        setError('Nesprávné uživatelské jméno/heslo');
         console.error('Error logging in:', errorData);
       }
     } catch (error) {
@@ -46,13 +47,14 @@ const SignIn = () => {
   return (
     <>
       <Header/>
+      <Effect />
       <div className="bg-grad"></div>
       <div className="main-login anim anim-slide-from-down">
         <form onSubmit={handleSubmit}>
           <h1>Přihlášení</h1>
           <input
             type="text"
-            placeholder='Uživatelské jméno / email'
+            placeholder='Uživatelské jméno/email'
             value={nameOrEmail}
             onChange={(e) => setNameOrEmail(e.target.value)}
             required
@@ -65,8 +67,7 @@ const SignIn = () => {
             required
           />
           {error && <p className="error">{error}</p>}
-          <p className='redirect'>Jestě nemáš účet? <Link to='/registration'>Zaregistruj se</Link></p>
-          <button className='button button-blue' type="submit">Pokračovat</button>
+          <button className='button button-blue' type="submit">Pokračovat</button><p className='redirect'>Jestě nemáš účet? <Link to='/registration'>Zaregistruj se</Link></p>
         </form>
       </div>
     </>
