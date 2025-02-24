@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 //import axios from 'axios';
 import { useUser } from './User';
 
+import ProfilePic from './ProfilePic';
+
 interface UserProps {
   user: any;
   index: number;
@@ -16,10 +18,7 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
     <Link to={'/users/' + user.username} className={(loggedInUser && loggedInUser.uuid == user.uuid && "user-active") + " user anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
       <div className="user-info">
         <span className="index">{index + 1}.</span>
-        <div className="profile-pic" style={ { backgroundColor: user.color } }>
-          {/* <img src="https://unsplash.it/1920/1080" alt="" /> */}
-          <div className="username-letter">{user.username[0].toUpperCase()}</div>
-        </div>
+        <ProfilePic user={user} />
         <div className="s1">
           <span className="username">{user.username}</span>
           <div className="elo">

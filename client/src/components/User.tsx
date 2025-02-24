@@ -44,7 +44,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      console.log('Token:', token);
+      //console.log('Token:', token);
       axios.get(apiUrl + 'getUserByToken', {
         headers: {
           'Authorization': `Bearer ${token}`
