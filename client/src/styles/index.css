@@ -17,6 +17,7 @@
   --c15: #2e2e2e;
   --c-warn: rgb(247, 66, 66);
   --c-win: rgba(255, 208, 0, 0.6);
+  --c-win-2: rgba(212, 173, 0, 0.8);
 
   --c-beginner: rgba(21, 255, 0, 0.3);
   --c-easy: rgba(102, 255, 0, 0.3);
@@ -28,6 +29,12 @@
   --c-acc-losses: rgb(207, 38, 38);
   --c-acc-draws: rgb(133, 133, 133);
 
+  --c-acc-place-1: rgba(202, 165, 0, 0.85);
+  --c-acc-place-2: rgb(153, 153, 153);
+  --c-acc-place-3: rgba(212, 113, 0, 0.8);
+
+  --c-test-1: rgb(34, 197, 143);
+
   --f1: "Dosis";
   --f2: "Poppins";
   --f3: "Rubik";
@@ -35,7 +42,7 @@
   --f-test-1: #2e2e2e;
   --f-test-2: #cccccc;
 
-  --header-h: 5.5rem;
+  --header-h: 6.2rem;
   --footer-h: 5.5rem;
   --main-b-gap: 5rem;
 }

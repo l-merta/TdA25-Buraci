@@ -1,22 +1,25 @@
 .main-login {
+  min-height: calc(100vh - var(--header-h) - var(--main-b-gap) - var(--footer-h) + 1rem);
   position: relative;
   top: var(--header-h);
-  padding: 0 1rem;
-  padding-top: 3rem;
-  padding-bottom: 4.5rem;
+  display: flex;
+  align-items: center;
 }
 .main-login form {
   background-color: var(--bg-color);
   width: 30rem;
   max-width: 100%;
   border: 1px solid var(--bg-color3);
-  border-radius: 0.5rem;
+  border-radius: 0.8rem;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1rem 2rem;
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
   align-items: center;
+}
+.main-login form h1 {
+  font: 800 2rem var(--f1);
 }
 .main-login form input {
   color: var(--font-color);
@@ -24,14 +27,14 @@
   background-color: transparent;
   font: 500 1rem var(--f1);
   width: 100%;
-  border: 1px solid var(--bg-contr);
-  border-radius: 0.3rem;
+  border: 2px solid var(--bg-color3);
+  border-radius: 0.4rem;
   padding: 0.6rem 0.6rem;
   transition: 0.12s;
 }
 .main-login form input:focus {
   outline: none;
-  border: 1px solid var(--c6);
+  border: 2px solid var(--c6);
 }
 .main-login form p {
   opacity: 0.8;
@@ -46,6 +49,18 @@
 .main-login form p a:hover {
   opacity: 0.8;
 }
+.main-login form .error {
+  color: var(--c5);
+  font: 500 1.1rem var(--f1);
+  text-align: center;
+}
+.main-login form .redirect {
+  font: 500 1.1rem var(--f1);
+}
+.main-login form .redirect a {
+  color: var(--c5);
+  font: 700 1.1rem var(--f1);
+}
 .main-login form button {
-  margin-top: 1rem;
+  margin: 0.6rem 0;
 }/*# sourceMappingURL=login.css.map */

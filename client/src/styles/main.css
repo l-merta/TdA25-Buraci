@@ -25,7 +25,7 @@ header {
   z-index: 100;
 }
 header img {
-  height: 120%;
+  height: 110%;
 }
 header a {
   color: var(--c3) !important;
@@ -57,6 +57,49 @@ header .actions-2 {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+header .actions-2 .user {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+header .actions-2 .user .data {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.2rem;
+}
+header .actions-2 .user .data .username {
+  font: 700 1.4rem var(--f1);
+}
+header .actions-2 .user .data .elo {
+  font: 600 1rem var(--f1);
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+header .actions-2 .user .data .elo i {
+  color: var(--c-win-2);
+  font-size: 0.8rem;
+}
+header .actions-2 .user:hover {
+  scale: 0.95;
+}
+header .actions-2 .logout {
+  color: var(--c3);
+  font-size: 1.2rem;
+  aspect-ratio: 1/1;
+  width: 3.2rem;
+  border: 2px solid var(--c3);
+  border-radius: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+header .actions-2 .logout:hover {
+  scale: 0.95;
 }
 header .actions-2 .theme-switch {
   opacity: 0.9;
@@ -127,6 +170,18 @@ header .burger-menu .burger-nav {
 }
 header .burger-menu .burger-nav a {
   width: 100%;
+}
+header .burger-menu .burger-nav .user {
+  width: 100%;
+  margin-top: 0.5rem;
+  gap: 0.7rem;
+  text-decoration: none;
+}
+header .burger-menu .burger-nav .user .username {
+  font-size: 1.7rem;
+}
+header .burger-menu .burger-nav .user:hover {
+  scale: 0.95;
 }
 
 main {
@@ -329,6 +384,86 @@ footer .social a:hover {
   scale: 0.95;
 }
 
+.profile-pic {
+  background-color: transparent;
+  aspect-ratio: 1/1;
+  width: 3.2rem;
+  border-radius: 0.7rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /*
+  &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      border-radius: inherit;
+      z-index: 1;
+  }
+  */
+}
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  position: relative;
+  z-index: 2;
+}
+.profile-pic .background {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+.profile-pic .username-letter {
+  font: 600 1.5rem var(--f1);
+  position: relative;
+  z-index: 2;
+}
+.profile-pic::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 0.9rem;
+  animation: rotate-border 2s linear infinite;
+  z-index: 0;
+}
+
+.profile-pic-border {
+  --border-size: 0.82;
+}
+.profile-pic-border.profile-pic-place-1::after {
+  background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-1));
+}
+.profile-pic-border.profile-pic-place-1 img, .profile-pic-border.profile-pic-place-1 .background {
+  scale: var(--border-size);
+}
+.profile-pic-border.profile-pic-place-2::after {
+  background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-2));
+}
+.profile-pic-border.profile-pic-place-2 img, .profile-pic-border.profile-pic-place-2 .background {
+  scale: var(--border-size);
+}
+.profile-pic-border.profile-pic-place-3::after {
+  background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-3));
+}
+.profile-pic-border.profile-pic-place-3 img, .profile-pic-border.profile-pic-place-3 .background {
+  scale: var(--border-size);
+}
+
 .loading {
   width: 100%;
   height: 100%;
@@ -361,9 +496,13 @@ b.b-blue {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.6rem;
   text-decoration: none;
   transition: 0.12s;
   cursor: pointer;
+}
+.button.button-0 {
+  font: 600 1.1rem var(--f1);
 }
 .button.button-1 {
   font: 600 1.6rem var(--f1);
@@ -439,6 +578,14 @@ input[type=text] {
   transition: 0.12s;
 }
 
+.line-vertical {
+  background-color: var(--c5);
+  width: 0.2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  margin: auto 0;
+}
+
 .anim.anim-slide-from-down {
   opacity: 0;
   animation: slide-from-down 0.3s ease-in-out forwards;
@@ -484,6 +631,14 @@ input[type=text] {
     transform: translateY(0);
   }
 }
+@keyframes rotate-border {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 @media screen and (max-width: 1250px) {
   .sec-texts .group {
     grid-template-columns: repeat(2, 1fr);
@@ -507,7 +662,7 @@ input[type=text] {
     width: 100%;
   }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
   header .actions, header .actions-2 {
     display: none;
   }

@@ -40,8 +40,9 @@ function App() {
           a poskytnout uživatelům <b className=''>atraktivní herní zážitek</b>.
         </p>
         <nav>
-          <Link to="/game" className='button button-1 button-red anim anim-slide-from-down'>Nová hra</Link>
-          <Link to="/games" className='button button-1 button-red button-border anim anim-slide-from-down'>Seznam her</Link>
+          <Link to="/online" className='button button-1 button-red anim anim-slide-from-down'>Najít online hru</Link>
+          <div className="line-vertical"></div>
+          <Link to="/games" className='button button-1 button-red button-border anim anim-slide-from-down'>Seznam offline her</Link>
           {/* <Link to="/create" className='button button-blue'>Vytvořit hru</Link> */}
         </nav>
       </main>
