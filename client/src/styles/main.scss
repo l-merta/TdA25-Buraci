@@ -377,6 +377,9 @@ b {
     transition: .12s;
     cursor: pointer;
 
+    &.button-0 {
+        font: 600 1.1rem var(--f1);
+    }
     &.button-1 {
         font: 600 1.6rem var(--f1);
     }
