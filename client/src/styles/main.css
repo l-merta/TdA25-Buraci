@@ -25,7 +25,7 @@ header {
   z-index: 100;
 }
 header img {
-  height: 120%;
+  height: 110%;
 }
 header a {
   color: var(--c3) !important;
@@ -440,6 +440,14 @@ input[type=text] {
   border-radius: 0.5rem;
   padding: 0.4rem 0.6rem;
   transition: 0.12s;
+}
+
+.line-vertical {
+  background-color: var(--c5);
+  width: 0.2rem;
+  height: 2rem;
+  border-radius: 1rem;
+  margin: auto 0;
 }
 
 .anim.anim-slide-from-down {

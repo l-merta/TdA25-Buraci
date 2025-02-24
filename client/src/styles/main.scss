@@ -25,7 +25,7 @@ header {
     z-index: 100;
 
     img {
-        height: 120%;
+        height: 110%;
     }
     a {
         color: var(--c3) !important;
@@ -449,6 +449,13 @@ input[type=text] {
     border-radius: 0.5rem;
     padding: 0.4rem 0.6rem;
     transition: .12s;
+}
+.line-vertical {
+    background-color: var(--c5);
+    width: 0.2rem;
+    height: 2.0rem;
+    border-radius: 1rem;
+    margin: auto 0;
 }
 
 .anim {
