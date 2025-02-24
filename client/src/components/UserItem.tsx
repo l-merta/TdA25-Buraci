@@ -20,7 +20,10 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
         </div>
         <div className="s1">
           <span className="username">{user.username}</span>
-          <div className="elo">{user.elo}</div>
+          <div className="elo">
+            <i className="fa-solid fa-trophy"></i>
+            <span>{user.elo}</span>
+          </div>
         </div>
       </div>
       <div className="user-data">

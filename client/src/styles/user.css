@@ -62,6 +62,13 @@
 }
 .user-list .user .user-info .s1 .elo {
   font: 500 1.2rem var(--f1);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.user-list .user .user-info .s1 .elo i {
+  color: var(--c-win-2);
+  font-size: 0.9rem;
 }
 .user-list .user .user-data {
   display: flex;
