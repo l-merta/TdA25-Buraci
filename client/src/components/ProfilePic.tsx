@@ -19,7 +19,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({ user, index }) => {
         }
       })
       .then(response => {
-        console.log('Rank:', response.data);
+        //console.log('Rank:', response.data);
         setRank(response.data.rank);
       })
       //.catch(error => {});
