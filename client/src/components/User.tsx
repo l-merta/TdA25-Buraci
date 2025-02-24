@@ -10,6 +10,7 @@ interface User {
   wins: number;
   draws: number;
   losses: number;
+  color: string;
 }
 
 interface UserContextType {

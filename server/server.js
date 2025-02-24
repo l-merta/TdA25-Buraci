@@ -88,7 +88,12 @@ app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
   console.log(req.user);
   try {
     const db = await getDb();
-    const user = await db.get(`SELECT uuid, username, email, role, elo, wins, draws, losses FROM users WHERE uuid = ?`, [req.user.uuid]);
+    const user = await db.get(`
+      SELECT u.uuid, u.username, u.email, u.role, u.elo, u.wins, u.draws, u.losses, pc.color 
+      FROM users u
+      LEFT JOIN profile_colors pc ON u.color = pc.id
+      WHERE u.uuid = ?
+    `, [req.user.uuid]);
     if (!user) {
       return res.status(404).json({ code: 404, message: "User not found" });
     }
@@ -102,7 +107,12 @@ app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
 app.get("/api/v1/users", async (req, res) => {
   try {
     const db = await getDb();
-    const rows = await db.all(`SELECT * FROM users`);
+    const rows = await db.all(`
+      SELECT u.*, pc.color 
+      FROM users u
+      LEFT JOIN profile_colors pc ON u.color = pc.id
+      ORDER BY u.elo DESC
+    `);
     res.json(rows);
   } catch (error) {
     console.error(error);
@@ -115,7 +125,12 @@ app.get("/api/v1/users/uuid/:uuid", async (req, res) => {
 
   try {
     const db = await getDb();
-    const row = await db.get(`SELECT * FROM users WHERE uuid = ?`, [uuid]);
+    const row = await db.get(`
+      SELECT u.*, pc.color 
+      FROM users u
+      LEFT JOIN profile_colors pc ON u.color = pc.id
+      WHERE u.uuid = ?
+    `, [uuid]);
     if (!row) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
@@ -131,7 +146,12 @@ app.get("/api/v1/users/username/:username", async (req, res) => {
 
   try {
     const db = await getDb();
-    const row = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    const row = await db.get(`
+      SELECT u.*, pc.color 
+      FROM users u
+      LEFT JOIN profile_colors pc ON u.color = pc.id
+      WHERE u.username = ?
+    `, [username]);
     if (!row) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }

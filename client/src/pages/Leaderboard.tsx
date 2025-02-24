@@ -8,7 +8,7 @@ import UserList from '../components/UserList';
 import Footer from '../components/Footer';
 
 function AdminDashboard() {
-  document.title = "Admin Dashboard";
+  document.title = "Žebříček - TdA";
 
   //const { user } = useUser();
   //const theme = useTheme();
