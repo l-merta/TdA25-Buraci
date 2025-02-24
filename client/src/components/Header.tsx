@@ -46,6 +46,10 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
           <span>Seznam her</span>
           <div className="line"></div>
         </Link>
+        <Link to="/leaderboard" className={'button button-empty ' + (active === 'leaderboard' ? 'header-active ' : ' ')}>
+          <span>Žebříček</span>
+          <div className="line"></div>
+        </Link>
         {user && user.role == 'admin' && (
           <Link to="/admin-dashboard" className={'button button-empty ' + (active === 'admin' ? 'header-active ' : ' ')}>
             <span>Admin Panel</span>
@@ -65,11 +69,11 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         <button className="theme-switch" onClick={switchColorTheme}>
           <i className={theme === 'theme-light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun-bright'}></i>
         </button>
-        <Link to="/game" className='button button-red'>Nová hra</Link>
+        {/* <Link to="/game" className='button button-red'>Nová hra</Link> */}
         {user ? (
           <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
         ) : (
-          <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
+          <Link to="/login" className='button button-red'>Přihlásit se</Link>
         )}
       </div>
       <div className="burger-menu">
@@ -82,11 +86,12 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
         {menuOpen && (
           <nav className="burger-nav">
             <Link to="/games" className='button button-empty'>Seznam her</Link>
+            <Link to="/leaderboard" className='button button-empty'>Žebříček</Link>
             <Link to="/think-different-academy" className='button button-empty'>O TdA</Link>
             <Link to="/about-team" className='button button-empty'>O týmu a aplikaci</Link>
             <Link to="/game" className='button button-red'>Nová hra</Link>
             {user ? (
-              <span className='button button-red button-border'>{user.username}</span>
+              <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
             ) : (
               <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
             )}

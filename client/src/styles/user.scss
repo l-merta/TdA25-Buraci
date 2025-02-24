@@ -12,26 +12,107 @@
     border: 1px solid var(--bg-color3);
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
-    padding: 0.8rem 0.5rem;
+    padding: 0.8rem 0.8rem;
+    text-decoration: none;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     transition: .12s;
+    cursor: pointer;
 
-    .user-name,
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1.0rem;
+
+      .index {
+        opacity: 0.6;
+        font: 600 1.2rem var(--f1);
+        min-width: 1.5rem;
+        text-align: center;
+        margin-right: -0.3rem;
+      }
+      .profile-pic {
+        background-color: var(--bg-color3);
+        aspect-ratio: 1/1;
+        width: 3.2rem;
+        border-radius: 0.7rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+  
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .username-letter {
+          font: 600 1.5rem var(--f1);
+        }
+      }
+      .s1 {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
+        .username {
+          font: 600 1.4rem var(--f1);
+        }
+        .elo {
+          font: 500 1.2rem var(--f1);
+        }
+      }
+    }
     .user-data {
       display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.5rem;
+
+      .item {
+        aspect-ratio: 1/1;
+        width: 3.6rem;
+        border: 0px solid var(--font-color);
+        border-radius: 50%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.0rem;
+
+        .value {
+          color: var(--font-color);
+          font: 700 1.4rem var(--f1);
+        }
+        .label {
+          color: var(--font-color);
+          background-color: var(--bg-color);
+          font: 500 1.0rem var(--f1);
+          border-radius: 0.2rem;
+          padding: 0.05rem 0.2rem;
+          //position: absolute;
+          bottom: -0.6rem;
+        }
+
+        &.item-wins {
+          color: var(--c-acc-wins);
+          border-color: var(--c-acc-wins);
+        }
+        &.item-losses {
+          color: var(--c-acc-losses);
+          border-color: var(--c-acc-losses);
+        }
+        &.item-draws {
+          color: var(--c-acc-draws);
+          border-color: var(--c-acc-draws);
+        }
+      }
     }
-    .user-data {
-      align-items: end;
-    }
-    .username {
-      font: 600 1.2rem var(--f1);
-    }
-    .role {
-      font: 500 1.1rem var(--f1);
+    &:hover {
+      scale: 0.97;
     }
   }
 }

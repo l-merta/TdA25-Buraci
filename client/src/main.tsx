@@ -7,6 +7,7 @@ import { UserProvider } from './components/User';
 import Home from './pages/Home.tsx';
 import Game from './pages/Game.tsx';
 import GameList from './pages/Games.tsx';
+import Leaderboard from './pages/Leaderboard.tsx';
 import OnlineRoom from './pages/OnlineRoom.tsx';
 import Create from './pages/Create.tsx';
 import SignIn from './pages/SignIn.tsx';
@@ -21,6 +22,7 @@ import './styles/index.css';
 import './styles/main.css';
 import './styles/game.css';
 import './styles/game-list.css';
+import './styles/leaderboard.css';
 import './styles/login.css';
 import './styles/online.css'
 import './styles/user-page.css';
@@ -39,6 +41,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/game" element={<Game />} />
           <Route path="/game/:uuid" element={<Game />} />
           <Route path="/games" element={<GameList />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/freeplay" element={<OnlineRoom />} />
           <Route path="/freeplay/new" element={<OnlineRoom />} />
           <Route path="/online" element={<OnlineRoom />} />

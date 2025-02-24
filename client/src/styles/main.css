@@ -337,11 +337,16 @@ footer .social a:hover {
   align-items: center;
 }
 
+b {
+  font-weight: inherit;
+}
 b.b-red {
   color: var(--c5);
+  font-weight: 600;
 }
 b.b-blue {
   color: var(--c6);
+  font-weight: 600;
 }
 
 .button {
@@ -395,6 +400,7 @@ b.b-blue {
 
 .button:hover {
   opacity: 0.8;
+  scale: 0.96;
 }
 
 .replay {

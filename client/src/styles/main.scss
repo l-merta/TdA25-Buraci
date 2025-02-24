@@ -351,11 +351,15 @@ footer {
     align-items: center;
 }
 b {
+    font-weight: inherit;
+
     &.b-red {
         color: var(--c5);
+        font-weight: 600;
     }
     &.b-blue {
         color: var(--c6);
+        font-weight: 600;
     }
 }
 .button {
@@ -408,6 +412,7 @@ b {
 }
 .button:hover {
     opacity: 0.8;
+    scale: 0.96;
 }
 .replay {
     color: var(--font-color);
