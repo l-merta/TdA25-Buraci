@@ -107,7 +107,25 @@ const Header: React.FC<HeaderProps> = ({ active }) => {
             <Link to="/about-team" className='button button-0 button-empty'>O týmu a aplikaci</Link>
             <Link to="/game" className='button button-0 button-red'>Nová hra</Link>
             {user ? (
-              <Link to="/login" onClick={logout} className=''>Uživatel {user.username}</Link>
+              <>
+              <Link to="/login" onClick={logout} className='button button-0 button-red button-border'>
+                <i className="fa-solid fa-right-from-bracket"></i>
+                Odhlásit se
+              </Link>
+              <Link to={"/users/" + user.username} className='user'>
+                <ProfilePic user={user} />
+                <div className="data">
+                  <span className="username">{user.username}</span>
+                  {/* <div className="elo">
+                    <i className="fa-solid fa-trophy"></i>
+                    <span>{user.elo}</span>
+                  </div> */}
+                </div>
+              </Link>
+              <Link to={"/login"} onClick={logout} className='logout'>
+                
+              </Link>
+              </>
             ) : (
               <Link to="/login" className='button button-red button-border'>Přihlásit se</Link>
             )}
