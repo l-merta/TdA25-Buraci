@@ -162,6 +162,31 @@ app.get("/api/v1/users/username/:username", async (req, res) => {
   }
 });
 
+app.get("/api/v1/users/rank/:uuid", async (req, res) => {
+  const { uuid } = req.params;
+
+  try {
+    const db = await getDb();
+    const users = await db.all(`
+      SELECT u.uuid, u.elo 
+      FROM users u
+      ORDER BY u.elo DESC
+    `);
+
+    const userIndex = users.findIndex(user => user.uuid === uuid);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ code: 404, message: "User not found" });
+    }
+
+    const rank = userIndex + 1;
+    res.json({ uuid, rank });
+  } catch (error) {
+    console.error("Error fetching user rank:", error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
 app.put("/api/v1/users/:uuid", async (req, res) => {
   const { uuid } = req.params;
   const { username, email, password, elo } = req.body;

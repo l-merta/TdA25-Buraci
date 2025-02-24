@@ -18,7 +18,7 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
     <Link to={'/users/' + user.username} className={(loggedInUser && loggedInUser.uuid == user.uuid && "user-active") + " user anim anim-slide-from-down"} style={{ animationDelay: index * 0.08 + "s" }}>
       <div className="user-info">
         <span className="index">{index + 1}.</span>
-        <ProfilePic user={user} />
+        <ProfilePic user={user} index={index + 1} />
         <div className="s1">
           <span className="username">{user.username}</span>
           <div className="elo">
