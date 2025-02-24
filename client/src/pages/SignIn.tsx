@@ -31,7 +31,7 @@ const SignIn = () => {
       if (response.ok) {
         const loginData = await response.json();
         login(loginData.token, loginData.user);
-        console.log(loginData.user);
+        //console.log(loginData.user);
         navigate('/'); // Redirect to home page or any other page
       } else {
         const errorData = await response.json();

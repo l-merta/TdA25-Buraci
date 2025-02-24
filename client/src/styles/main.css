@@ -58,6 +58,49 @@ header .actions-2 {
   align-items: center;
   gap: 1rem;
 }
+header .actions-2 .user {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+header .actions-2 .user .data {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.2rem;
+}
+header .actions-2 .user .data .username {
+  font: 700 1.4rem var(--f1);
+}
+header .actions-2 .user .data .elo {
+  font: 600 1rem var(--f1);
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+header .actions-2 .user .data .elo i {
+  color: var(--c-win-2);
+  font-size: 0.8rem;
+}
+header .actions-2 .user:hover {
+  scale: 0.95;
+}
+header .actions-2 .logout {
+  color: var(--c3);
+  font-size: 1.2rem;
+  aspect-ratio: 1/1;
+  width: 3.2rem;
+  border: 2px solid var(--c3);
+  border-radius: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+header .actions-2 .logout:hover {
+  scale: 0.95;
+}
 header .actions-2 .theme-switch {
   opacity: 0.9;
   color: var(--c3);
@@ -329,6 +372,26 @@ footer .social a:hover {
   scale: 0.95;
 }
 
+.profile-pic {
+  background-color: var(--bg-color3);
+  aspect-ratio: 1/1;
+  width: 3.2rem;
+  border-radius: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.profile-pic .username-letter {
+  font: 600 1.5rem var(--f1);
+}
+
 .loading {
   width: 100%;
   height: 100%;
@@ -518,7 +581,7 @@ input[type=text] {
     width: 100%;
   }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
   header .actions, header .actions-2 {
     display: none;
   }

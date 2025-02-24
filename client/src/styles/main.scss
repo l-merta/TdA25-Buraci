@@ -61,6 +61,53 @@ header {
         align-items: center;
         gap: 1.0rem;
 
+        .user {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+
+            .data {
+                display: flex;
+                flex-direction: column;
+                align-items: end;
+                gap: 0.2rem;
+
+                .username {
+                    font: 700 1.4rem var(--f1);
+                }
+                .elo {
+                    font: 600 1.0rem var(--f1);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.2rem;
+
+                    i {
+                        color: var(--c-win-2);
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+            &:hover {
+                scale: 0.95;
+            }
+        }
+        .logout {
+            color: var(--c3);
+            font-size: 1.2rem;
+            aspect-ratio: 1/1;
+            width: 3.2rem;
+            border: 2px solid var(--c3);
+            border-radius: 0.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+
+            &:hover {
+                scale: 0.95;
+            }
+        }
         .theme-switch {
             opacity: 0.9;
             color: var(--c3);
@@ -343,6 +390,25 @@ footer {
         }
     }
 }
+.profile-pic {
+    background-color: var(--bg-color3);
+    aspect-ratio: 1/1;
+    width: 3.2rem;
+    border-radius: 0.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .username-letter {
+        font: 600 1.5rem var(--f1);
+    }
+}
 .loading {
     width: 100%;
     height: 100%;
@@ -522,7 +588,7 @@ input[type=text] {
       }
   }
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
     header {
         .actions, .actions-2 {
             display: none;

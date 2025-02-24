@@ -264,7 +264,12 @@ app.post("/api/v1/login", async (req, res) => {
 
   try {
     const db = await getDb();
-    const user = await db.get(`SELECT * FROM users WHERE username = ? OR email = ?`, [nameOrEmail, nameOrEmail]);
+    const user = await db.get(`
+      SELECT u.*, pc.color 
+      FROM users u
+      LEFT JOIN profile_colors pc ON u.color = pc.id
+      WHERE u.username = ? OR u.email = ?
+    `, [nameOrEmail, nameOrEmail]);
 
     if (!user) {
       return res.status(401).json({ code: 401, message: "Unauthorized: Invalid username/email or password" });
