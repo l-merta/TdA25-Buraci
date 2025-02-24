@@ -35,7 +35,7 @@ function App() {
           <span className='sec'>Academy</span>
         </h1>
         <p className="anim anim-slide-from-down">
-          Nezisková organizace zaměřená na <b className='b-blue'>rozvoj</b> myšlení <b className=''>studentů i široké veřejnosti</b>.
+          Nezisková organizace zaměřená na <b className='b-blue'>rozvoj myšlení</b> <b className=''>studentů i široké veřejnosti</b>.
           Vyvíjíme <b className='b-blue'>piškvorkovou platformu</b>, která má digitalizovat piškvorky
           a poskytnout uživatelům <b className=''>atraktivní herní zážitek</b>.
         </p>
