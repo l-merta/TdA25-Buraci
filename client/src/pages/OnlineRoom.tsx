@@ -231,15 +231,13 @@ function OnlineRoom() {
         <Header />
         <div className="bg-grad"></div>
         <div className="main-room">
-          {multiplayerType != "online" && 
-            <div className="code-cont">
-              <h3>Room Code</h3>
-              <div className="group">
-                <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
-                <span className="code">{roomIdFromState}</span>
-              </div>
+          <div className={"code-cont " + (multiplayerType == "online" ? "code-cont-hidden" : "")}>
+            <h3>Room Code</h3>
+            <div className="group">
+              {multiplayerType != "online" && <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>}
+              <span className="code">{multiplayerType == "online" ? "******" : roomIdFromState}</span>
             </div>
-          }
+          </div>
           <div className="players">
             {players && players.length > 0 && 
               <>

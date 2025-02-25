@@ -46,6 +46,9 @@
     .code {
       font: 700 2.2rem var(--f1);
     }
+    &.code-cont-hidden {
+      opacity: 0;
+    }
   }
   .players {
     display: flex;
