@@ -449,10 +449,10 @@ footer .social a:hover {
 .profile-pic .effect::after {
   content: "";
   position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
+  top: -20%;
+  left: -20%;
+  right: -20%;
+  bottom: -20%;
   border-radius: 0.9rem;
   animation: rotate-border 2s linear infinite;
   z-index: 0;

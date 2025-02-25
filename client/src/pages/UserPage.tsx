@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
 import Header from './../components/Header';
 import Footer from './../components/Footer';
+import ProfilePic from './../components/ProfilePic';
 
 interface UserProps {
   username: string;
@@ -32,7 +34,16 @@ function UserPage() {
       <Header active='admin'/>
       <div className="bg-grad"></div>
       <div className="main-user anim anim-slide-from-down">
-        <h1>Stránka uživatele {user.username}</h1>
+        <div className="info">
+          <ProfilePic user={user} />
+          <div className="s1">
+            <h1 className='username'>{user.username}</h1>
+            <span className="elo">
+              <i className="fa-solid fa-trophy"></i>
+              {user.elo}
+            </span>
+          </div>
+        </div>
       </div>
       <Footer />
     </>

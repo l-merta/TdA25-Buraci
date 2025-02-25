@@ -9,4 +9,58 @@
     margin-bottom: 1rem;
     text-align: center;
   }
+  .info {
+    width: 100%;
+    max-width: 50rem;
+    margin: 0 auto;
+    display: flex;
+    gap: 1.5rem;
+
+    .profile-pic {
+      background-color: var(--bg-color3);
+      aspect-ratio: 1/1;
+      width: 8rem;
+      border-radius: 0.7rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .admin {
+        font-size: 0.7rem;
+        width: 1.6rem;
+      }
+      .username-letter {
+        font: 600 3.5rem var(--f1);
+      }
+    }
+    .s1 {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 0.3rem;
+
+      .username {
+        font: 600 2.5rem var(--f1);
+        margin: 0;
+      }
+      .elo {
+        opacity: 0.6;
+        font: 600 1.6rem var(--f1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+          color: var(--c-win-2);
+          font-size: 1.3rem;
+        }
+      }
+    }
+  }
 }
