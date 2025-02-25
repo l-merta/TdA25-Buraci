@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+
 import Header from './../components/Header';
 import Footer from './../components/Footer';
+import ProfilePic from './../components/ProfilePic';
 
 interface UserProps {
   username: string;
@@ -16,6 +18,8 @@ function UserPage() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { username } = useParams();
 
+  document.title = `Stránka uživatele ${username} - TdA`;
+
   const [user, setUser] = useState<UserProps | null>(null);
 
   useEffect(() => {
@@ -25,14 +29,21 @@ function UserPage() {
       .catch(error => console.error('Error fetching user data:', error));
   }, [username]);
 
-  document.title = `Stránka uživatele ${username}`;
-
   if (user) return (
     <>
-      <Header active='admin'/>
+      <Header/>
       <div className="bg-grad"></div>
       <div className="main-user anim anim-slide-from-down">
-        <h1>Stránka uživatele {user.username}</h1>
+        <div className="info">
+          <ProfilePic user={user} />
+          <div className="s1">
+            <h1 className='username'>{user.username}</h1>
+            <span className="elo">
+              <i className="fa-solid fa-trophy"></i>
+              {user.elo}
+            </span>
+          </div>
+        </div>
       </div>
       <Footer />
     </>

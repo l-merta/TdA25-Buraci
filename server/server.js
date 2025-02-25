@@ -7,6 +7,8 @@ require("dotenv").config();
 const http = require("http");
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 5200;
@@ -183,6 +185,22 @@ app.get("/api/v1/users/rank/:uuid", async (req, res) => {
     res.json({ uuid, rank });
   } catch (error) {
     console.error("Error fetching user rank:", error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.get("/api/v1/users/images/:username", async (req, res) => {
+  const { username } = req.params;
+  const imagePath = path.join(__dirname, 'images', 'users', `${username}.png`);
+
+  try {
+    if (fs.existsSync(imagePath)) {
+      res.sendFile(imagePath);
+    } else {
+      res.status(404).json({ image: null });
+    }
+  } catch (error) {
+    console.error("Error fetching user image:", error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });

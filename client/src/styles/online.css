@@ -45,6 +45,9 @@
 .main-room .code-cont .code {
   font: 700 2.2rem var(--f1);
 }
+.main-room .code-cont.code-cont-hidden {
+  opacity: 0;
+}
 .main-room .players {
   display: flex;
   justify-content: center;

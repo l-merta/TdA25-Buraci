@@ -76,6 +76,9 @@ body {
 body * {
   box-sizing: border-box;
 }
+.disabled {
+  display: none !important;
+}
 h2 {
   /* opacity: 1.0; */
   color: var(--font-color);

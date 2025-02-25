@@ -393,28 +393,18 @@ footer .social a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  /*
-  &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      border-radius: inherit;
-      z-index: 1;
-  }
-  */
+  overflow: visible !important;
 }
 .profile-pic img {
   width: 100%;
   height: 100%;
+  border-radius: 0.7rem;
   -o-object-fit: cover;
      object-fit: cover;
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 3;
 }
 .profile-pic .background {
   width: 100%;
@@ -430,13 +420,39 @@ footer .social a:hover {
   position: relative;
   z-index: 2;
 }
-.profile-pic::after {
+.profile-pic .admin {
+  color: var(--c3);
+  background-color: var(--c6);
+  font: 600 0.55rem var(--f1);
+  aspect-ratio: 1/1;
+  width: 1.1rem;
+  border: 1px solid rgb(8, 71, 189);
+  border-radius: 1rem;
+  position: absolute;
+  top: -0.24rem;
+  right: -0.24rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+}
+.profile-pic .effect {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.profile-pic .effect::after {
   content: "";
   position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
+  top: -20%;
+  left: -20%;
+  right: -20%;
+  bottom: -20%;
   border-radius: 0.9rem;
   animation: rotate-border 2s linear infinite;
   z-index: 0;
@@ -445,19 +461,19 @@ footer .social a:hover {
 .profile-pic-border {
   --border-size: 0.82;
 }
-.profile-pic-border.profile-pic-place-1::after {
+.profile-pic-border.profile-pic-place-1 .effect::after {
   background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-1));
 }
 .profile-pic-border.profile-pic-place-1 img, .profile-pic-border.profile-pic-place-1 .background {
   scale: var(--border-size);
 }
-.profile-pic-border.profile-pic-place-2::after {
+.profile-pic-border.profile-pic-place-2 .effect::after {
   background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-2));
 }
 .profile-pic-border.profile-pic-place-2 img, .profile-pic-border.profile-pic-place-2 .background {
   scale: var(--border-size);
 }
-.profile-pic-border.profile-pic-place-3::after {
+.profile-pic-border.profile-pic-place-3 .effect::after {
   background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-3));
 }
 .profile-pic-border.profile-pic-place-3 img, .profile-pic-border.profile-pic-place-3 .background {
