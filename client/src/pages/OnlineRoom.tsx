@@ -7,6 +7,7 @@ import GameBoard from "./../components/GameBoard";
 import PlayerItem from "./../components/PlayerItem";
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
+import Loading from "./../components/Loading"
 
 interface GameSettProps {
   gameMode: string;
@@ -190,6 +191,7 @@ function OnlineRoom() {
         <div className="main-room">
           <div className="queue-message">
             <h1>{queueMessage}</h1>
+            <Loading />
           </div>
         </div>
         <Footer />
@@ -229,13 +231,15 @@ function OnlineRoom() {
         <Header />
         <div className="bg-grad"></div>
         <div className="main-room">
-          <div className="code-cont">
-            <h3>Room Code</h3>
-            <div className="group">
-              <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
-              <span className="code">{roomIdFromState}</span>
+          {multiplayerType != "online" && 
+            <div className="code-cont">
+              <h3>Room Code</h3>
+              <div className="group">
+                <button onClick={copyToClipboard}><i className="fa-solid fa-copy"></i></button>
+                <span className="code">{roomIdFromState}</span>
+              </div>
             </div>
-          </div>
+          }
           <div className="players">
             {players && players.length > 0 && 
               <>

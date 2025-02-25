@@ -56,7 +56,7 @@ module.exports = (server) => {
       queue.sort((a, b) => a.userElo - b.userElo);
       //console.log(queue);
 
-      socket.emit("queue", { message: "You are in a queue, " + username });
+      socket.emit("queue", { message: "Hledáme pro tebe vhodného protivníka" });
 
       //onGameEvents(roomId, socket);
 
