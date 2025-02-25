@@ -429,8 +429,8 @@ footer .social a:hover {
   border: 1px solid rgb(8, 71, 189);
   border-radius: 1rem;
   position: absolute;
-  top: -0.2rem;
-  right: -0.2rem;
+  top: -0.24rem;
+  right: -0.24rem;
   display: flex;
   justify-content: center;
   align-items: center;
