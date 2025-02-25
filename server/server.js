@@ -191,7 +191,7 @@ app.get("/api/v1/users/rank/:uuid", async (req, res) => {
 
 app.get("/api/v1/users/images/:username", async (req, res) => {
   const { username } = req.params;
-  const imagePath = path.join(__dirname, 'images', 'users', `${username}.png`);
+  const imagePath = path.join(__dirname, 'images', 'users', `${username.toLowerCase()}.png`);
 
   try {
     if (fs.existsSync(imagePath)) {
