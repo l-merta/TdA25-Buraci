@@ -18,6 +18,8 @@ function UserPage() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { username } = useParams();
 
+  document.title = `Stránka uživatele ${username} - TdA`;
+
   const [user, setUser] = useState<UserProps | null>(null);
 
   useEffect(() => {
@@ -27,11 +29,9 @@ function UserPage() {
       .catch(error => console.error('Error fetching user data:', error));
   }, [username]);
 
-  document.title = `Stránka uživatele ${username}`;
-
   if (user) return (
     <>
-      <Header active='admin'/>
+      <Header/>
       <div className="bg-grad"></div>
       <div className="main-user anim anim-slide-from-down">
         <div className="info">
