@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface ProfilePicProps {
-  user: any
-  index?: number
+  user: any;
+  index?: number;
 }
 
 const ProfilePic: React.FC<ProfilePicProps> = ({ user, index }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [rank, setRank] = useState(index);
+  const [imageExists, setImageExists] = useState(false);
 
   useEffect(() => {
     if (!rank) {
@@ -19,20 +20,33 @@ const ProfilePic: React.FC<ProfilePicProps> = ({ user, index }) => {
         }
       })
       .then(response => {
-        //console.log('Rank:', response.data);
         setRank(response.data.rank);
       })
       //.catch(error => {});
     }
   }, [rank]);
 
+  useEffect(() => {
+    axios.get(`${apiUrl}users/images/${user.username}`)
+      .then(response => {
+        if (response.status === 200) {
+          setImageExists(true);
+        }
+      })
+      .catch(() => {
+        setImageExists(false);
+      });
+  }, [user.username]);
+
   return (
     <div className={"profile-pic " + (rank ? "profile-pic-border profile-pic-place-" + rank : "")}>
-      {/* <img src="https://unsplash.it/1920/1080" alt="" /> */}
-      <div className="background" style={ { backgroundColor: user && user.color } }></div>
+      {imageExists && <img src={`${apiUrl}users/images/${user.username}`} alt="" />}
+      {!imageExists &&
+        <div className="background" style={{ backgroundColor: user && user.color }}></div>
+      }
       <div className="username-letter">{user.username[0].toUpperCase()}</div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePic
+export default ProfilePic;

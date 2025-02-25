@@ -411,10 +411,13 @@ footer .social a:hover {
 .profile-pic img {
   width: 100%;
   height: 100%;
+  border-radius: 0.7rem;
   -o-object-fit: cover;
      object-fit: cover;
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 3;
 }
 .profile-pic .background {
   width: 100%;
