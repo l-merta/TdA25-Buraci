@@ -109,4 +109,15 @@
   border-radius: 0.5rem;
   padding: 0.4rem 0.6rem;
   cursor: pointer;
+}
+
+.main-room-code {
+  justify-content: start;
+}
+.main-room-code .code-input-cont {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
 }/*# sourceMappingURL=online.css.map */
