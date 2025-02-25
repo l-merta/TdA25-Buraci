@@ -43,7 +43,7 @@ const Games = () => {
       <Header active='games'/>
       <div className="bg-grad"></div>
       <div className="main-games">
-        <h1>Uložené hry piškvorek</h1>
+        <h1>Seznam her</h1>
         <h2>Vyber si způsob hry</h2>
         <div className="game-modes">
           <button className={"anim anim-scale-up mode " + (gameSett.id === 0 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[0])}>
