@@ -14,6 +14,7 @@ import SignIn from './pages/SignIn.tsx';
 import SignUp from './pages/SignUp.tsx';
 import UserPage from './pages/UserPage.tsx';
 import Tda from './pages/Tda.tsx';
+import Tou from './pages/Tou.tsx';
 import Team from './pages/Team.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 import PageNotFound from './pages/ErrorPage.tsx';
@@ -51,6 +52,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/registration" element={<SignUp />} />
           <Route path="/users/:username" element={<UserPage />} />
           <Route path="/think-different-academy" element={<Tda />} />
+          <Route path="/terms-of-use" element={<Tou />} />
           <Route path="/about-team" element={<Team />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/*" element={<PageNotFound />} />
