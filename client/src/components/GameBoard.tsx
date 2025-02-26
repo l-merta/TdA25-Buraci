@@ -30,7 +30,7 @@ interface GameBoardProps {
 const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
-    const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : "online";
+    const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : (location.pathname.includes("online") ? "online" : "");
     const theme = useTheme();
     const params = useParams<{ uuid: string }>();
     const { showPopup } = usePopup();
