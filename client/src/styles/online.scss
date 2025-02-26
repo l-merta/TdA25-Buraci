@@ -118,3 +118,14 @@
     }
   }
 }
+.main-room-code {
+  justify-content: start;
+
+  .code-input-cont {
+    margin-top: 2.0rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}

@@ -462,19 +462,19 @@ footer .social a:hover {
   --border-size: 0.82;
 }
 .profile-pic-border.profile-pic-place-1 .effect::after {
-  background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-1));
+  background: conic-gradient(var(--c-acc-place-1), var(--c-acc-place-1-2) 50%, var(--c-acc-place-1));
 }
 .profile-pic-border.profile-pic-place-1 img, .profile-pic-border.profile-pic-place-1 .background {
   scale: var(--border-size);
 }
 .profile-pic-border.profile-pic-place-2 .effect::after {
-  background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-2));
+  background: conic-gradient(var(--c-acc-place-2), var(--c-acc-place-2-2) 50%, var(--c-acc-place-2));
 }
 .profile-pic-border.profile-pic-place-2 img, .profile-pic-border.profile-pic-place-2 .background {
   scale: var(--border-size);
 }
 .profile-pic-border.profile-pic-place-3 .effect::after {
-  background: conic-gradient(transparent, transparent 50%, var(--c-acc-place-3));
+  background: conic-gradient(var(--c-acc-place-3), var(--c-acc-place-3-2) 50%, var(--c-acc-place-3));
 }
 .profile-pic-border.profile-pic-place-3 img, .profile-pic-border.profile-pic-place-3 .background {
   scale: var(--border-size);
@@ -486,6 +486,38 @@ footer .social a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  animation: blur-in 0.3s ease-in-out forwards;
+}
+.popup .popup-inner {
+  background-color: var(--bg-color);
+  width: 100%;
+  max-width: 30rem;
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--bg-color3);
+  border-radius: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  animation: scale-up 0.3s ease-in-out;
+}
+.popup .popup-inner .text {
+  color: var(--font-color);
+  font: 600 1.6rem var(--f1);
+  text-align: center;
 }
 
 b {
@@ -645,6 +677,16 @@ input[type=text] {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@keyframes blur-in {
+  from {
+    -webkit-backdrop-filter: blur(0);
+            backdrop-filter: blur(0);
+  }
+  to {
+    -webkit-backdrop-filter: blur(0.4rem);
+            backdrop-filter: blur(0.4rem);
   }
 }
 @keyframes rotate-border {

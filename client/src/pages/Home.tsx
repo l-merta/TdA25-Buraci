@@ -1,4 +1,4 @@
-//import { useState, useEffect } from 'react'
+//import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useTheme, themeToImg } from './../components/ThemeHandler';
 
@@ -24,7 +24,7 @@ function App() {
       <div className="bg-grad"></div>
       <main>
         <Effect />
-        <img src={theme && theme == "theme-light" ? 
+        <img src={theme && theme === "theme-light" ? 
           "/images/logos/Think-different-Academy_LOGO_cerny.png" :
           "/images/logos/Think-different-Academy_LOGO_bily.png"} 
           alt="TdA logo" 
@@ -99,4 +99,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { useTheme, themeToImg } from './ThemeHandler';
+import { useUser } from './User';
 
 import Loading from './Loading';
 import GameBoard from './GameBoard';
@@ -15,6 +16,7 @@ interface GameProps {
 const GameItem:React.FC<GameProps> = ({ game, index, setGames, gameSett }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const theme = useTheme();
+  const { user } = useUser();
 
   const [popupVisible, setPopupVisible] = useState<string | null>(null);
   const [loadingDelete, setLoadingDelete] = useState<string | null>(null);
@@ -83,18 +85,18 @@ const GameItem:React.FC<GameProps> = ({ game, index, setGames, gameSett }) => {
             <div className="actions">
               <Link to={gameSett.gameMode != "online" ? ("/game/" + game.uuid) : "/online/"}
                 state={gameSett.gameMode != "online" ? gameSett : { ...gameSett, uuid: game.uuid }}
-                className="button button-blue"
+                className="button button-red"
               >Hrát</Link>
               {/* <button className="button button-red button-border">Náhled</button> */}
             </div>
           </div>
         </div>
         <div className="s3">
-          <button className="button button-dots" onClick={() => togglePopup(game.uuid)}>
+          {user && <button className="button button-dots" onClick={() => togglePopup(game.uuid)}>
             <i className="fa-solid fa-ellipsis-vertical"></i>
-          </button>
+          </button>}
           {popupVisible === game.uuid && (
-            <div className="popup" ref={popupRef}>
+            <div className="game-edit-popup" ref={popupRef}>
               <Link to={"/create/" + game.uuid} className="button button-edit">
                 <i className="fa-solid fa-pen-to-square"></i>
                 Upravit úlohu

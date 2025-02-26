@@ -20,6 +20,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({ user, index }) => {
         }
       })
       .then(response => {
+        console.log(user.username, response.data.rank);
         setRank(response.data.rank);
       })
       //.catch(error => {});
@@ -46,7 +47,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({ user, index }) => {
       }
       <div className="effect"></div>
       <div className="username-letter">{user.username[0].toUpperCase()}</div>
-      {user.role == "admin" && <div className="admin"><i className="fa-solid fa-check"></i></div>}
+      {user.role == "admin" && <div className="admin"><i className="fa-solid fa-gear"></i></div>}
     </div>
   );
 };

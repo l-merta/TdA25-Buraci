@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme } from './../components/ThemeHandler';
+import { usePopup } from './../components/PopupContext';
 
 import Loading from './Loading';
 
@@ -29,8 +30,10 @@ interface GameBoardProps {
 const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
+    const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : "online";
     const theme = useTheme();
     const params = useParams<{ uuid: string }>();
+    const { showPopup } = usePopup();
 
     // Set the uuid from params if it's not provided as a prop
     if (!uuid) {
@@ -64,9 +67,18 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
         timeoutIds.current = [];
     };
 
+    /*
+    useEffect(() => {
+        if (!popupShown) {
+        showPopup("Prdíky a bobky");
+        setPopupShown(true);
+        }
+    }, [popupShown, showPopup]);
+    */
+
     useEffect(() => {
         if (playerCurr[0] === 1 || playerCurr[1] === 1) {
-            console.log("is online game");
+            //console.log("is online game");
             setOnline(true);
         }
     }, [playerCurr]);
@@ -153,12 +165,27 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
         };
 
         if (gameData.win) {
-            //console.log("Player " + gameData.win.player + " won!");
+            const winningPlayerIndex = players.indexOf(gameData.win.player);
+            const winningPlayerName = playerNames ? playerNames[winningPlayerIndex] : gameData.win.player;
+
             if (ai[0] == 1 && ai[1] == 1 && !replayButton) {
                 const timeoutId = setTimeout(() => {
                     resetGame();
                 }, 2000);
                 timeoutIds.current.push(timeoutId);
+            }
+            else {
+                // No AI-only match
+                if (multiplayerType === "online") {
+                    if (playerCurr[winningPlayerIndex] === 1) {
+                        showPopup(`Vyhrál jsi!`);
+                    } else {
+                        showPopup(`Prohrál jsi..`);
+                    }
+                }
+                else {
+                    showPopup(`Vyhrál ${winningPlayerName}!`);
+                }
             }
         } else {
             if (gameDataLoaded && ai[gameData.nextPlaying] == 1) {

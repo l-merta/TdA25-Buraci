@@ -30,8 +30,11 @@
   --c-acc-draws: rgb(133, 133, 133);
 
   --c-acc-place-1: rgba(202, 165, 0, 0.85);
+  --c-acc-place-1-2: rgba(255, 243, 187, 0.85);
   --c-acc-place-2: rgb(153, 153, 153);
-  --c-acc-place-3: rgba(212, 113, 0, 0.8);
+  --c-acc-place-2-2: rgb(235, 235, 235);
+  --c-acc-place-3: rgba(212, 113, 0, 0.85);
+  --c-acc-place-3-2: rgba(255, 208, 155, 0.85);
 
   --c-test-1: rgb(34, 197, 143);
 
