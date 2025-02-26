@@ -47,7 +47,7 @@ const ProfilePic: React.FC<ProfilePicProps> = ({ user, index }) => {
       }
       <div className="effect"></div>
       <div className="username-letter">{user.username[0].toUpperCase()}</div>
-      {user.role == "admin" && <div className="admin"><i className="fa-solid fa-check"></i></div>}
+      {user.role == "admin" && <div className="admin"><i className="fa-solid fa-gear"></i></div>}
     </div>
   );
 };

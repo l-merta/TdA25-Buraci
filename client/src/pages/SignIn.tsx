@@ -67,7 +67,7 @@ const SignIn = () => {
             required
           />
           {error && <p className="error">{error}</p>}
-          <button className='button button-blue' type="submit">Pokračovat</button><p className='redirect'>Jestě nemáš účet? <Link to='/registration'>Zaregistruj se</Link></p>
+          <button className='button button-red' type="submit">Pokračovat</button><p className='redirect'>Jestě nemáš účet? <Link to='/registration'>Zaregistruj se</Link></p>
         </form>
       </div>
     </>

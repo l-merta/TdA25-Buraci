@@ -83,7 +83,7 @@ const GameItem:React.FC<GameProps> = ({ game, index, setGames, gameSett }) => {
             <div className="actions">
               <Link to={gameSett.gameMode != "online" ? ("/game/" + game.uuid) : "/online/"}
                 state={gameSett.gameMode != "online" ? gameSett : { ...gameSett, uuid: game.uuid }}
-                className="button button-blue"
+                className="button button-red"
               >Hrát</Link>
               {/* <button className="button button-red button-border">Náhled</button> */}
             </div>
