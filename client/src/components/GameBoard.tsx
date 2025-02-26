@@ -60,7 +60,6 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     const initialMoveMade = useRef(false);
     const aiMoveInProgress = useRef(false);
     const [gameDataLoaded, setGameDataLoaded] = useState(false);
-    const [popupShown, setPopupShown] = useState(false);
     const timeoutIds = useRef<number[]>([]);
 
     const clearTimeouts = () => {
