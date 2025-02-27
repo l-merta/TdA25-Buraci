@@ -18,7 +18,7 @@ function UserPage() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { username } = useParams();
 
-  document.title = `Stránka uživatele ${username} - TdA`;
+  document.title = `${username} - TdA`;
 
   const [user, setUser] = useState<UserProps | null>(null);
 
@@ -35,14 +35,37 @@ function UserPage() {
       <div className="bg-grad"></div>
       <div className="main-user anim anim-slide-from-down">
         <div className="info">
-          <ProfilePic user={user} />
-          <div className="s1">
-            <h1 className='username'>{user.username}</h1>
-            <span className="elo">
-              <i className="fa-solid fa-trophy"></i>
-              {user.elo}
-            </span>
+          <div className='subinfo'>
+            <ProfilePic user={user} />
+            <div className="s1">
+              <h1 className='username'>{user.username}</h1>
+              <span className="elo">
+                <i className="fa-solid fa-trophy"></i>
+                <span>{user.elo}</span>
+                <span className='index'>2. místo</span>
+              </span>
+              <div className="timestamp">
+                Založen 1.1. 2005
+              </div>
+            </div>
           </div>
+          <div className="user-data">
+            <div className="item item-wins">
+              <span className="value">{user.wins}</span>
+              <span className='label'>Výhry</span>
+            </div>
+            <div className="item item-losses">
+              <span className="value">{user.losses}</span>
+              <span className='label'>Prohry</span>
+            </div>
+            <div className="item item-draws">
+              <span className="value">{user.draws}</span>
+              <span className='label'>Remízy</span>
+            </div>
+          </div>
+        </div>
+        <div className="game-history">
+          <h2>Historie her</h2>
         </div>
       </div>
       <Footer />

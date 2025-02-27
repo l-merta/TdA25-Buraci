@@ -35,7 +35,8 @@ const SignIn = () => {
         navigate('/'); // Redirect to home page or any other page
       } else {
         const errorData = await response.json();
-        setError('Nesprávné uživatelské jméno/heslo');
+        if (errorData.message.includes('user/email')) setError('Nesprávné uživatelské jméno nebo heslo');
+        if (errorData.message.includes('ban')) setError('Uživatel je zabanován');
         console.error('Error logging in:', errorData);
       }
     } catch (error) {

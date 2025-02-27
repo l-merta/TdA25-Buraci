@@ -323,6 +323,11 @@ app.post("/api/v1/login", async (req, res) => {
       return res.status(401).json({ code: 401, message: "Unauthorized: Invalid username/email or password" });
     }
 
+    const banned = await isUserBanned(user.uuid);
+    if (banned) {
+      return res.status(403).json({ code: 403, message: "Forbidden: User is banned" });
+    }
+
     const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET, { expiresIn: '1h' });
     const { password: userPassword, ...userWithoutPassword } = user;
     res.status(200).json({ token, user: userWithoutPassword });
@@ -538,8 +543,14 @@ function authenticateToken(req, res, next) {
   const token = req.headers['authorization'];
   if (!token) return res.status(401).json({ code: 401, message: "Unauthorized: No token provided" });
 
-  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, async (err, user) => {
     if (err) return res.status(403).json({ code: 403, message: "Forbidden: Invalid token" });
+
+    const banned = await isUserBanned(user.uuid);
+    if (banned) {
+      return res.status(403).json({ code: 403, message: "Forbidden: User is banned" });
+    }
+
     req.user = user;
     next();
   });
@@ -551,6 +562,11 @@ function authenticateTokenAdmin(req, res, next) {
 
   jwt.verify(token.split(' ')[1], process.env.JWT_SECRET, async (err, user) => {
     if (err) return res.status(403).json({ code: 403, message: "Forbidden: Invalid token" });
+
+    const banned = await isUserBanned(user.uuid);
+    if (banned) {
+      return res.status(403).json({ code: 403, message: "Forbidden: User is banned" });
+    }
 
     try {
       const db = await getDb();
@@ -566,6 +582,16 @@ function authenticateTokenAdmin(req, res, next) {
     }
   });
 }
+
+const isUserBanned = async (uuid) => {
+  const db = await getDb();
+  const user = await db.get(`SELECT id FROM users WHERE uuid = ?`, [uuid]);
+  if (!user) {
+    return false;
+  }
+  const bannedUser = await db.get(`SELECT * FROM blacklist WHERE userId = ?`, [user.id]);
+  return !!bannedUser;
+};
 
 // Error handling middleware
 app.use((err, req, res, next) => {

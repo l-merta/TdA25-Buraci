@@ -14,6 +14,15 @@
   max-width: 50rem;
   margin: 0 auto;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1.5rem;
+}
+.main-user .info .subinfo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
   gap: 1.5rem;
 }
 .main-user .info .profile-pic {
@@ -50,7 +59,7 @@
   margin: 0;
 }
 .main-user .info .s1 .elo {
-  opacity: 0.6;
+  opacity: 0.8;
   font: 600 1.6rem var(--f1);
   display: flex;
   align-items: center;
@@ -59,4 +68,67 @@
 .main-user .info .s1 .elo i {
   color: var(--c-win-2);
   font-size: 1.3rem;
+}
+.main-user .info .s1 .elo .index {
+  font: 500 1.2rem var(--f1);
+  margin-left: 0.6rem;
+}
+.main-user .info .s1 .timestamp {
+  opacity: 0.6;
+  font: 500 1.2rem var(--f1);
+  margin-top: 0.5rem;
+}
+.main-user .info .user-data {
+  padding-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2.5rem;
+}
+.main-user .info .user-data .item {
+  aspect-ratio: 1/1;
+  width: 3.6rem;
+  border: 0px solid var(--font-color);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0rem;
+}
+.main-user .info .user-data .item .value {
+  color: var(--font-color);
+  font: 700 2.4rem var(--f1);
+}
+.main-user .info .user-data .item .label {
+  color: var(--font-color);
+  background-color: transparent;
+  font: 500 1.5rem var(--f1);
+  border-radius: 0.2rem;
+  padding: 0.05rem 0.2rem;
+  bottom: -0.6rem;
+}
+.main-user .info .user-data .item.item-wins {
+  color: var(--c-acc-wins);
+  border-color: var(--c-acc-wins);
+}
+.main-user .info .user-data .item.item-losses {
+  color: var(--c-acc-losses);
+  border-color: var(--c-acc-losses);
+}
+.main-user .info .user-data .item.item-draws {
+  color: var(--c-acc-draws);
+  border-color: var(--c-acc-draws);
+}
+.main-user .game-history {
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+  margin-top: 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1.5rem;
 }/*# sourceMappingURL=user-page.css.map */
