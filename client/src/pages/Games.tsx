@@ -35,7 +35,7 @@ const Games = () => {
     }
   ];
 
-  const [gameSett, setGameSett] = useState(gameSettArr[0]);
+  const [gameSett, setGameSett] = useState(gameSettArr[2]);
   const [roomCode, setRoomCode] = useState("");
 
   return (
@@ -46,6 +46,13 @@ const Games = () => {
         <h1>Seznam her</h1>
         <h2>Vyber si způsob hry</h2>
         <div className="game-modes">
+          <button className={"anim anim-scale-up mode " + (gameSett.id === 2 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[2])}>
+            <h3>
+              <i className="fa-regular fa-globe"></i>
+              <span>Online</span>
+            </h3>
+            <p>Zasoupeř si se svými kamarády nebo rodinou</p>
+          </button>
           <button className={"anim anim-scale-up mode " + (gameSett.id === 0 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[0])}>
             <h3>
               <i className="fa-regular fa-computer-classic"></i>
@@ -66,13 +73,6 @@ const Games = () => {
               <span>Divák</span>
             </h3>
             <p>Podívej se, jak Táda hájí svůj status šampióna proti jinému AI</p>
-          </button>
-          <button className={"anim anim-scale-up mode " + (gameSett.id === 2 ? "mode-active " : " ")} onClick={() => setGameSett(gameSettArr[2])}>
-            <h3>
-              <i className="fa-regular fa-globe"></i>
-              <span>Online</span>
-            </h3>
-            <p>Zasoupeř si se svými kamarády nebo rodinou</p>
           </button>
         </div>
         {gameSett.gameMode === "online" && 
