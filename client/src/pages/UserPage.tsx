@@ -5,6 +5,7 @@ import axios from 'axios';
 import Header from './../components/Header';
 import Footer from './../components/Footer';
 import ProfilePic from './../components/ProfilePic';
+import GameBoard from './../components/GameBoard';
 
 interface UserProps {
   uuid: string;
@@ -25,6 +26,7 @@ function UserPage() {
 
   const [user, setUser] = useState<UserProps | null>(null);
   const [rank, setRank] = useState<number | null>(null);
+  const [gamesHistory, setGamesHistory] = useState<any[]>([]);
 
   useEffect(() => {
     fetch(`${apiUrl}users/username/${username}`)
@@ -45,6 +47,19 @@ function UserPage() {
     })
     //.catch(error => {});
   }, [user]);
+
+  useEffect(() => {
+    if (!user || gamesHistory.length > 0) return;
+    axios.get(`${apiUrl}gamesHistory/${user.uuid}`, {
+      headers: {
+        //'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setGamesHistory(response.data);
+    })
+    //.catch(error => {});
+  }, [gamesHistory, user]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -91,6 +106,14 @@ function UserPage() {
         </div>
         <div className="game-history">
           <h2>Historie her</h2>
+          {gamesHistory.length === 0 && <p>Uživatel ještě neodehrál žádnou hru</p>}
+          {gamesHistory.length > 0 && 
+            <div className="games">
+              {gamesHistory.map((game) => (
+                <GameBoard key={game.uuid} size={15} gameBoard={game.board} onlyBoard={true} ai={[0, 0]} playerCurr={[0, 0]} />
+              ))}
+            </div>
+          }
         </div>
       </div>
       <Footer />

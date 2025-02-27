@@ -438,11 +438,14 @@ app.get("/api/v1/gamesHistory/:uuid", async (req, res) => {
 
   try {
     const db = await getDb();
-    const row = await db.get(`SELECT * FROM games_history WHERE player1 = ? OR player2 = ?`, [uuid, uuid]);
-    if (!row) {
+    const rows = await db.all(`SELECT * FROM games_history WHERE player1 = ? OR player2 = ?`, [uuid, uuid]);
+    rows.forEach(row => {
+      row.board = JSON.parse(row.board); // Convert board back to JSON
+    });
+    if (!rows) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
-    res.json(row);
+    res.json(rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });

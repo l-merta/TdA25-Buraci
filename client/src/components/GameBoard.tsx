@@ -18,6 +18,7 @@ interface GameBoardProps {
     size: number;
     ai: Array<Number>;
     playerCurr: Array<Number>;
+    gameBoard?: any;
     socket?: any;
     isHost?: boolean;
     uuid?: string;
@@ -27,7 +28,7 @@ interface GameBoardProps {
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : (location.pathname.includes("online") ? "online" : "");
@@ -47,7 +48,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, socket, isH
     const [gameData, setGameData] = useState<GameBoardProps | any>({
         name: "",
         difficulty: "medium",
-        board: Array.from({ length: size }, () => Array(size).fill('')),
+        board: gameBoard ? gameBoard : Array.from({ length: size }, () => Array(size).fill('')),
         playing: players.length - 1,
         nextPlaying: 0,
         gameState: "unknown"

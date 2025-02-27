@@ -136,9 +136,13 @@
     margin: 0 auto;
     margin-top: 2.5rem;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: start;
-    gap: 1.5rem;
+    flex-direction: column;
+    gap: 1.0rem;
+
+    .games {
+      .game-board {
+        pointer-events: none;
+      }
+    }
   }
 }
