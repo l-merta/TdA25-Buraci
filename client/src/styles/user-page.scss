@@ -60,6 +60,7 @@
       }
       .elo {
         opacity: 0.8;
+        color: var(--font-color);
         font: 600 1.6rem var(--f1);
         display: flex;
         align-items: center;
@@ -76,6 +77,7 @@
       }
       .timestamp {
         opacity: 0.6;
+        color: var(--font-color);
         font: 500 1.2rem var(--f1);
         margin-top: 0.5rem;
       }

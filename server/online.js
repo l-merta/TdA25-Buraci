@@ -2,6 +2,7 @@ const { Server } = require("socket.io");
 const { players, getPlaying, playField, checkWin, checkPotentialWin } = require("./gameplay");
 const { getDb } = require("./db");
 const { addEloToUser, addWinToUser, addLossToUser, addDrawToUser } = require("./elo");
+const { v4: uuidv4 } = require("uuid");
 const jwt = require('jsonwebtoken');
 
 async function getUserData(userUuid) {
@@ -9,6 +10,37 @@ async function getUserData(userUuid) {
   const user = await db.get(`SELECT * FROM users WHERE uuid = ?`, [userUuid]);
   return user ? user : null;
 }
+
+const saveGameHistory = async (room, board, result) => {
+  const db = await getDb();
+  const gameUuid = uuidv4();
+  const createdAt = new Date().toISOString();
+
+  const player1Token = room.players[0].socket.handshake.query.token;
+  const player2Token = room.players[1].socket.handshake.query.token;
+
+  let player1Uuid, player2Uuid;
+  try {
+    const decoded1 = jwt.verify(player1Token, process.env.JWT_SECRET);
+    player1Uuid = decoded1.uuid;
+  } catch (err) {
+    console.error("Invalid token for player 1");
+    return;
+  }
+
+  try {
+    const decoded2 = jwt.verify(player2Token, process.env.JWT_SECRET);
+    player2Uuid = decoded2.uuid;
+  } catch (err) {
+    console.error("Invalid token for player 2");
+    return;
+  }
+
+  await db.run(
+    `INSERT INTO games_history (uuid, createdAt, player1, player2, board, result) VALUES (?, ?, ?, ?, ?, ?)`,
+    [gameUuid, createdAt, player1Uuid, player2Uuid, JSON.stringify(board), result]
+  );
+};
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -169,8 +201,6 @@ module.exports = (server) => {
     });
 
     socket.on("playField", async (data) => {
-      //console.log(`Field played`);
-
       const { row, col, board, ai } = data;
       const newGameData = { 
         ...data, 
@@ -199,18 +229,18 @@ module.exports = (server) => {
             await addLossToUser(loser.socket.handshake.query.token);
             await addEloToUser(loser.socket.handshake.query.token);
           }
+          await saveGameHistory(rooms[roomId], newGameData.board, 'win');
         }
       } else {
-        // Check for empty spaces - if none, add draw to both players
         const isDraw = newGameData.board.every(row => row.every(cell => cell !== ''));
         console.log("New GameBoard", newGameData.board);
         if (isDraw) {
-          //newGameData.win = "draw";
           if (rooms[roomId].type == "online") {
             rooms[roomId].players.forEach(async player => {
               await addDrawToUser(player.socket.handshake.query.token);
               await addEloToUser(player.socket.handshake.query.token);
             });
+            await saveGameHistory(rooms[roomId], newGameData.board, 'draw');
           }
         } else {
           newGameData.win = null;
