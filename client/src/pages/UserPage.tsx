@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import Header from './../components/Header';
 import Footer from './../components/Footer';
 import ProfilePic from './../components/ProfilePic';
 
 interface UserProps {
+  uuid: string;
   username: string;
   role: string;
   elo: number;
   wins: number;
   draws: number;
   losses: number;
+  createdAt: string;
 }
 
 function UserPage() {
@@ -21,6 +24,7 @@ function UserPage() {
   document.title = `${username} - TdA`;
 
   const [user, setUser] = useState<UserProps | null>(null);
+  const [rank, setRank] = useState<number | null>(null);
 
   useEffect(() => {
     fetch(`${apiUrl}users/username/${username}`)
@@ -28,6 +32,27 @@ function UserPage() {
       .then(data => setUser(data))
       .catch(error => console.error('Error fetching user data:', error));
   }, [username]);
+  
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`${apiUrl}users/rank/${user.uuid}`, {
+      headers: {
+        //'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setRank(response.data.rank);
+    })
+    //.catch(error => {});
+  }, [user]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}.${month}. ${year}`;
+  };
 
   if (user) return (
     <>
@@ -42,10 +67,10 @@ function UserPage() {
               <span className="elo">
                 <i className="fa-solid fa-trophy"></i>
                 <span>{user.elo}</span>
-                <span className='index'>2. místo</span>
+                {rank && <span className='index'>{rank}. místo</span>}
               </span>
               <div className="timestamp">
-                Založen 1.1. 2005
+                Vytvořen {formatDate(user.createdAt)}
               </div>
             </div>
           </div>
