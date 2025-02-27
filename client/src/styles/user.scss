@@ -123,6 +123,13 @@
       scale: 0.97;
     }
   }
+  .user-admin {
+    cursor: default;
+
+    &:hover {
+      scale: 1;
+    }
+  }
   .user-active {
     border: 2px solid var(--c6);
   }

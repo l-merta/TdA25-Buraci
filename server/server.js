@@ -87,7 +87,6 @@ app.post("/api/v1/users", async (req, res) => {
 });
 
 app.get("/api/v1/getUserByToken", authenticateToken, async (req, res) => {
-  console.log(req.user);
   try {
     const db = await getDb();
     const user = await db.get(`
@@ -411,6 +410,22 @@ app.get("/api/v1/games", async (req, res) => {
       row.board = JSON.parse(row.board); // Convert board back to JSON
     });
     res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
+app.get("/api/v1/gamesHistory/:uuid", async (req, res) => {
+  const { uuid } = req.params;
+
+  try {
+    const db = await getDb();
+    const row = await db.get(`SELECT * FROM games_history WHERE player1 = ? OR player2 = ?`, [uuid, uuid]);
+    if (!row) {
+      return res.status(404).json({ code: 404, message: "Resource not found" });
+    }
+    res.json(row);
   } catch (error) {
     console.error(error);
     res.status(500).json({ code: 500, message: "Internal Server Error" });
