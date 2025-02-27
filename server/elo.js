@@ -12,9 +12,9 @@ const addEloToUser = async (token) => {
   }
 
   const db = await getDb();
-  const user = await db.get(`SELECT elo FROM users WHERE uuid = ?`, [uuid]);
+  const user = await db.get(`SELECT elo, wins, draws, losses FROM users WHERE uuid = ?`, [uuid]);
   if (user) {
-    const newElo = calculateElo(user.elo);
+    const newElo = calculateElo(user.elo, user.wins, user.draws, user.losses);
     await db.run(`UPDATE users SET elo = ? WHERE uuid = ?`, [newElo, uuid]);
     console.log(`Updated ELO for user ${uuid} to ${newElo}`);
   } else {
@@ -22,10 +22,21 @@ const addEloToUser = async (token) => {
   }
 }
 
-function calculateElo(currentElo) {
-  // Calculate new ELO based on current ELO
-  // This is a placeholder implementation, replace with actual ELO calculation logic
-  return currentElo + 100;
+function calculateElo(currentElo, wins, draws, losses) {
+  const K = 40;
+  const alpha = 0.5;
+  const scalingFactor = 400;
+
+  const totalGames = wins + draws + losses;
+  const winDrawRatio = (wins + draws) / totalGames;
+
+  const expectedScore = 1 / (1 + Math.pow(10, (currentElo - currentElo) / scalingFactor)); // Placeholder, replace with actual opponent's ELO
+  const actualScore = 1; // Placeholder, replace with actual game result (1 for win, 0.5 for draw, 0 for loss)
+
+  const adjustmentFactor = 1 + alpha * (0.5 - winDrawRatio);
+  const newElo = currentElo + K * (actualScore - expectedScore) * adjustmentFactor;
+
+  return Math.max(0, Math.round(newElo)); // Ensure ELO is not negative and round up
 }
 
 const addWinToUser = async (token) => {

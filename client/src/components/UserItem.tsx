@@ -33,11 +33,11 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
           <span className='label'>Výhry</span>
         </div>
         <div className="item item-losses">
-          <span className="value">{user.wins}</span>
+          <span className="value">{user.losses}</span>
           <span className='label'>Prohry</span>
         </div>
         <div className="item item-draws">
-          <span className="value">{user.wins}</span>
+          <span className="value">{user.draws}</span>
           <span className='label'>Remízy</span>
         </div>
       </div>
