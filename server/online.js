@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const { players, getPlaying, playField, checkWin, checkPotentialWin } = require("./gameplay");
 const { getDb } = require("./db");
+const { addEloToUser, addWinToUser, addLossToUser, addDrawToUser } = require("./elo");
 const jwt = require('jsonwebtoken');
 
 async function getUserData(userUuid) {
@@ -132,7 +133,7 @@ module.exports = (server) => {
   });
 
   function onGameEvents(roomId, socket) {
-    console.log("onGameEvents", roomId);
+    //console.log("onGameEvents", roomId);
 
     socket.emit("welcome", { 
       message: "WebSocket connection established - love, server", 
@@ -167,8 +168,8 @@ module.exports = (server) => {
       emitRoomData(rooms[roomId]);
     });
 
-    socket.on("playField", (data) => {
-      console.log(`Field played`);
+    socket.on("playField", async (data) => {
+      //console.log(`Field played`);
 
       const { row, col, board, ai } = data;
       const newGameData = { 
@@ -183,10 +184,38 @@ module.exports = (server) => {
 
       checkPotentialWin(newGameData.board, 5, players);
       const win = checkWin(newGameData.board, 5, players);
-      if (win)
+      if (win) {
         newGameData.win = win[0];
-      else 
-        newGameData.win = null;
+        console.log("Found win", win[0]);
+        if (rooms[roomId].type == "online") {
+          console.log("Win detected in online game");
+          const winner = rooms[roomId].players.find(player => player.playerChar === win[0].player);
+          const loser = rooms[roomId].players.find(player => player.playerChar !== win[0].player);
+          if (winner) {
+            await addWinToUser(winner.socket.handshake.query.token);
+            await addEloToUser(winner.socket.handshake.query.token);
+          }
+          if (loser) {
+            await addLossToUser(loser.socket.handshake.query.token);
+            await addEloToUser(loser.socket.handshake.query.token);
+          }
+        }
+      } else {
+        // Check for empty spaces - if none, add draw to both players
+        const isDraw = newGameData.board.every(row => row.every(cell => cell !== ''));
+        console.log("New GameBoard", newGameData.board);
+        if (isDraw) {
+          //newGameData.win = "draw";
+          if (rooms[roomId].type == "online") {
+            rooms[roomId].players.forEach(async player => {
+              await addDrawToUser(player.socket.handshake.query.token);
+              await addEloToUser(player.socket.handshake.query.token);
+            });
+          }
+        } else {
+          newGameData.win = null;
+        }
+      }
 
       emitPlayFieldProcessed(rooms[roomId], newGameData);
     });
@@ -200,7 +229,7 @@ module.exports = (server) => {
     });
 
     socket.on("userRename", (data) => {
-      console.log("username rename");
+      //console.log("username rename");
       const player = rooms[roomId].players.find(client => client.socket === socket);
       if (player) {
         player.playerName = data.newName;
@@ -248,7 +277,7 @@ module.exports = (server) => {
       queue.splice(index, 1);
     }
 
-    console.log("Disconnection process done");
+    //console.log("Disconnection process done");
   }
 
   function emitPlayerList(room) {
