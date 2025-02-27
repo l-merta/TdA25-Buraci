@@ -208,28 +208,44 @@ app.put("/api/v1/users/:uuid", async (req, res) => {
   const { uuid } = req.params;
   const { username, email, password, elo } = req.body;
 
-  if (!username || !email || !password || elo === undefined) {
+  // Check if at least one field is provided
+  if (!username && !email && !password && elo === undefined) {
     return res.status(400).json({ code: 400, message: "Bad request: Missing required fields" });
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+  const updates = [];
+  const params = [];
 
-  const updatedUser = {
-    username,
-    email,
-    password: hashedPassword, // Store the hashed password
-    elo,
-    updatedAt: new Date().toISOString(),
-  };
+  if (username) {
+    updates.push("username = ?");
+    params.push(username);
+  }
 
+  if (email) {
+    updates.push("email = ?");
+    params.push(email);
+  }
+
+  if (password) {
+    const hashedPassword = await argon2.hash(password, 10); // Hash the password
+    updates.push("password = ?");
+    params.push(hashedPassword);
+  }
+
+  if (elo !== undefined) {
+    updates.push("elo = ?");
+    params.push(elo);
+  }
+
+  //params.push(new Date().toISOString()); // updatedAt
+  params.push(uuid); // uuid
+
+  const updateQuery = `UPDATE users SET ${updates.join(", ")} WHERE uuid = ?`;
 
   try {
     const db = await getDb();
-    const result = await db.run(
-      `UPDATE users SET username = ?, email = ?, password = ?, elo = ?, updatedAt = ? WHERE uuid = ?`,
-      [updatedUser.username, updatedUser.email, updatedUser.password, updatedUser.elo, updatedUser.updatedAt, uuid]
-    );
-    if (result.affectedRows === 0) {
+    const result = await db.run(updateQuery, params);
+    if (result.changes === 0) {
       return res.status(404).json({ code: 404, message: "Resource not found" });
     }
 
@@ -239,7 +255,8 @@ app.put("/api/v1/users/:uuid", async (req, res) => {
     }
     res.status(200).json(updatedRow);
   } catch (error) {
-    res.status(500).json({ code: 500, message: "Internal server error" });
+    console.error("Error updating user:", error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
   }
 });
 

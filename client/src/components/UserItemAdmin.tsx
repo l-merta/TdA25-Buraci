@@ -1,8 +1,6 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
 import { useUser } from './User';
 import axios from 'axios';
-
 import ProfilePic from './ProfilePic';
 
 interface UserProps {
@@ -13,6 +11,7 @@ interface UserProps {
 const UserItem: React.FC<UserProps> = ({ user, index }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { user: loggedInUser } = useUser();
+  const [elo, setElo] = useState(user.elo);
 
   const userBan = async () => {
     const token = localStorage.getItem('token');
@@ -23,10 +22,25 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
             'Authorization': `Bearer ${token}`
           }
         });
-        // Optionally, you can update the UI to reflect the banned user
         console.log(`User ${user.uuid} banned successfully`);
       } catch (error) {
         console.error('Failed to ban user:', error);
+      }
+    }
+  };
+
+  const updateElo = async () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        await axios.put(`${apiUrl}users/${user.uuid}`, { elo }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log(`User ${user.uuid} ELO updated successfully`);
+      } catch (error) {
+        console.error('Failed to update ELO:', error);
       }
     }
   };
@@ -40,7 +54,12 @@ const UserItem: React.FC<UserProps> = ({ user, index }) => {
           <span className="username">{user.username}</span>
           <div className="elo">
             <i className="fa-solid fa-trophy"></i>
-            <span>{user.elo}</span>
+            <input
+              type="number"
+              value={elo}
+              onChange={(e) => setElo(Number(e.target.value))}
+            />
+            <button className="button button-green button-border" onClick={updateElo}>Update ELO</button>
           </div>
         </div>
       </div>
