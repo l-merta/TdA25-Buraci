@@ -132,7 +132,8 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
         else {
             setGameDataLoaded(true);
         }
-        await checkForWin();
+        if (onlinePlayerUuids)
+            await checkForWin();
     };
 
     // Get game with uuid from API
@@ -427,11 +428,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
                 </div>
             }
             <div className="wrapper">
-              {playerNamesData ?
+              {playerNamesData && playerNamesData.length > 0 ?
                 <div className="players">
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
                     <img src={getCharImage(players[0], false)} alt="" />
-                    <div className="name">{playerNamesData && playerNamesData[0]}</div>
+                    <div className="name">{playerNamesData.length > 0 && playerNamesData[0]}</div>
                     {gameData.win && gameData.win.player == players[0] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}
@@ -443,7 +444,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
                     </button>
                   : ""}
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
-                    <div className="name">{playerNamesData && playerNamesData[1]}</div>
+                    <div className="name">{playerNamesData.length > 0 && playerNamesData[1]}</div>
                     {gameData.win && gameData.win.player == players[1] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}
