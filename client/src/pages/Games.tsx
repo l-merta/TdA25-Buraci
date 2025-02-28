@@ -78,8 +78,8 @@ const Games = () => {
         {gameSett.gameMode === "online" && 
           <>
           <div className="online-actions anim anim-slide-from-down">
-            <Link to={`/online`} className="button button-red">Najít hru</Link>
-            <Link to={gameSett.gameMode !== "online" ? "/game/" : "/freeplay/new"} state={gameSett} className="button button-red button-border">Vytvořit vlastní hru</Link>
+            <Link to={`/online`} className="button button-red">Matchmaking</Link>
+            <Link to={gameSett.gameMode !== "online" ? "/game/" : "/freeplay/new"} state={gameSett} className="button button-red button-border">Freeplay s přáteli</Link>
           </div>
           <div className="online-actions anim anim-slide-from-down">
             <input 

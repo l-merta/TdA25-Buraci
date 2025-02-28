@@ -40,9 +40,9 @@ function App() {
           a poskytnout uživatelům <b className=''>atraktivní herní zážitek</b>.
         </p>
         <nav>
-          <Link to="/online" className='button button-1 button-red anim anim-slide-from-down'>Najít online hru</Link>
+          <Link to="/online" className='button button-1 button-red anim anim-slide-from-down'>Matchmaking</Link>
           <div className="line-vertical"></div>
-          <Link to="/games" className='button button-1 button-red button-border anim anim-slide-from-down'>Seznam offline her</Link>
+          <Link to="/games" className='button button-1 button-red button-border anim anim-slide-from-down'>Seznam her</Link>
           {/* <Link to="/create" className='button button-blue'>Vytvořit hru</Link> */}
         </nav>
       </main>
@@ -55,7 +55,7 @@ function App() {
             <img src={"/images/icons/zarivka_playing_" + themeToImg(theme, ".png")} alt="Táda" />
           </div>
           <div className="actions">
-            <Link to="/game" state={aiGameSett} className='button button-red'>Vyzkoušej své schopnosti!</Link>
+            <Link to="/game" state={aiGameSett} className='button button-red'>Vyzkoušej si AI!</Link>
           </div>
         </div>
         <div className="s2">
