@@ -573,6 +573,32 @@ app.put("/api/v1/gameFieldClick", async (req, res) => {
   }
 });
 
+app.put("/api/v1/checkForWin", async (req, res) => {
+  const { board } = req.body;
+  const newGameData = { 
+    ...req.body, 
+    playing: getPlaying(board),
+    win: null
+  }
+
+  newGameData.nextPlaying = newGameData.playing == players.length - 1 ? 0 : newGameData.playing + 1;
+
+  checkPotentialWin(newGameData.board, 5, players);
+  const win = checkWin(newGameData.board, 5, players);
+  
+  if (win)
+    newGameData.win = win[0];
+  else 
+    newGameData.win = null;
+
+  try {
+    res.json(newGameData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ code: 500, message: "Internal Server Error" });
+  }
+});
+
 // Middleware to validate JWT token
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization'];

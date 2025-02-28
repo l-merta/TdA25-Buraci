@@ -24,11 +24,12 @@ interface GameBoardProps {
     uuid?: string;
     replayButton?: boolean;
     playerNames?: Array<String>;
+    onlinePlayerUuids?: Array<String>;
     editMode?: boolean;
     onlyBoard?: boolean;
 }
 
-const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, socket, isHost, uuid, replayButton, playerNames, editMode, onlyBoard }) => {
+const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, socket, isHost, uuid, replayButton, playerNames, onlinePlayerUuids, editMode, onlyBoard }) => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const multiplayerType = location.pathname.includes("freeplay") ? "freeplay" : (location.pathname.includes("online") ? "online" : "");
@@ -43,6 +44,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
 
     //@ts-ignore
     const [players, setPlayers] = useState<Array<string>>(["X", "O"]); // List of players - their symbols
+    const [playerNamesData, setPlayerNamesData] = useState<Array<String> | null>([]);
     //@ts-ignore
     const [colors, setColors] = useState<Array<string>>(["cervene", "modre"]); // List of players - their symbols
     const [gameData, setGameData] = useState<GameBoardProps | any>({
@@ -68,21 +70,47 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
         timeoutIds.current = [];
     };
 
-    /*
-    useEffect(() => {
-        if (!popupShown) {
-        showPopup("Prdíky a bobky");
-        setPopupShown(true);
-        }
-    }, [popupShown, showPopup]);
-    */
-
     useEffect(() => {
         if (playerCurr[0] === 1 || playerCurr[1] === 1) {
             //console.log("is online game");
             setOnline(true);
         }
     }, [playerCurr]);
+
+    useEffect(() => {
+        if (playerNames) {
+            setPlayerNamesData(playerNames);
+        }
+        else if (onlinePlayerUuids) {
+            const fetchPlayerNames = async (uuid: String, index: number) => {
+                try {
+                    const response = await fetch(`${apiUrl}users/uuid/${uuid}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        //body: JSON.stringify({ uuids: onlinePlayerUuids }),
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const result = await response.json(); // Parse JSON data
+                    setPlayerNamesData((prev: any) => {
+                        const newPlayerNames = [...prev];
+                        newPlayerNames[index] = result.username;
+                        console.log("newPlayerNames", newPlayerNames);
+                        return newPlayerNames;
+                    });
+                } catch (error: any) {
+                    console.log(error.message); // Set error message if there's an issue
+                }
+            };
+            onlinePlayerUuids.forEach((uuid, index) => {
+                fetchPlayerNames(uuid, index);
+            });
+
+        }
+    }, [onlinePlayerUuids, playerNames]);
 
     const fetchGameData = async () => {
         if (uuid) {
@@ -104,6 +132,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
         else {
             setGameDataLoaded(true);
         }
+        await checkForWin();
     };
 
     // Get game with uuid from API
@@ -145,6 +174,27 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
           socket.emit("playField", { ...gameData, row: row, col: col, ai: ai });
         }
     };
+    const checkForWin = async () => {
+        try {
+            const response = await fetch(`${apiUrl}checkForWin`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ ...gameData }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to play field in game");
+            }
+
+            const data = await response.json();
+            setGameData(data);
+          } catch (error: any) {
+              console.error("Error checking for win:", error.message);
+          }
+    };
     useEffect(() => {
         if (socket) {
             socket.on("playFieldProcessed", (newGameData: any) => {
@@ -167,7 +217,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
 
         if (gameData.win) {
             const winningPlayerIndex = players.indexOf(gameData.win.player);
-            const winningPlayerName = playerNames ? playerNames[winningPlayerIndex] : gameData.win.player;
+            const winningPlayerName = playerNamesData ? playerNamesData[winningPlayerIndex] : gameData.win.player;
 
             if (ai[0] == 1 && ai[1] == 1 && !replayButton) {
                 const timeoutId = setTimeout(() => {
@@ -177,15 +227,17 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
             }
             else {
                 // No AI-only match
-                if (multiplayerType === "online") {
-                    if (playerCurr[winningPlayerIndex] === 1) {
-                        showPopup(`Vyhrál jsi!`);
-                    } else {
-                        showPopup(`Prohrál jsi..`);
+                if (!onlinePlayerUuids) {
+                    if (multiplayerType === "online") {
+                        if (playerCurr[winningPlayerIndex] === 1) {
+                            showPopup(`Vyhrál jsi!`);
+                        } else {
+                            showPopup(`Prohrál jsi..`);
+                        }
                     }
-                }
-                else {
-                    showPopup(`Vyhrál ${winningPlayerName}!`);
+                    else {
+                        showPopup(`Vyhrál ${winningPlayerName}!`);
+                    }
                 }
             }
         } else {
@@ -375,11 +427,11 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
                 </div>
             }
             <div className="wrapper">
-              {playerNames ?
+              {playerNamesData ?
                 <div className="players">
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 0 ? "playing " : " ") + (gameData.win && gameData.win.player == players[0] ? "player-win " : "")}>
                     <img src={getCharImage(players[0], false)} alt="" />
-                    <div className="name">{playerNames && playerNames[0]}</div>
+                    <div className="name">{playerNamesData && playerNamesData[0]}</div>
                     {gameData.win && gameData.win.player == players[0] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}
@@ -391,7 +443,7 @@ const GameBoard: React.FC<GameBoardProps> = ({ size, ai, playerCurr, gameBoard, 
                     </button>
                   : ""}
                   <div className={"player player-" + (!gameData.win && getBeforePlaying() == 1 ? "playing " : " ") + (gameData.win && gameData.win.player == players[1] ? "player-win " : "")}>
-                    <div className="name">{playerNames && playerNames[1]}</div>
+                    <div className="name">{playerNamesData && playerNamesData[1]}</div>
                     {gameData.win && gameData.win.player == players[1] ? 
                         <i className="fa-solid fa-crown"></i>
                     : ""}

@@ -110,7 +110,9 @@ function UserPage() {
           {gamesHistory.length > 0 && 
             <div className="games">
               {gamesHistory.map((game) => (
-                <GameBoard key={game.uuid} size={15} gameBoard={game.board} onlyBoard={true} ai={[0, 0]} playerCurr={[0, 0]} />
+                <div className="game">
+                  <GameBoard key={game.uuid} size={15} gameBoard={game.board} onlyBoard={true} onlinePlayerUuids={[game.player1, game.player2]} ai={[0, 0]} playerCurr={[0, 0]} />
+                </div>
               ))}
             </div>
           }
